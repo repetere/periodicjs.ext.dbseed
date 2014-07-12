@@ -975,7 +975,7 @@ var index = function(req, res, next) {
     applicationController.getPluginViewTemplate({
     res:res,
     req:req,
-    viewname:'p-admin/seed/index',
+    viewname:'p-admin/dbseed/index',
     pluginname:'periodicjs.ext.seed',
     themepath:appSettings.themepath,
     themefileext:appSettings.templatefileextension,
