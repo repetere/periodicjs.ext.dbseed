@@ -17,7 +17,7 @@ var extscript = function(resources){
 	mongoose = resources.mongoose;
 	appSettings = resources.settings;
 	applicationController = new appController(resources);
-	seedController = require('./controller/seed')(resources);
+	seedController = require('./controller/dbseed')(resources);
 	// Post = mongoose.model('Post');
 	// Collection = mongoose.model('Collection');
 	// node index.js --cli --extension seed --task sampledata

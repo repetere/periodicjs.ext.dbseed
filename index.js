@@ -3,7 +3,7 @@
 module.exports = function(periodic){
 	// express,app,logger,config,db,mongoose
 	var seedRouter = periodic.express.Router(),
-			seedController = require('./controller/seed')(periodic);
+			seedController = require('./controller/dbseed')(periodic);
 
 	for(var x in periodic.settings.extconf.extensions){
 		if(periodic.settings.extconf.extensions[x].name === 'periodicjs.ext.admin'){
@@ -13,5 +13,5 @@ module.exports = function(periodic){
 	}
 	seedRouter.post('/grow', seedController.grow);
 
-	periodic.app.use('/p-admin/seed',seedRouter);
+	periodic.app.use('/p-admin/dbseed',seedRouter);
 };
