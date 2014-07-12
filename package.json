@@ -1,5 +1,5 @@
 {
-  "name": "periodicjs.ext.example",
+  "name": "periodicjs.ext.seed",
   "description": "example extensions for periodicjs",
   "version": "0.0.1",
   "main": "index.js",
