@@ -1,8 +1,12 @@
 {
-	"name": "periodicjs.ext.seed",
+	"name": "periodicjs.ext.dbseed",
 	"periodicCompatibility":"0.0.2",
-	"periodicDependencies":[{
-		"extname":"periodicjs.ext.sample2",
-		"version":"0.0.2"
-	}]
+	"periodicDependencies": [],
+	"periodicjs.ext.admin": {
+		"menu": {
+			"Extensions": {
+				"seed admin": "<a href=\"/p-admin/seed\">Seed Content</a>"
+			}
+		}
+	}
 }

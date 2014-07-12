@@ -1,6 +1,6 @@
 {
-  "name": "periodicjs.ext.seed",
-  "description": "example extensions for periodicjs",
+  "name": "periodicjs.ext.dbseed",
+  "description": "seeding db with initial data",
   "version": "0.0.1",
   "main": "index.js",
   "engines": {
