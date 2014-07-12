@@ -5,7 +5,7 @@
 	"periodicjs.ext.admin": {
 		"menu": {
 			"Extensions": {
-				"seed admin": "<a href=\"/p-admin/seed\">Seed Content</a>"
+				"seed admin": "<a href=\"/p-admin/dbseed\">DB Seed Content</a>"
 			}
 		}
 	}
