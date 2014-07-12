@@ -1,4 +1,4 @@
-periodicjs.ext.dbseed
-=====================
+periodicjs.ext.example
+======================
 
-import json seeds into periodic mongodb
+example periodic extension
