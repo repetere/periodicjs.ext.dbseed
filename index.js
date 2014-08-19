@@ -11,7 +11,7 @@ module.exports = function(periodic){
 			// seedRouter.get('/status', seedController.status);
 		}
 	}
-	seedRouter.post('/grow', seedController.grow);
+	// seedRouter.post('/grow', seedController.grow);
 
 	periodic.app.use('/p-admin/dbseed',seedRouter);
 };
