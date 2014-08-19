@@ -1,22 +1,17 @@
 'use strict';
 
 var path = require('path'),
-	async = require('async'),
 	fs = require('fs-extra'),
-	merge = require('utils-merge'),
-	appController = require('../../../../app/controller/application'),
 	seedController,
 	// Collection,
 	mongoose,
 	logger,
-	appSettings,
-	applicationController;
+	appSettings;
 
 var extscript = function(resources){
 	logger = resources.logger;
 	mongoose = resources.mongoose;
 	appSettings = resources.settings;
-	applicationController = new appController(resources);
 	seedController = require('./controller/dbseed')(resources);
 	// Post = mongoose.model('Post');
 	// Collection = mongoose.model('Collection');
@@ -36,10 +31,10 @@ var extscript = function(resources){
 			    seedController.seedDocuments(seedjson.data,function(err,seeds){
 			    	console.timeEnd('Seeding Data Started');
 			      if(err){
-			        logger.error("err",err);
+			        logger.error('err',err);
 			      }
 			      else{       	
-			        logger.info("seeds",seeds);
+			        logger.info('seeds',seeds);
 			      }
 						process.exit(0);
 			    });
@@ -47,14 +42,14 @@ var extscript = function(resources){
 			});
 		}
 		else{	
-			logger.silly("sample extension",argv);
+			logger.silly('sample extension',argv);
 			process.exit(0);
 		}
 	};
 
 	return{
 		cli:cli
-	}
+	};
 };
 
 module.exports = extscript;
