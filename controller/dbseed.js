@@ -1,30 +1,85 @@
 'use strict';
 
-var Utilities = require('periodicjs.core.utilities'),
+var async = require('async'),
+    Utilities = require('periodicjs.core.utilities'),
     ControllerHelper = require('periodicjs.core.controllerhelper'),
     CoreUtilities,
     CoreController,
-    async = require('async'),
-    applicationController,
     appSettings,
     mongoose,
     logger;
 
-var seedPostData = function(options){
-  // logger.silly("seedAssetData",options);
+var seedUserGroupRolePrivilegeData = function(options){
+  var seeddocument = options.seeddocument,
+      seeddocumenttype = options.seeddocumenttype,
+      seed_uacid = null,
+      errorObj = null;
+
+  try{
+    if(!seeddocument.title){
+      errorObj = new Error('User '+seeddocumenttype+' '+seeddocument.title+' is missing title');
+    }
+    else{
+      switch(seeddocumenttype){
+        case 'group':
+          if(!seeddocument.usergroupid){
+            errorObj = new Error('User '+seeddocumenttype+' '+seeddocument.title+' is usergroupid');
+          }
+          else{
+            seed_uacid = seeddocument.usergroupid;
+          }
+          break;
+        case 'role':
+          if(!seeddocument.userroleid){
+            errorObj = new Error('User '+seeddocumenttype+' '+seeddocument.title+' is userroleid');
+          }
+          else{
+            seed_uacid = seeddocument.userroleid;
+          }
+          break;
+        case 'privilege':
+          if(!seeddocument.userprivilegeid){
+            errorObj = new Error('User '+seeddocumenttype+' '+seeddocument.title+' is userprivilegeid');
+          }
+          else{
+            seed_uacid = seeddocument.userprivilegeid;
+          }
+          break;
+        default:
+          errorObj = new Error('User '+seeddocumenttype+' '+seeddocument.title+' is missing uacid');
+          break;
+      }
+    }
+    if(!seeddocument.name){
+      seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
+    }
+  }
+  catch(e){
+    errorObj = e;
+  }
+
+  return {
+    doc: seeddocument,
+    docs_uacid: seed_uacid,
+    err:errorObj
+  };
+};
+
+var seedItemData = function(options){
+  // logger.silly('seedAssetData',options);
   var seeddocument = options.seeddocument,
       seed_namehash = null,
       errorObj = null;
 
   try{
     if(!seeddocument.title){
-      errorObj = new Error('Post '+seeddocument.title+' is missing title');
+      errorObj = new Error('Item '+seeddocument.title+' is missing title');
     }
     if(!seeddocument.content){
-      errorObj = new Error('Post '+seeddocument.title+' is missing content');
+      errorObj = new Error('Item '+seeddocument.title+' is missing content');
     }
     if(!seeddocument.name){
-      seeddocument.name = applicationController.makeNiceName(seeddocument.title);
+      seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
     }
   }
   catch(e){
@@ -52,7 +107,7 @@ var seedCollectionData = function(options){
       errorObj = new Error('Collection '+seeddocument.title+' is missing content');
     }
     if(!seeddocument.name){
-      seeddocument.name = applicationController.makeNiceName(seeddocument.title);
+      seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
     }
   }
   catch(e){
@@ -67,7 +122,7 @@ var seedCollectionData = function(options){
 };
 
 var seedUserData = function(options){
-  // logger.silly("seedAssetData",options);
+  // logger.silly('seedAssetData',options);
   var seeddocument = options.seeddocument,
       seed_namehash = null,
       errorObj = null,
@@ -104,7 +159,7 @@ var seedUserData = function(options){
 };
 
 var seedAssetData = function(options){
-  // logger.silly("seedAssetData",options);
+  // logger.silly('seedAssetData',options);
   var seeddocument = options.seeddocument,
       seed_namehash = null,
       errorObj = null;
@@ -160,7 +215,7 @@ var seedContenttypeData = function(options){
       errorObj = new Error('contenttype '+seeddocument.title+' is missing title');
     }
     if(!seeddocument.name){
-      seeddocument.name = applicationController.makeNiceAttribute(seeddocument.title);
+      seeddocument.name = CoreUtilities.makeNiceAttribute(seeddocument.title);
     }
   }
   catch(e){
@@ -184,7 +239,7 @@ var seedCategoryData = function(options){
       errorObj = new Error('Category '+seeddocument.title+' is missing title');
     }
     if(!seeddocument.name){
-      seeddocument.name = applicationController.makeNiceName(seeddocument.title);
+      seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
     }
   }
   catch(e){
@@ -208,7 +263,7 @@ var seedTagData = function(options){
       errorObj = new Error('Tag '+seeddocument.title+' is missing title');
     }
     if(!seeddocument.name){
-      seeddocument.name = applicationController.makeNiceName(seeddocument.title);
+      seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
     }
   }
   catch(e){
@@ -228,11 +283,11 @@ var seedDocuments = function(documents,callback){
       Users = [],
       Users_namehash = {},
       Users_namehash_array = [],
-      PostsObj,
-      Post = mongoose.model('Post'),
-      Posts =[],
-      Posts_namehash = {},
-      Posts_namehash_array = [],
+      ItemsObj,
+      Item = mongoose.model('Item'),
+      Items =[],
+      Items_namehash = {},
+      Items_namehash_array = [],
       AssetsObj,
       Asset = mongoose.model('Asset'),
       Assets =[],
@@ -257,9 +312,25 @@ var seedDocuments = function(documents,callback){
       Collection = mongoose.model('Collection'),
       Collections =[],
       Collections_namehash_array = [],
-      Collections_namehash = {};
+      Collections_namehash = {},
+      UserprivilegesObj,
+      Userprivilege = mongoose.model('Userprivilege'),
+      Userprivileges =[],
+      Userprivileges_userprivilegeid_array = [],
+      Userprivileges_namehash = {},
+      UserrolesObj,
+      Userrole = mongoose.model('Userrole'),
+      Userroles =[],
+      Userroles_userroleid_array = [],
+      Userroles_namehash = {},
+      UsergroupsObj,
+      Usergroup = mongoose.model('Usergroup'),
+      Usergroups =[],
+      Usergroups_usergroupid_array = [],
+      Usergroups_namehash = {};
 
-    for(var x in documents){
+      console.log('documents.length',documents.length);
+  for(var x in documents){
     if(!documents[x].datatype){
       callback(new Error('new document is missing datatype'),null);
     }
@@ -267,6 +338,55 @@ var seedDocuments = function(documents,callback){
       callback(new Error('new document is data'),null);
     }
     else{
+      if(documents[x].datatype==='usergroup'){
+        UsergroupsObj = seedUserGroupRolePrivilegeData({
+          seeddocument:documents[x].datadocument,
+          seeddocumenttype:'group'
+        });
+        if(UsergroupsObj.err){
+          callback(UsergroupsObj.err,null);
+        }
+        else{
+          Usergroups.push(UsergroupsObj.doc);
+          Usergroups_usergroupid_array.push(UsergroupsObj.docs_uacid);
+          if(UsergroupsObj.doc.roles && UsergroupsObj.doc.roles.length>0){
+            for(var z in UsergroupsObj.doc.roles){
+              Userroles_userroleid_array.push(UsergroupsObj.doc.roles[z]);
+            }
+          }
+        }
+      }
+      if(documents[x].datatype==='userrole'){
+        UserrolesObj = seedUserGroupRolePrivilegeData({
+          seeddocument:documents[x].datadocument,
+          seeddocumenttype:'role'
+        });
+        if(UserrolesObj.err){
+          callback(UserrolesObj.err,null);
+        }
+        else{
+          Userroles.push(UserrolesObj.doc);
+          Userroles_userroleid_array.push(UserrolesObj.docs_uacid);
+          if(UserrolesObj.doc.privileges && UserrolesObj.doc.privileges.length>0){
+            for(var za in UserrolesObj.doc.privileges){
+              Userprivileges_userprivilegeid_array.push(UserrolesObj.doc.privileges[za]);
+            }
+          }
+        }
+      }
+      if(documents[x].datatype==='userprivilege'){
+        UserprivilegesObj = seedUserGroupRolePrivilegeData({
+          seeddocument:documents[x].datadocument,
+          seeddocumenttype:'privilege'
+        });
+        if(UserprivilegesObj.err){
+          callback(UserprivilegesObj.err,null);
+        }
+        else{
+          Userprivileges.push(UserprivilegesObj.doc);
+          Userprivileges_userprivilegeid_array.push(UserprivilegesObj.docs_uacid);
+        }
+      }
       if(documents[x].datatype==='asset'){
         AssetsObj = seedAssetData({
           seeddocument:documents[x].datadocument
@@ -280,6 +400,8 @@ var seedDocuments = function(documents,callback){
         }
       }
       if(documents[x].datatype==='user'){
+        console.log(x,'documents[x]',documents[x],'Users',Users);
+
         UsersObj = seedUserData({
           seeddocument:documents[x].datadocument
         });
@@ -289,6 +411,11 @@ var seedDocuments = function(documents,callback){
         else{
           Users.push(UsersObj.doc);
           Users_namehash_array.push(UsersObj.docs_namehash);
+          if(UsersObj.doc.userroles && UsersObj.doc.userroles.length>0){
+            for(var q in UsersObj.doc.userroles){
+              Userroles_userroleid_array.push(UsersObj.doc.userroles[q]);
+            }
+          }
         }
       }
       if(documents[x].datatype==='contenttype'){
@@ -336,16 +463,16 @@ var seedDocuments = function(documents,callback){
           }
         }
       }
-      if(documents[x].datatype==='post'){
-        PostsObj = seedPostData({
+      if(documents[x].datatype==='item'){
+        ItemsObj = seedItemData({
           seeddocument:documents[x].datadocument
         });
-        if(PostsObj.err){
-          callback(PostsObj.err,null);
+        if(ItemsObj.err){
+          callback(ItemsObj.err,null);
         }
         else{
-          Posts.push(PostsObj.doc);
-          Posts_namehash_array.push(PostsObj.docs_namehash);
+          Items.push(ItemsObj.doc);
+          Items_namehash_array.push(ItemsObj.docs_namehash);
         }
       }
       if(documents[x].datatype==='collection'){
@@ -362,18 +489,17 @@ var seedDocuments = function(documents,callback){
       }
     }
   }
-
   // http://stackoverflow.com/questions/15400029/mongoose-create-multiple-documents
   var getCollectionIdsFromCollectionArray = function(callback){
-    var CollectionPosts =[];
+    var CollectionItems =[];
     for(var y in Collections){
-      if(Collections[y].posts){
-        CollectionPosts = Collections[y].posts;
-        Collections[y].posts=[];
-        for(var z in CollectionPosts){
-          if(Posts_namehash[CollectionPosts[z].post]){
-            CollectionPosts[z].post = Posts_namehash[CollectionPosts[z].post];
-            Collections[y].posts.push(CollectionPosts[z]);
+      if(Collections[y].items){
+        CollectionItems = Collections[y].items;
+        Collections[y].items=[];
+        for(var z in CollectionItems){
+          if(Items_namehash[CollectionItems[z].item]){
+            CollectionItems[z].item = Items_namehash[CollectionItems[z].item];
+            Collections[y].items.push(CollectionItems[z]);
           }
         }
       }
@@ -389,7 +515,7 @@ var seedDocuments = function(documents,callback){
               delete arguments['0'];
             }
             for(var x in arguments){
-              // logger.silly("arguments[x]",x,arguments[x]);
+              // logger.silly('arguments[x]',x,arguments[x]);
               Collections_namehash[arguments[x].name]=arguments[x]._id;
             }
             callback(null,arguments);
@@ -425,7 +551,7 @@ var seedDocuments = function(documents,callback){
         callback(null,{
           numberofdocuments:documents.length,
           collections:Collections_namehash,
-          posts:Posts_namehash,
+          items:Items_namehash,
           tags:Tags_namehash,
           categories:Categories_namehash,
           contenttypes:Contenttypes_namehash,
@@ -436,10 +562,10 @@ var seedDocuments = function(documents,callback){
     });
   };
 
-  var getPostIdsFromPostArray = function(callback){
+  var getItemIdsFromItemArray = function(callback){
     async.waterfall([
       function(callback){
-        Post.create(Posts,function(err){
+        Item.create(Items,function(err){
           if(err){
             callback(err,null);
           }
@@ -448,29 +574,29 @@ var seedDocuments = function(documents,callback){
               delete arguments['0'];
             }
             for(var x in arguments){
-              // logger.silly("arguments[x]",x,arguments[x]);
-              Posts_namehash[arguments[x].name]=arguments[x]._id;
+              // logger.silly('arguments[x]',x,arguments[x]);
+              Items_namehash[arguments[x].name]=arguments[x]._id;
             }
             callback(null,arguments);
           }
         });
       },
-      function(NewPosts,callback){
-        Post.find({
+      function(NewItems,callback){
+        Item.find({
             'name':{
-              $in:Posts_namehash_array
+              $in:Items_namehash_array
             }
           },
           '_id name',
-          function(err,postdata){
+          function(err,itemdata){
             if(err){
               callback(err,null,null);
             }
             else{
-              for(var x in postdata){
-                Posts_namehash[postdata[x].name]=postdata[x]._id;
+              for(var x in itemdata){
+                Items_namehash[itemdata[x].name]=itemdata[x]._id;
               }
-              callback(null,{newcategories:NewPosts,queriedposts:postdata});
+              callback(null,{newcategories:NewItems,querieditems:itemdata});
             }
         });
       }
@@ -479,7 +605,7 @@ var seedDocuments = function(documents,callback){
         callback(err,null);
       }
       else{
-        logger.silly(results);
+        logger.silly('Items_namehash',results);
         getCollectionIdsFromCollectionArray(callback);
       }
     });
@@ -504,69 +630,69 @@ var seedDocuments = function(documents,callback){
         else{
           logger.silly('getTaxonomyIdsFromTaxonomiesArrays results',results);
           async.parallel({
-            Posts:function(callback){
+            Items:function(callback){
               try{
-                var PostTags=[],PostContenttypes=[],PostCategories=[],PostAssets=[],PostAuthors=[];
-                for(var y in Posts){
-                  if(Posts[y].tags){
-                    PostTags = Posts[y].tags;
-                    Posts[y].tags=[];
-                    for(var z in PostTags){
-                      if(Tags_namehash[PostTags[z]]){
-                        Posts[y].tags.push(Tags_namehash[PostTags[z]]);
+                var ItemTags=[],ItemContenttypes=[],ItemCategories=[],ItemAssets=[],ItemAuthors=[];
+                for(var y in Items){
+                  if(Items[y].tags){
+                    ItemTags = Items[y].tags;
+                    Items[y].tags=[];
+                    for(var z in ItemTags){
+                      if(Tags_namehash[ItemTags[z]]){
+                        Items[y].tags.push(Tags_namehash[ItemTags[z]]);
                       }
                     }
                   }
-                  if(Posts[y].categories){
-                    PostCategories = Posts[y].categories;
-                    Posts[y].categories=[];
-                    for(var zc in PostCategories){
-                      if(Categories_namehash[PostCategories[zc]]){
-                        Posts[y].categories.push(Categories_namehash[PostCategories[zc]]);
+                  if(Items[y].categories){
+                    ItemCategories = Items[y].categories;
+                    Items[y].categories=[];
+                    for(var zc in ItemCategories){
+                      if(Categories_namehash[ItemCategories[zc]]){
+                        Items[y].categories.push(Categories_namehash[ItemCategories[zc]]);
                       }
                     }
                   }
-                  if(Posts[y].contenttypes){
-                    PostContenttypes = Posts[y].contenttypes;
-                    Posts[y].contenttypes=[];
-                    for(var zct in PostContenttypes){
-                      if(Contenttypes_namehash[PostContenttypes[zct]]){
-                        Posts[y].contenttypes.push(Contenttypes_namehash[PostContenttypes[zct]]);
+                  if(Items[y].contenttypes){
+                    ItemContenttypes = Items[y].contenttypes;
+                    Items[y].contenttypes=[];
+                    for(var zct in ItemContenttypes){
+                      if(Contenttypes_namehash[ItemContenttypes[zct]]){
+                        Items[y].contenttypes.push(Contenttypes_namehash[ItemContenttypes[zct]]);
                       }
                     }
                   }
-                  if(Posts[y].assets){
-                    PostAssets = Posts[y].assets;
-                    Posts[y].assets=[];
-                    for(var za in PostAssets){
-                      if(Assets_namehash[PostAssets[za]]){
-                        Posts[y].assets.push(Assets_namehash[PostAssets[za]]);
+                  if(Items[y].assets){
+                    ItemAssets = Items[y].assets;
+                    Items[y].assets=[];
+                    for(var za in ItemAssets){
+                      if(Assets_namehash[ItemAssets[za]]){
+                        Items[y].assets.push(Assets_namehash[ItemAssets[za]]);
                       }
                     }
                   }
-                  if(Posts[y].primaryasset){
-                    if(Assets_namehash[Posts[y].primaryasset]){
-                      Posts[y].primaryasset = Assets_namehash[Posts[y].primaryasset];
+                  if(Items[y].primaryasset){
+                    if(Assets_namehash[Items[y].primaryasset]){
+                      Items[y].primaryasset = Assets_namehash[Items[y].primaryasset];
                     }
                     else{
-                      delete Posts[y].primaryasset;
+                      delete Items[y].primaryasset;
                     }
                   }
-                  if(Posts[y].authors){
-                    PostAuthors = Posts[y].authors;
-                    Posts[y].authors=[];
-                    for(var zu in PostAuthors){
-                      if(Users_namehash[PostAuthors[zu]]){
-                        Posts[y].authors.push(Users_namehash[PostAuthors[zu]]);
+                  if(Items[y].authors){
+                    ItemAuthors = Items[y].authors;
+                    Items[y].authors=[];
+                    for(var zu in ItemAuthors){
+                      if(Users_namehash[ItemAuthors[zu]]){
+                        Items[y].authors.push(Users_namehash[ItemAuthors[zu]]);
                       }
                     }
                   }
-                  if(Posts[y].primaryauthor){
-                    if(Users_namehash[Posts[y].primaryauthor]){
-                      Posts[y].primaryauthor = Users_namehash[Posts[y].primaryauthor];
+                  if(Items[y].primaryauthor){
+                    if(Users_namehash[Items[y].primaryauthor]){
+                      Items[y].primaryauthor = Users_namehash[Items[y].primaryauthor];
                     }
                     else{
-                      delete Posts[y].primaryauthor;
+                      delete Items[y].primaryauthor;
                     }
                   }
                 }
@@ -653,8 +779,8 @@ var seedDocuments = function(documents,callback){
               callback(err,null);
             }
             else{
-              logger.silly('setting meta for posts and collections',results);
-              getPostIdsFromPostArray(callback);
+              logger.silly('setting meta for items and collections',results);
+              getItemIdsFromItemArray(callback);
             }
           });
         }
@@ -683,7 +809,7 @@ var seedDocuments = function(documents,callback){
               delete arguments['0'];
             }
             for(var x in arguments){
-              // logger.silly("arguments[x]",x,arguments[x]);
+              // logger.silly('arguments[x]',x,arguments[x]);
               Tags_namehash[arguments[x].name]=arguments[x]._id;
             }
             callback(null,arguments);
@@ -742,7 +868,7 @@ var seedDocuments = function(documents,callback){
               delete arguments['0'];
             }
             for(var x in arguments){
-              // logger.silly("arguments[x]",x,arguments[x]);
+              // logger.silly('arguments[x]',x,arguments[x]);
               Categories_namehash[arguments[x].name]=arguments[x]._id;
             }
             callback(null,arguments);
@@ -801,7 +927,7 @@ var seedDocuments = function(documents,callback){
               delete arguments['0'];
             }
             for(var x in arguments){
-              // //logger.silly("arguments[x]",x,arguments[x]);
+              // //logger.silly('arguments[x]',x,arguments[x]);
               Contenttypes_namehash[arguments[x].name]=arguments[x]._id;
             }
             callback(null,arguments);
@@ -839,6 +965,7 @@ var seedDocuments = function(documents,callback){
   };
 
   var getUsersIdsFromUserNameArray = function(callback){
+    // console.log('Users in getting ids',Users);
     async.waterfall([
       function(callback){
         User.create(Users,function(err){
@@ -850,7 +977,7 @@ var seedDocuments = function(documents,callback){
               delete arguments['0'];
             }
             for(var x in arguments){
-              // logger.silly("arguments[x]",x,arguments[x]);
+              // logger.silly('arguments[x]',x,arguments[x]);
               Users_namehash[arguments[x].username]=arguments[x]._id;
             }
             callback(null,arguments);
@@ -881,8 +1008,8 @@ var seedDocuments = function(documents,callback){
         callback(err,null);
       }
       else{
-        logger.silly(results);
-        //logger.silly("getUsersIdsFromUserNameArray results",results);
+        //logger.silly(Users_namehash);
+        logger.silly('getUsersIdsFromUserNameArray results',results);
         getTaxonomyIdsFromTaxonomiesArrays(callback);
       }
     });
@@ -919,54 +1046,263 @@ var seedDocuments = function(documents,callback){
             }
           }
         }
-        //logger.silly("Assets_namehash",Assets_namehash);
+        //logger.silly('Assets_namehash',Assets_namehash);
         getUsersIdsFromUserNameArray(callback);
       }
     });
   };
 
-  /*
-  Assets
-    |
-    -> Users
-        |
-        -> Contenttypes
-        -> Categories
-        -> Tags
-            |
-            -> Posts
-                |
-                ->Collections
-  */
-  if(Assets.length>0){
-    for(var y in Assets){
-      if(Assets[y].author){
-        if(Users_namehash[Assets[y].author]){
-          Assets[y].author = Users_namehash[Assets[y].author];
-        }
-        else{
-          delete Assets[y].author;
+  var getUsergroupsIdsFromUsergroupsIdArray = function(callback){
+    //replace ids with _ids of privileges
+    for(var x in Usergroups){
+      if(Usergroups[x].roles){
+        var Usergrouproles= Usergroups[x].roles;
+        Usergroups[x].roles=[];
+        for(var y in Usergrouproles){
+          if(Userroles_namehash[Usergrouproles[y]]){
+            Usergroups[x].roles.push(Userroles_namehash[Usergrouproles[y]]);
+          }
         }
       }
     }
-    Asset.create(Assets,function(err){
-      if(err){
-        callback(err,null);
+    var newgroup={};
+    async.series({
+      createusergroups:function(callback){ 
+        Usergroup.create(Usergroups,function(err){
+          if(err){
+            callback(err,null);
+          }
+          else{
+            if(!arguments['0']){
+              delete arguments['0'];
+            }
+            for(var x in arguments){
+              newgroup = arguments[x];
+              Usergroups_namehash[newgroup.usergroupid]=newgroup._id;
+            }
+            callback(null,'created new user groups');
+          }
+        });
+      },
+      findexistingusergroups:function(callback){
+        Usergroup.find({
+            'usergroupid':{
+              $in:Usergroups_usergroupid_array
+            }
+          },'_id usergroupid name',function(err,ugdata){
+            if(err){
+              callback(err,null);
+            }
+            else{
+              for(var x in ugdata){
+                Usergroups_namehash[ugdata[x].usergroupid]=ugdata[x]._id;
+              }
+              callback(null,'got usergroups name hash updated');
+              //logger.silly('Assets_namehash',Assets_namehash);
+            }
+          });
+      }
+    },function(err,results){
+        if(err){
+          callback(err,null);
+        }
+        else{
+          for(var x in Users){
+            if(Users[x].usergroups){
+              var UsersObjgroups= Users[x].usergroups;
+              Users[x].usergroups=[];
+              for(var y in UsersObjgroups){
+                if(Usergroups_namehash[UsersObjgroups[y]]){
+                  Users[x].usergroups.push(Usergroups_namehash[UsersObjgroups[y]]);
+                }
+              }
+            }
+          }
+          logger.silly('Users',results);
+          callback(null,'got usergroups ready from name hash');
+        }
+    });
+  };
+
+  var getUserroleIdsFromUserroleIdArray = function(callback){
+    //replace ids with _ids of privileges
+    console.log('getUserroleIdsFromUserroleIdArray');
+    for(var x in Userroles){
+      if(Userroles[x].privileges){
+        var Userroleprivileges= Userroles[x].privileges;
+        Userroles[x].privileges=[];
+        for(var y in Userroleprivileges){
+          if(Userprivileges_namehash[Userroleprivileges[y]]){
+            Userroles[x].privileges.push(Userprivileges_namehash[Userroleprivileges[y]]);
+          }
+        }
+      }
+    }
+    var newrole={};
+    async.series({
+      createuserroles:function(callback){ 
+        Userrole.create(Userroles,function(err){
+          if(err){
+            callback(err,null);
+          }
+          else{
+            if(!arguments['0']){
+              delete arguments['0'];
+            }
+            for(var x in arguments){
+              newrole = arguments[x];
+              Userroles_namehash[newrole.userroleid]=newrole._id;
+            }
+            callback(null,'created new user roles');
+          }
+        });
+      },
+      findexistinguserroles:function(callback){
+        Userrole.find({
+            'userroleid':{
+              $in:Userroles_userroleid_array
+            }
+          },'_id userroleid name',function(err,urdata){
+            if(err){
+              callback(err,null);
+            }
+            else{
+              for(var x in urdata){
+                Userroles_namehash[urdata[x].name]=urdata[x]._id;
+              }
+
+              for(var xx in Users){
+                if(Users[xx].userroles){
+                  var UsersObjroles= Users[xx].userroles;
+                  Users[xx].userroles=[];
+                  for(var y in UsersObjroles){
+                    if(Userroles_namehash[UsersObjroles[y]]){
+                      Users[xx].userroles.push(Userroles_namehash[UsersObjroles[y]]);
+                    }
+                  }
+                }
+              }
+              callback(null,'got userroles name hash updated');
+              //logger.silly('Assets_namehash',Assets_namehash);
+            }
+          });
+      }
+    },function(err,results){
+        if(err){
+          callback(err,null);
+        }
+        else{
+          callback(null,results);
+        }
+    });
+  };
+
+  var getUserprivilegeIdsFromUserPrivilegeIdArray = function(callback){
+    var newprivilege={};
+    if(Userprivileges.length>0){
+      Userprivilege.create(Userprivileges,function(err){
+        if(err){
+          callback(err,null);
+        }
+        else{
+          if(!arguments['0']){
+            delete arguments['0'];
+          }
+          for(var x in arguments){
+
+            newprivilege = arguments[x];
+            Userprivileges_namehash[newprivilege.userprivilegeid]=newprivilege._id;
+            // Assets_namehash[arguments[x].name]=arguments[x]._id;
+          }
+          console.log('Userprivileges_namehash',Userprivileges_namehash);
+          callback(null,'created privilges');
+        }
+      });
+    }
+    else{
+      callback(null,'no privilges to create');
+    }
+  };
+
+  async.parallel({
+    seedFunctionForContentSeeds:function(callback){
+      /*
+      Assets
+        |
+        -> Users
+            |
+            -> Contenttypes
+            -> Categories
+            -> Tags
+                |
+                -> Items
+                    |
+                    ->Collections
+      */
+      if(Assets.length>0){
+        for(var y in Assets){
+          if(Assets[y].author){
+            if(Users_namehash[Assets[y].author]){
+              Assets[y].author = Users_namehash[Assets[y].author];
+            }
+            else{
+              delete Assets[y].author;
+            }
+          }
+        }
+        Asset.create(Assets,function(err){
+          if(err){
+            callback(err,null);
+          }
+          else{
+            if(!arguments['0']){
+              delete arguments['0'];
+            }
+            for(var x in arguments){
+              Assets_namehash[arguments[x].name]=arguments[x]._id;
+            }
+            callback(null,'created new assets');
+          }
+        });
       }
       else{
-        if(!arguments['0']){
-          delete arguments['0'];
-        }
-        for(var x in arguments){
-          Assets_namehash[arguments[x].name]=arguments[x]._id;
-        }
-        getAssetIdsFromAssetNameArray(callback);
+        callback(null,'no new assets');
       }
-    });
-  }
-  else{
-    getAssetIdsFromAssetNameArray(callback);
-  }
+    },
+    seedUserAccessControl:function(callback){
+      /*
+      privileges
+        |
+        -> roles
+            |
+            -> groups
+      */
+      async.series({
+        createprivileges:function(callback){
+          getUserprivilegeIdsFromUserPrivilegeIdArray(callback);
+        },
+        createroles:function(callback){
+          getUserroleIdsFromUserroleIdArray(callback);
+        },
+        creategroups:function(callback){
+          getUsergroupsIdsFromUsergroupsIdArray(callback);
+        }
+      },
+      function(err,results){
+        callback(err,results);
+      });
+      
+    }
+  },function(err,results){
+    if(err){
+      callback(err,null);
+    }
+    else{
+      console.log('results for creating permissions and groups',results);
+      getAssetIdsFromAssetNameArray(callback);
+    }
+  });
+
 };
 
 var index = function(req, res) {
@@ -996,22 +1332,17 @@ var index = function(req, res) {
     }});
 };
 
-// var grow = function(req, res ,next) {
-// };
-
 var controller = function(resources){
-	logger = resources.logger;
-	mongoose = resources.mongoose;
-	appSettings = resources.settings;
+  logger = resources.logger;
+  mongoose = resources.mongoose;
+  appSettings = resources.settings;
   CoreController = new ControllerHelper(resources);
   CoreUtilities = new Utilities(resources);
 
   return{
     index:index,
-    // status:status,
-		// grow:grow,
     seedDocuments:seedDocuments
-	};
+  };
 };
 
 module.exports = controller;
