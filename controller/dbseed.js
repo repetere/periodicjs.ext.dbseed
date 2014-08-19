@@ -1,10 +1,10 @@
 'use strict';
 
-var path = require('path'),
-    appController = require(path.resolve(__dirname,'../../../../../app/controller/application')),
-    fs = require('fs-extra'),
+var Utilities = require('periodicjs.core.utilities'),
+    ControllerHelper = require('periodicjs.core.controllerhelper'),
+    CoreUtilities,
+    CoreController,
     async = require('async'),
-    UserHelper,
     applicationController,
     appSettings,
     mongoose,
@@ -18,10 +18,10 @@ var seedPostData = function(options){
 
   try{
     if(!seeddocument.title){
-      errorObj = new Error("Post "+seeddocument.title+" is missing title");
+      errorObj = new Error('Post '+seeddocument.title+' is missing title');
     }
     if(!seeddocument.content){
-      errorObj = new Error("Post "+seeddocument.title+" is missing content");
+      errorObj = new Error('Post '+seeddocument.title+' is missing content');
     }
     if(!seeddocument.name){
       seeddocument.name = applicationController.makeNiceName(seeddocument.title);
@@ -39,17 +39,17 @@ var seedPostData = function(options){
 };
 
 var seedCollectionData = function(options){
-  // logger.silly("seedAssetData",options);
+  // logger.silly('seedAssetData',options);
   var seeddocument = options.seeddocument,
       seed_namehash = null,
       errorObj = null;
 
   try{
     if(!seeddocument.title){
-      errorObj = new Error("Collection "+seeddocument.title+" is missing title");
+      errorObj = new Error('Collection '+seeddocument.title+' is missing title');
     }
     if(!seeddocument.content){
-      errorObj = new Error("Collection "+seeddocument.title+" is missing content");
+      errorObj = new Error('Collection '+seeddocument.title+' is missing content');
     }
     if(!seeddocument.name){
       seeddocument.name = applicationController.makeNiceName(seeddocument.title);
@@ -78,7 +78,7 @@ var seedUserData = function(options){
 
   try{
     if(!seeddocument.email){
-      errorObj = new Error("user is missing email");
+      errorObj = new Error('user is missing email');
     }
     else{
       if(seeddocument.password){
@@ -111,29 +111,29 @@ var seedAssetData = function(options){
   try{
     if(seeddocument.locationtype ==='local'){
       if(!seeddocument.attributes){
-        errorObj = new Error("asset "+seeddocument.name+" is missing attributes");
+        errorObj = new Error('asset '+seeddocument.name+' is missing attributes');
       }
       else{
         if(!seeddocument.attributes.periodicFilename){
-          errorObj = new Error("asset "+seeddocument.name+" is missing periodicPath");
+          errorObj = new Error('asset '+seeddocument.name+' is missing periodicPath');
         }
         if(!seeddocument.attributes.periodicPath){
-          errorObj = new Error("asset "+seeddocument.name+" is missing periodicPath");
+          errorObj = new Error('asset '+seeddocument.name+' is missing periodicPath');
         }
         if(!seeddocument.attributes.periodicDirectory){
-          errorObj = new Error("asset "+seeddocument.name+" is missing periodicDirectory");
+          errorObj = new Error('asset '+seeddocument.name+' is missing periodicDirectory');
         }
       }
     }
 
     if(!seeddocument.fileurl){
-      errorObj = new Error("asset "+seeddocument.name+" is missing fileurl");
+      errorObj = new Error('asset '+seeddocument.name+' is missing fileurl');
     }
     if(!seeddocument.assettype){
-      errorObj = new Error("asset "+seeddocument.name+" is missing assettype");
+      errorObj = new Error('asset '+seeddocument.name+' is missing assettype');
     }
     if(!seeddocument.name){
-      errorObj = new Error("asset "+seeddocument.name+" is missing title");
+      errorObj = new Error('asset '+seeddocument.name+' is missing title');
     }
     else{
       seed_namehash = seeddocument.name;
@@ -157,7 +157,7 @@ var seedContenttypeData = function(options){
 
   try{
     if(!seeddocument.title){
-      errorObj = new Error("contenttype "+seeddocument.title+" is missing title");
+      errorObj = new Error('contenttype '+seeddocument.title+' is missing title');
     }
     if(!seeddocument.name){
       seeddocument.name = applicationController.makeNiceAttribute(seeddocument.title);
@@ -181,7 +181,7 @@ var seedCategoryData = function(options){
 
   try{
     if(!seeddocument.title){
-      errorObj = new Error("Category "+seeddocument.title+" is missing title");
+      errorObj = new Error('Category '+seeddocument.title+' is missing title');
     }
     if(!seeddocument.name){
       seeddocument.name = applicationController.makeNiceName(seeddocument.title);
@@ -205,7 +205,7 @@ var seedTagData = function(options){
 
   try{
     if(!seeddocument.title){
-      errorObj = new Error("Tag "+seeddocument.title+" is missing title");
+      errorObj = new Error('Tag '+seeddocument.title+' is missing title');
     }
     if(!seeddocument.name){
       seeddocument.name = applicationController.makeNiceName(seeddocument.title);
@@ -223,9 +223,7 @@ var seedTagData = function(options){
 };
 
 var seedDocuments = function(documents,callback){
-  var asyncTasks = {},
-      afterUsersCreatedAsyncTasks = {},
-      UsersObj,
+  var UsersObj,
       User = mongoose.model('User'),
       Users = [],
       Users_namehash = {},
@@ -263,10 +261,10 @@ var seedDocuments = function(documents,callback){
 
     for(var x in documents){
     if(!documents[x].datatype){
-      callback(new Error("new document is missing datatype"),null);
+      callback(new Error('new document is missing datatype'),null);
     }
     else if(!documents[x].datadocument){
-      callback(new Error("new document is data"),null);
+      callback(new Error('new document is data'),null);
     }
     else{
       if(documents[x].datatype==='asset'){
@@ -422,7 +420,7 @@ var seedDocuments = function(documents,callback){
         callback(err,null);
       }
       else{
-        //logger.silly(results);
+        logger.silly(results);
         //logger.silly(Collections_namehash);
         callback(null,{
           numberofdocuments:documents.length,
@@ -481,7 +479,7 @@ var seedDocuments = function(documents,callback){
         callback(err,null);
       }
       else{
-        //logger.silly(Posts_namehash);
+        logger.silly(results);
         getCollectionIdsFromCollectionArray(callback);
       }
     });
@@ -504,7 +502,7 @@ var seedDocuments = function(documents,callback){
           callback(err,null);
         }
         else{
-          //logger.silly("getTaxonomyIdsFromTaxonomiesArrays results",results);
+          logger.silly('getTaxonomyIdsFromTaxonomiesArrays results',results);
           async.parallel({
             Posts:function(callback){
               try{
@@ -655,7 +653,7 @@ var seedDocuments = function(documents,callback){
               callback(err,null);
             }
             else{
-              //logger.silly('setting meta for posts and collections',results);
+              logger.silly('setting meta for posts and collections',results);
               getPostIdsFromPostArray(callback);
             }
           });
@@ -883,7 +881,7 @@ var seedDocuments = function(documents,callback){
         callback(err,null);
       }
       else{
-        //logger.silly(Users_namehash);
+        logger.silly(results);
         //logger.silly("getUsersIdsFromUserNameArray results",results);
         getTaxonomyIdsFromTaxonomiesArrays(callback);
       }
@@ -971,8 +969,8 @@ var seedDocuments = function(documents,callback){
   }
 };
 
-var index = function(req, res, next) {
-    applicationController.getPluginViewTemplate({
+var index = function(req, res) {
+    CoreController.getPluginViewTemplate({
     res:res,
     req:req,
     viewname:'p-admin/dbseed/index',
@@ -980,14 +978,14 @@ var index = function(req, res, next) {
     themepath:appSettings.themepath,
     themefileext:appSettings.templatefileextension,
     callback:function(templatepath){
-        applicationController.handleDocumentQueryRender({
+        CoreController.handleDocumentQueryRender({
             res:res,
             req:req,
             renderView:templatepath,
             responseData:{
                 pagedata:{
                     title:'Seed Admin',
-                    extensions:applicationController.getAdminMenu()
+                    extensions:CoreUtilities.getAdminMenu()
                 },
                 periodic:{
                   version: appSettings.version
@@ -998,22 +996,20 @@ var index = function(req, res, next) {
     }});
 };
 
-var grow = function(req, res ,next) {
-};
+// var grow = function(req, res ,next) {
+// };
 
 var controller = function(resources){
 	logger = resources.logger;
 	mongoose = resources.mongoose;
 	appSettings = resources.settings;
-	applicationController = new appController(resources);
-  var userSchema = require(path.resolve(__dirname,'../../../../../app/model/user.js'));
-  resources.User = mongoose.model('User',userSchema);
-  UserHelper = require(path.resolve(__dirname,'../../../../../app/controller/helpers/user'))(resources);
+  CoreController = new ControllerHelper(resources);
+  CoreUtilities = new Utilities(resources);
 
   return{
     index:index,
     // status:status,
-		grow:grow,
+		// grow:grow,
     seedDocuments:seedDocuments
 	};
 };
