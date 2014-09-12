@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.dbseed",
   "description": "seeding db with initial data",
-  "version": "1.5.21",
+  "version": "1.5.22",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
@@ -25,7 +25,7 @@
     "fs-extra": "0.9.1",
     "periodicjs.core.controllerhelper": "~1.1.1",
     "periodicjs.core.extensions": "~1.5.0",
-    "periodicjs.core.utilities": "~1.1.2"
+    "periodicjs.core.utilities": "~1.1.1"
   },
   "devDependencies": {
     "browserify": "~4.2.1",
@@ -51,8 +51,13 @@
   ],
   "readme": "periodicjs.ext.dbseed\n======================\n\nimport json seeds into periodic mongodb\n",
   "readmeFilename": "README.md",
-  "_id": "periodicjs.ext.dbseed@0.0.1",
-  "_shasum": "61546ba94ea11c44c91ac8ae1a29d16ee563e8ac",
-  "_from": "https://github.com/typesettin/periodicjs.ext.dbseed/archive/master.tar.gz",
-  "_resolved": "https://github.com/typesettin/periodicjs.ext.dbseed/archive/master.tar.gz"
+  "_id": "periodicjs.ext.dbseed@1.5.2",
+  "_shasum": "48eaa0a167b8bfe15e5a7cccfb8ac00c72c1be7f",
+  "_from": "periodicjs.ext.dbseed@1.5.2",
+  "_resolved": "https://github.com/typesettin/periodicjs.ext.dbseed/archive/master.tar.gz",
+  "gitHead": "c998dc634f5104167cd1fd23d1829674264dfe39",
+  "bugs": {
+    "url": "https://github.com/typesettin/periodicjs.ext.dbseed/issues"
+  },
+  "homepage": "https://github.com/typesettin/periodicjs.ext.dbseed"
 }
