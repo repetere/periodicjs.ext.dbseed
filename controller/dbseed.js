@@ -1306,17 +1306,17 @@ var seedDocuments = function(documents,callback){
 };
 
 var index = function(req, res) {
-    CoreController.getPluginViewTemplate({
-    res:res,
-    req:req,
-    viewname:'p-admin/dbseed/index',
-    pluginname:'periodicjs.ext.seed',
-    themepath:appSettings.themepath,
-    themefileext:appSettings.templatefileextension,
-    callback:function(templatepath){
+  CoreController.getPluginViewDefaultTemplate(
+    {
+      viewname:'p-admin/dbseed/index',
+      themefileext:appSettings.templatefileextension,
+      extname:'periodicjs.ext.seed'
+    },
+    function(err,templatepath){
         CoreController.handleDocumentQueryRender({
             res:res,
             req:req,
+            err:err,
             renderView:templatepath,
             responseData:{
                 pagedata:{
@@ -1329,7 +1329,7 @@ var index = function(req, res) {
                 user:req.user
             }
         });
-    }});
+    });
 };
 
 var controller = function(resources){
