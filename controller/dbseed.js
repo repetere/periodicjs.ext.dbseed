@@ -1310,7 +1310,7 @@ var index = function(req, res) {
     {
       viewname:'p-admin/dbseed/index',
       themefileext:appSettings.templatefileextension,
-      extname:'periodicjs.ext.seed'
+      extname:'periodicjs.ext.dbseed'
     },
     function(err,templatepath){
         CoreController.handleDocumentQueryRender({
