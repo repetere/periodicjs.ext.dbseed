@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.dbseed",
   "description": "seeding db with initial data",
-  "version": "1.5.23",
+  "version": "1.5.3",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
@@ -49,15 +49,30 @@
   "keywords": [
     "periodicjs"
   ],
-  "readme": "periodicjs.ext.dbseed\n======================\n\nimport json seeds into periodic mongodb\n",
-  "readmeFilename": "README.md",
-  "_id": "periodicjs.ext.dbseed@1.5.2",
-  "_shasum": "48eaa0a167b8bfe15e5a7cccfb8ac00c72c1be7f",
-  "_from": "periodicjs.ext.dbseed@1.5.2",
-  "_resolved": "https://github.com/typesettin/periodicjs.ext.dbseed/archive/master.tar.gz",
+  "_id": "periodicjs.ext.dbseed@1.5.23",
+  "_shasum": "9a1b9bfa7bad0c959000ec4f4b85b1b0afa8884e",
+  "_from": "periodicjs.ext.dbseed@1.5.23",
+  "_resolved": "https://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-1.5.23.tgz",
   "gitHead": "c998dc634f5104167cd1fd23d1829674264dfe39",
   "bugs": {
     "url": "https://github.com/typesettin/periodicjs.ext.dbseed/issues"
   },
-  "homepage": "https://github.com/typesettin/periodicjs.ext.dbseed"
+  "homepage": "https://github.com/typesettin/periodicjs.ext.dbseed",
+  "_npmVersion": "2.0.0-beta.0",
+  "_npmUser": {
+    "name": "yawetse",
+    "email": "yaw.etse@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "yawetse",
+      "email": "yaw.etse@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "9a1b9bfa7bad0c959000ec4f4b85b1b0afa8884e",
+    "tarball": "http://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-1.5.23.tgz"
+  },
+  "directories": {},
+  "readme": "ERROR: No README data found!"
 }

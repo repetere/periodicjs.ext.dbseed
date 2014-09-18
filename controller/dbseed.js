@@ -75,9 +75,9 @@ var seedItemData = function(options){
     if(!seeddocument.title){
       errorObj = new Error('Item '+seeddocument.title+' is missing title');
     }
-    if(!seeddocument.content){
-      errorObj = new Error('Item '+seeddocument.title+' is missing content');
-    }
+    // if(!seeddocument.content){
+    //   errorObj = new Error('Item '+seeddocument.title+' is missing content');
+    // }
     if(!seeddocument.name){
       seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
     }
@@ -103,9 +103,9 @@ var seedCollectionData = function(options){
     if(!seeddocument.title){
       errorObj = new Error('Collection '+seeddocument.title+' is missing title');
     }
-    if(!seeddocument.content){
-      errorObj = new Error('Collection '+seeddocument.title+' is missing content');
-    }
+    // if(!seeddocument.content){
+    //   errorObj = new Error('Collection '+seeddocument.title+' is missing content');
+    // }
     if(!seeddocument.name){
       seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
     }
@@ -546,7 +546,7 @@ var seedDocuments = function(documents,callback){
         callback(err,null);
       }
       else{
-        logger.silly(results);
+        console.log(results);
         //logger.silly(Collections_namehash);
         callback(null,{
           numberofdocuments:documents.length,
@@ -605,7 +605,7 @@ var seedDocuments = function(documents,callback){
         callback(err,null);
       }
       else{
-        logger.silly('Items_namehash',results);
+        console.log('Items_namehash',results);
         getCollectionIdsFromCollectionArray(callback);
       }
     });
@@ -628,7 +628,7 @@ var seedDocuments = function(documents,callback){
           callback(err,null);
         }
         else{
-          logger.silly('getTaxonomyIdsFromTaxonomiesArrays results',results);
+          console.log('getTaxonomyIdsFromTaxonomiesArrays results',results);
           async.parallel({
             Items:function(callback){
               try{
@@ -779,7 +779,7 @@ var seedDocuments = function(documents,callback){
               callback(err,null);
             }
             else{
-              logger.silly('setting meta for items and collections',results);
+              console.log('setting meta for items and collections',results);
               getItemIdsFromItemArray(callback);
             }
           });
@@ -1009,7 +1009,7 @@ var seedDocuments = function(documents,callback){
       }
       else{
         //logger.silly(Users_namehash);
-        logger.silly('getUsersIdsFromUserNameArray results',results);
+        console.log('getUsersIdsFromUserNameArray results',results);
         getTaxonomyIdsFromTaxonomiesArrays(callback);
       }
     });
@@ -1118,7 +1118,7 @@ var seedDocuments = function(documents,callback){
               }
             }
           }
-          logger.silly('Users',results);
+          console.log('Users',results);
           callback(null,'got usergroups ready from name hash');
         }
     });
