@@ -22,8 +22,8 @@ var extscript = function(resources){
 			
 			fs.readJson(datafile,function(err,seedjson){
 			  if(err){
-			    logger.error(err.stack);
-			    logger.error(err);
+			    logger.error(err.stack.toString());
+			    logger.error(err.toString());
 					process.exit(0);
 			  }
 			  else{
@@ -31,7 +31,7 @@ var extscript = function(resources){
 			    seedController.seedDocuments(seedjson.data,function(err,seeds){
 			    	console.timeEnd('Seeding Data Started');
 			      if(err){
-			        logger.error('err',err);
+			    	logger.error(err.toString());
 			      }
 			      else{       	
 			        logger.info('seeds',seeds);
