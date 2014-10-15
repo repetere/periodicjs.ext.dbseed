@@ -65,7 +65,8 @@ var UsersObj,
 	Usergroup, // = mongoose.model('Usergroup')
 	Usergroups = [],
 	Usergroups_usergroupid_array = [],
-	Usergroups_namehash = {};
+	Usergroups_namehash = {},
+	seedObjectArraysDocumentErrors = [];
 
 var seedUserGroupRolePrivilegeData = function (options) {
 	var seeddocument = options.seeddocument,
@@ -1340,6 +1341,410 @@ var seedDocuments = function (documents, callback) {
 };
 
 /**
+ * returns object that has error information
+ * @param  {object} options - index,document,errormsg
+ * @return {object} error object{docuemntindex,seed,error};
+ */
+var returnSeedDocumentObjectError = function (options) {
+	var index = options.index,
+		documentobj = options.seed,
+		error = options.error;
+	return {
+		documentindex: index,
+		seed_datatype: documentobj.datatype,
+		seed_datadocument: documentobj.datadocument,
+		error: error
+	};
+};
+
+/**
+ * set seed data object for looking up and inserting usergroups
+ * @param {[type]} options index,seedobject
+ */
+var setSeedDataUsergroup = function (options) {
+	var index = options.index,
+		seedObject = options.seedobject;
+	UsergroupsObj = seedUserGroupRolePrivilegeData({
+		seeddocument: seedObject.datadocument,
+		seeddocumenttype: 'group'
+	});
+	if (UsergroupsObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: UsergroupsObj.err
+		}));
+	}
+	else {
+		Usergroups.push(UsergroupsObj.doc);
+		Usergroups_usergroupid_array.push(UsergroupsObj.docs_uacid);
+		if (UsergroupsObj.doc.roles && UsergroupsObj.doc.roles.length > 0) {
+			for (var z in UsergroupsObj.doc.roles) {
+				Userroles_userroleid_array.push(UsergroupsObj.doc.roles[z]);
+			}
+		}
+	}
+};
+
+/**
+ * set seed data object for looking up and inserting userroless
+ * @param {[type]} options index,seedobject
+ */
+var setSeedDataUserole = function (options) {
+	var index = options.index,
+		seedObject = options.seedobject;
+
+	UserrolesObj = seedUserGroupRolePrivilegeData({
+		seeddocument: seedObject.datadocument,
+		seeddocumenttype: 'role'
+	});
+	if (UserrolesObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: UserrolesObj.err
+		}));
+	}
+	else {
+		Userroles.push(UserrolesObj.doc);
+		Userroles_userroleid_array.push(UserrolesObj.docs_uacid);
+		if (UserrolesObj.doc.privileges && UserrolesObj.doc.privileges.length > 0) {
+			for (var za in UserrolesObj.doc.privileges) {
+				Userprivileges_userprivilegeid_array.push(UserrolesObj.doc.privileges[za]);
+			}
+		}
+	}
+};
+
+/**
+ * set seed data object for looking up and inserting userprivileges
+ * @param {[type]} options index,seedobject
+ */
+var setSeedDataUserprivilege = function (options) {
+	var index = options.index,
+		seedObject = options.seedobject;
+
+	UserprivilegesObj = seedUserGroupRolePrivilegeData({
+		seeddocument: seedObject.datadocument,
+		seeddocumenttype: 'privilege'
+	});
+	if (UserprivilegesObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: UserprivilegesObj.err
+		}));
+	}
+	else {
+		Userprivileges.push(UserprivilegesObj.doc);
+		Userprivileges_userprivilegeid_array.push(UserprivilegesObj.docs_uacid);
+	}
+};
+
+/**
+ * set seed data object for looking up and inserting assets
+ * @param {[type]} options index,seedobject
+ */
+var setSeedDataAsset = function (options) {
+	var index = options.index,
+		seedObject = options.seedobject;
+
+	AssetsObj = seedAssetData({
+		seeddocument: seedObject.datadocument
+	});
+	if (AssetsObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: AssetsObj.err
+		}));
+	}
+	else {
+		Assets.push(AssetsObj.doc);
+		Assets_namehash_array.push(AssetsObj.docs_namehash);
+	}
+};
+
+/**
+ * set seed data object for looking up and inserting users
+ * @param {[type]} options index,seedobject
+ */
+var setSeedDataUser = function (options) {
+	var index = options.index,
+		seedObject = options.seedobject;
+
+	UsersObj = seedUserData({
+		seeddocument: seedObject.datadocument
+	});
+	if (UsersObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: UsersObj.err
+		}));
+	}
+	else {
+		Users.push(UsersObj.doc);
+		Users_namehash_array.push(UsersObj.docs_namehash);
+		if (UsersObj.doc.userroles && UsersObj.doc.userroles.length > 0) {
+			for (var q in UsersObj.doc.userroles) {
+				Userroles_userroleid_array.push(UsersObj.doc.userroles[q]);
+			}
+		}
+	}
+};
+
+/**
+ * set seed data object for looking up and inserting contentypes
+ * @param {[type]} options index,seedobject
+ */
+var setSeedDataContentype = function (options) {
+	var index = options.index,
+		seedObject = options.seedobject;
+
+	ContenttypesObj = seedContenttypeData({
+		seeddocument: seedObject.datadocument
+	});
+	if (ContenttypesObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: ContenttypesObj.err
+		}));
+	}
+	else {
+		Contenttypes.push(ContenttypesObj.doc);
+		Contenttypes_namehash_array.push(ContenttypesObj.docs_namehash);
+		if (ContenttypesObj.doc.author) {
+			Users_namehash_array.push(ContenttypesObj.doc.author);
+		}
+	}
+};
+
+/**
+ * set seed data object for looking up and inserting categories
+ * @param {[type]} options index,seedobject
+ */
+var setSeedDataCategory = function (options) {
+	var index = options.index,
+		seedObject = options.seedobject;
+
+	CategoriesObj = seedCategoryData({
+		seeddocument: seedObject.datadocument
+	});
+	if (CategoriesObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: CategoriesObj.err
+		}));
+	}
+	else {
+		Categories.push(CategoriesObj.doc);
+		Categories_namehash_array.push(CategoriesObj.docs_namehash);
+		if (CategoriesObj.doc.author) {
+			Users_namehash_array.push(CategoriesObj.doc.author);
+		}
+	}
+};
+
+/**
+ * set seed data object for looking up and inserting tags
+ * @param {[type]} options index,seedobject
+ */
+var setSeedDataTag = function (options) {
+	var index = options.index,
+		seedObject = options.seedobject;
+
+	TagsObj = seedTagData({
+		seeddocument: seedObject.datadocument
+	});
+	if (TagsObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: TagsObj.err
+		}));
+	}
+	else {
+		Tags.push(TagsObj.doc);
+		Tags_namehash_array.push(TagsObj.docs_namehash);
+		if (TagsObj.doc.author) {
+			Users_namehash_array.push(TagsObj.doc.author);
+		}
+	}
+};
+
+/**
+ * set seed data object for looking up and inserting items
+ * @param {[type]} options index,seedobject
+ */
+var setSeedDataItem = function (options) {
+	var index = options.index,
+		seedObject = options.seedobject;
+
+	ItemsObj = seedItemData({
+		seeddocument: seedObject.datadocument
+	});
+	if (ItemsObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: ItemsObj.err
+		}));
+	}
+	else {
+		Items.push(ItemsObj.doc);
+		Items_namehash_array.push(ItemsObj.docs_namehash);
+	}
+};
+
+/**
+ * set seed data object for looking up and inserting collections
+ * @param {[type]} options index,seedobject
+ */
+var setSeedDataCollection = function (options) {
+	var index = options.index,
+		seedObject = options.seedobject;
+
+	ItemsObj = seedItemData({
+		seeddocument: seedObject.datadocument
+	});
+	if (ItemsObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: ItemsObj.err
+		}));
+	}
+	else {
+		Items.push(ItemsObj.doc);
+		Items_namehash_array.push(ItemsObj.docs_namehash);
+	}
+
+
+	CollectionsObj = seedCollectionData({
+		seeddocument: seedObject.datadocument
+	});
+	if (CollectionsObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: CollectionsObj.err
+		}));
+	}
+	else {
+		Collections.push(CollectionsObj.doc);
+		Collections_namehash_array.push(CollectionsObj.docs_namehash);
+	}
+};
+
+/**
+ * iterates through seed documents and set up arrays for inserting into database and creates name hashes to look up the values later
+ * @param  {object} options - documents,jsondata
+ * @param  {object} callback
+ * @return {Function} async callback (err,results);
+ */
+var setSeedObjectArrays = function (options, callback) {
+	var documents = options.documents;
+
+	for (var x in documents) {
+		if (!documents[x].datatype) {
+			seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+				index: x,
+				seed: documents[x],
+				error: new Error('new document is missing datatype')
+			}));
+		}
+		else if (!documents[x].datadocument) {
+			seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+				index: x,
+				seed: documents[x],
+				error: new Error('new document is data')
+			}));
+		}
+		else {
+			switch (documents[x].datatype) {
+			case 'usergroup':
+				setSeedDataUsergroup({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
+			case 'userrole':
+				setSeedDataUserole({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
+			case 'userprivilege':
+				setSeedDataUserprivilege({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
+			case 'asset':
+				setSeedDataAsset({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
+			case 'user':
+				setSeedDataUser({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
+			case 'contenttype':
+				setSeedDataContentype({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
+			case 'category':
+				setSeedDataCategory({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
+			case 'tag':
+				setSeedDataTag({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
+			case 'item':
+				setSeedDataItem({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
+			case 'collection':
+				setSeedDataCollection({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
+			default:
+				seedObjectArraysDocumentErrors.push(
+					returnSeedDocumentObjectError({
+						index: x,
+						seed: documents[x],
+						error: new Error('Invalid seed datatype')
+					})
+				);
+				break;
+			}
+		}
+	}
+	callback(null, {
+		seedDocumentErrors: seedObjectArraysDocumentErrors,
+		validDocuments: (documents.length - seedObjectArraysDocumentErrors.length),
+		invalidDocuments: (seedObjectArraysDocumentErrors.length)
+	});
+};
+
+/**
  * checks for valid seed json document
  * @param  {object} options - jsondata
  * @return {object} errors;
@@ -1361,18 +1766,33 @@ var isValidSeedJSONSync = function (options) {
  * @param  {object} callback
  * @return {Function} async callback (err,results);
  */
-var importSeed = function (options, callback) {
-	var insetsetting = options.insertsetting,
+var importSeed = function (options, importSeedCallback) {
+	var insertsetting = options.insertsetting,
 		seedjsondata = options.jsondata,
+		statusResults = {},
 		seedDataValidationError = isValidSeedJSONSync({
 			jsondata: seedjsondata
-		});
+		}),
+		startSeed = function (startSeedCallback) {
+			var dataForSetSeedObjectArrays = {
+				documents: seedjsondata.data
+			};
+			startSeedCallback(null, dataForSetSeedObjectArrays);
+		};
 
+	console.log('insertsetting', insertsetting);
 	if (seedDataValidationError) {
-		callback(seedDataValidationError, null);
+		importSeedCallback(seedDataValidationError, null);
 	}
 	else {
-		callback(null, 'seed looks good');
+		statusResults.numberofdocuments = seedjsondata.data.length;
+		async.waterfall([
+				startSeed,
+				setSeedObjectArrays
+			],
+			function (err, importseedresult) {
+				importSeedCallback(null, importseedresult);
+			});
 	}
 
 };

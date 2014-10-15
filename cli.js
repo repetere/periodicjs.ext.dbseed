@@ -2,6 +2,7 @@
 
 var path = require('path'),
 	fs = require('fs-extra'),
+	util = require('util'),
 	seedController,
 	// Collection,
 	mongoose,
@@ -73,7 +74,7 @@ var extscript = function (resources) {
 							logger.error(err.toString());
 						}
 						else {
-							logger.info('Import status', status);
+							console.info('Import status', util.inspect(status));
 						}
 						process.exit(0);
 					});
@@ -81,7 +82,7 @@ var extscript = function (resources) {
 			});
 		}
 		else if (argv.task === 'seed') {
-			var datafile = path.resolve(argv.file);
+			datafile = path.resolve(argv.file);
 
 			fs.readJson(datafile, function (err, seedjson) {
 				if (err) {
