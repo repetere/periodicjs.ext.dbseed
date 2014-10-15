@@ -9,18 +9,18 @@
  * @exports periodicjs.ext.dbseed
  * @param  {object} periodic variable injection of resources from current periodic instance
  */
-module.exports = function(periodic){
+module.exports = function (periodic) {
 	// express,app,logger,config,db,mongoose
 	var seedRouter = periodic.express.Router(),
-			seedController = require('./controller/dbseed')(periodic);
+		seedController = require('./controller/dbseed')(periodic);
 
-	for(var x in periodic.settings.extconf.extensions){
-		if(periodic.settings.extconf.extensions[x].name === 'periodicjs.ext.admin'){
+	for (var x in periodic.settings.extconf.extensions) {
+		if (periodic.settings.extconf.extensions[x].name === 'periodicjs.ext.admin') {
 			seedRouter.get('/', seedController.index);
 			// seedRouter.get('/status', seedController.status);
 		}
 	}
 	// seedRouter.post('/grow', seedController.grow);
 
-	periodic.app.use('/p-admin/dbseed',seedRouter);
+	periodic.app.use('/p-admin/dbseed', seedRouter);
 };

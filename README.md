@@ -13,10 +13,22 @@ $ npm install periodicjs.ext.dbseed
 
 ## Usage
 
-### import from cli
+### import database (upsert/update) with custom file seed from cli
 
 ```
-$ node index.js --cli --extension dbseed --task /path/to/sampledata.json
+$ node index.js --cli --extension dbseed --task import --file /path/to/file.json
+```
+
+### seed database with custom file seed from cli
+
+```
+$ node index.js --cli --extension dbseed --task seed --file /path/to/file.json
+```
+
+### import sample from cli
+
+```
+$ node index.js --cli --extension dbseed --task sampledata
 ```
 
 ##Development

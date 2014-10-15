@@ -6,6 +6,7 @@ var path = require('path'),
 	// Collection,
 	mongoose,
 	logger,
+	datafile,
 	appSettings;
 
 /**
@@ -20,47 +21,97 @@ var path = require('path'),
  * @param  {object} resources variable injection from current periodic instance with references to the active logger and mongo session
  * @return {object}           dbseed cli
  */
-var extscript = function(resources){
+var extscript = function (resources) {
 	logger = resources.logger;
 	mongoose = resources.mongoose;
 	appSettings = resources.settings;
 	seedController = require('./controller/dbseed')(resources);
-	// Post = mongoose.model('Post');
-	// Collection = mongoose.model('Collection');
-	// node index.js --cli --extension seed --task sampledata
-	var cli = function(argv){
-		if(argv.task==='sampledata'){
-			var datafile = path.resolve(__dirname,'./sampledata/sampledata.json');
-			
-			fs.readJson(datafile,function(err,seedjson){
-			  if(err){
-			    logger.error(err.stack.toString());
-			    logger.error(err.toString());
+	// node index.js --cli --extension dbseed --task sampledata
+	var cli = function (argv) {
+		if (argv.task === 'sampledata') {
+			datafile = path.resolve(__dirname, './sampledata/sampledata.json');
+
+			fs.readJson(datafile, function (err, seedjson) {
+				if (err) {
+					logger.error(err.stack.toString());
+					logger.error(err.toString());
 					process.exit(0);
-			  }
-			  else{
-			    console.time('Seeding Data Started');
-			    seedController.seedDocuments(seedjson.data,function(err,seeds){
-			    	console.timeEnd('Seeding Data Started');
-			      if(err){
-			    	logger.error(err.toString());
-			      }
-			      else{       	
-			        logger.info('seeds',seeds);
-			      }
+				}
+				else {
+					console.time('Seeding Data Started');
+					seedController.seedDocuments(seedjson.data, function (err, seeds) {
+						console.timeEnd('Seeding Data Started');
+						if (err) {
+							logger.error(err.toString());
+						}
+						else {
+							logger.info('seeds', seeds);
+						}
 						process.exit(0);
-			    });
-			  }
+					});
+				}
 			});
 		}
-		else{	
-			logger.silly('sample extension',argv);
+		else if (argv.task === 'import') {
+			datafile = path.resolve(argv.file);
+
+			fs.readJson(datafile, function (err, seedjson) {
+				if (err) {
+					logger.error(err.stack.toString());
+					logger.error(err.toString());
+					process.exit(0);
+				}
+				else {
+					console.time('Importing Seed Data');
+					seedController.importSeed({
+						jsondata: seedjson,
+						insertsetting: 'upsert'
+					}, function (err, status) {
+						console.timeEnd('Importing Seed Data');
+						if (err) {
+							console.log(err);
+							logger.error(err.toString());
+						}
+						else {
+							logger.info('Import status', status);
+						}
+						process.exit(0);
+					});
+				}
+			});
+		}
+		else if (argv.task === 'seed') {
+			var datafile = path.resolve(argv.file);
+
+			fs.readJson(datafile, function (err, seedjson) {
+				if (err) {
+					logger.error(err.stack.toString());
+					logger.error(err.toString());
+					process.exit(0);
+				}
+				else {
+					console.time('Seeding Data Started');
+					seedController.seedDocuments(seedjson.data, function (err, seeds) {
+						console.timeEnd('Seeding Data Started');
+						if (err) {
+							logger.error(err.toString());
+						}
+						else {
+							logger.info('seeds', seeds);
+						}
+						process.exit(0);
+					});
+				}
+			});
+		}
+		else {
+			logger.silly('invalid dbseed task', argv);
 			process.exit(0);
 		}
 	};
 
-	return{
-		cli:cli
+	return {
+		cli: cli
 	};
 };
 
