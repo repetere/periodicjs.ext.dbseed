@@ -40,7 +40,10 @@ var extscript = function (resources) {
 				}
 				else {
 					console.time('Seeding Data Started');
-					seedController.seedDocuments(seedjson.data, function (err, seeds) {
+					seedController.importSeed({
+						jsondata: seedjson,
+						insertsetting: 'upsert'
+					},function (err, seeds) {
 						console.timeEnd('Seeding Data Started');
 						if (err) {
 							logger.error(err.toString());
@@ -53,7 +56,7 @@ var extscript = function (resources) {
 				}
 			});
 		}
-		else if (argv.task === 'import') {
+		else if (argv.task === 'import' || argv.task === 'seed') {
 			datafile = path.resolve(argv.file);
 
 			fs.readJson(datafile, function (err, seedjson) {
@@ -75,30 +78,6 @@ var extscript = function (resources) {
 						}
 						else {
 							console.info('Import status', util.inspect(status));
-						}
-						process.exit(0);
-					});
-				}
-			});
-		}
-		else if (argv.task === 'seed') {
-			datafile = path.resolve(argv.file);
-
-			fs.readJson(datafile, function (err, seedjson) {
-				if (err) {
-					logger.error(err.stack.toString());
-					logger.error(err.toString());
-					process.exit(0);
-				}
-				else {
-					console.time('Seeding Data Started');
-					seedController.seedDocuments(seedjson.data, function (err, seeds) {
-						console.timeEnd('Seeding Data Started');
-						if (err) {
-							logger.error(err.toString());
-						}
-						else {
-							logger.info('seeds', seeds);
 						}
 						process.exit(0);
 					});

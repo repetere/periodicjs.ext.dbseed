@@ -74,6 +74,11 @@ var UsersObj,
 	validDocuments,
 	invalidDocuments;
 
+/**
+ * create seed {Userprivilege|Userrole|Usergroup} Object
+ * @param  {object} options seeddocument
+ * @return {object}         {doc-{Userprivilege|Userrole|Usergroup},docs_namehash - {Userprivilege|Userrole|Usergroup}.name,err}
+ */
 var seedUserGroupRolePrivilegeData = function (options) {
 	var seeddocument = options.seeddocument,
 		seeddocumenttype = options.seeddocumenttype,
@@ -129,7 +134,11 @@ var seedUserGroupRolePrivilegeData = function (options) {
 		err: errorObj
 	};
 };
-
+/**
+ * create seed Item Object
+ * @param  {object} options seeddocument
+ * @return {object}         {doc-Item,docs_namehash - Item.name,err}
+ */
 var seedItemData = function (options) {
 	// logger.silly('seedAssetData',options);
 	var seeddocument = options.seeddocument,
@@ -158,6 +167,11 @@ var seedItemData = function (options) {
 	};
 };
 
+/**
+ * create seed Collection Object
+ * @param  {object} options seeddocument
+ * @return {object}         {doc-Collection,docs_namehash - Collection.name,err}
+ */
 var seedCollectionData = function (options) {
 	// logger.silly('seedAssetData',options);
 	var seeddocument = options.seeddocument,
@@ -186,6 +200,11 @@ var seedCollectionData = function (options) {
 	};
 };
 
+/**
+ * create seed User Object
+ * @param  {object} options seeddocument
+ * @return {object}         {doc-User,docs_namehash - User.name,err}
+ */
 var seedUserData = function (options) {
 	// logger.silly('seedAssetData',options);
 	var seeddocument = options.seeddocument,
@@ -223,6 +242,11 @@ var seedUserData = function (options) {
 	};
 };
 
+/**
+ * create seed Asset Object
+ * @param  {object} options seeddocument
+ * @return {object}         {doc-Asset,docs_namehash - Asset.name,err}
+ */
 var seedAssetData = function (options) {
 	// logger.silly('seedAssetData',options);
 	var seeddocument = options.seeddocument,
@@ -270,6 +294,11 @@ var seedAssetData = function (options) {
 	};
 };
 
+/**
+ * create seed Contenttype Object
+ * @param  {object} options seeddocument
+ * @return {object}         {doc-Contenttype,docs_namehash - Contenttype.name,err}
+ */
 var seedContenttypeData = function (options) {
 	var seeddocument = options.seeddocument,
 		seed_namehash = null,
@@ -294,6 +323,11 @@ var seedContenttypeData = function (options) {
 	};
 };
 
+/**
+ * create seed Category Object
+ * @param  {object} options seeddocument
+ * @return {object}         {doc-category,docs_namehash - category.name,err}
+ */
 var seedCategoryData = function (options) {
 	var seeddocument = options.seeddocument,
 		seed_namehash = null,
@@ -318,6 +352,11 @@ var seedCategoryData = function (options) {
 	};
 };
 
+/**
+ * create seed Tag Object
+ * @param  {object} options seeddocument
+ * @return {object}         {doc-tag,docs_namehash - tag.name,err}
+ */
 var seedTagData = function (options) {
 	var seeddocument = options.seeddocument,
 		seed_namehash = null,
@@ -366,7 +405,7 @@ var returnSeedDocumentObjectError = function (options) {
 
 /**
  * set seed data object for looking up and inserting usergroups
- * @param {[type]} options index,seedobject
+ * @param {type} options index,seedobject
  */
 var setSeedDataUsergroup = function (options) {
 	var index = options.index,
@@ -395,7 +434,7 @@ var setSeedDataUsergroup = function (options) {
 
 /**
  * set seed data object for looking up and inserting userroless
- * @param {[type]} options index,seedobject
+ * @param {type} options index,seedobject
  */
 var setSeedDataUserole = function (options) {
 	var index = options.index,
@@ -425,7 +464,7 @@ var setSeedDataUserole = function (options) {
 
 /**
  * set seed data object for looking up and inserting userprivileges
- * @param {[type]} options index,seedobject
+ * @param {type} options index,seedobject
  */
 var setSeedDataUserprivilege = function (options) {
 	var index = options.index,
@@ -450,7 +489,7 @@ var setSeedDataUserprivilege = function (options) {
 
 /**
  * set seed data object for looking up and inserting assets
- * @param {[type]} options index,seedobject
+ * @param {type} options index,seedobject
  */
 var setSeedDataAsset = function (options) {
 	var index = options.index,
@@ -474,7 +513,7 @@ var setSeedDataAsset = function (options) {
 
 /**
  * set seed data object for looking up and inserting users
- * @param {[type]} options index,seedobject
+ * @param {type} options index,seedobject
  */
 var setSeedDataUser = function (options) {
 	var index = options.index,
@@ -503,7 +542,7 @@ var setSeedDataUser = function (options) {
 
 /**
  * set seed data object for looking up and inserting contentypes
- * @param {[type]} options index,seedobject
+ * @param {type} options index,seedobject
  */
 var setSeedDataContentype = function (options) {
 	var index = options.index,
@@ -530,7 +569,7 @@ var setSeedDataContentype = function (options) {
 
 /**
  * set seed data object for looking up and inserting categories
- * @param {[type]} options index,seedobject
+ * @param {type} options index,seedobject
  */
 var setSeedDataCategory = function (options) {
 	var index = options.index,
@@ -557,7 +596,7 @@ var setSeedDataCategory = function (options) {
 
 /**
  * set seed data object for looking up and inserting tags
- * @param {[type]} options index,seedobject
+ * @param {type} options index,seedobject
  */
 var setSeedDataTag = function (options) {
 	var index = options.index,
@@ -584,7 +623,7 @@ var setSeedDataTag = function (options) {
 
 /**
  * set seed data object for looking up and inserting items
- * @param {[type]} options index,seedobject
+ * @param {type} options index,seedobject
  */
 var setSeedDataItem = function (options) {
 	var index = options.index,
@@ -608,7 +647,7 @@ var setSeedDataItem = function (options) {
 
 /**
  * set seed data object for looking up and inserting collections
- * @param {[type]} options index,seedobject
+ * @param {type} options index,seedobject
  */
 var setSeedDataCollection = function (options) {
 	var index = options.index,
@@ -750,7 +789,12 @@ var setSeedObjectArrays = function (options, callback) {
 	callback(null, 'processed seed file');
 };
 
-var getCollectionIdsFromCollectionArray = function (callback) {
+/**
+ * insert collections into database, update Collections_namehash array, also update author in collection
+ * @param  {Function} getCollectionIdsFromCollectionArrayAsyncCallBack
+ * @return {Function} async callback getCollectionIdsFromCollectionArrayAsyncCallBack(err,results);
+ */
+var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollectionArrayAsyncCallBack) {
 	var CollectionItems = [];
 	for (var y in Collections) {
 		if (Collections[y].items) {
@@ -768,18 +812,21 @@ var getCollectionIdsFromCollectionArray = function (callback) {
 		function (callback) {
 			Collection.create(Collections, function (err) {
 				if (err) {
-					callback(err, null);
+					// callback(err, null);
+					insertContentIntoDatabaseErrors.push({
+						createCollectionsError: err.toString()
+					});
 				}
-				else {
-					if (!arguments['0']) {
-						delete arguments['0'];
-					}
-					for (var x in arguments) {
-						// logger.silly('arguments[x]',x,arguments[x]);
+				if (!arguments['0']) {
+					delete arguments['0'];
+				}
+				for (var x in arguments) {
+					// logger.silly('arguments[x]',x,arguments[x]);
+					if(arguments[x]._id){
 						Collections_namehash[arguments[x].name] = arguments[x]._id;
 					}
-					callback(null, arguments);
 				}
+				callback(null, 'updated Collections_namehash');
 			});
 		},
 		function (NewCollections, callback) {
@@ -791,7 +838,10 @@ var getCollectionIdsFromCollectionArray = function (callback) {
 				'_id name',
 				function (err, collectiondata) {
 					if (err) {
-						callback(err, null, null);
+						// callback(err, null, null);
+						insertContentIntoDatabaseErrors.push({
+							searchforCollectionsError: err.toString()
+						});
 					}
 					else {
 						for (var x in collectiondata) {
@@ -804,44 +854,37 @@ var getCollectionIdsFromCollectionArray = function (callback) {
 					}
 				});
 		}
-	], function (err, results) {
-		if (err) {
-			callback(err, null);
-		}
-		else {
-			console.log(results);
-			//logger.silly(Collections_namehash);
-			callback(null, {
-				// numberofdocuments: documents.length,
-				collections: Collections_namehash,
-				items: Items_namehash,
-				tags: Tags_namehash,
-				categories: Categories_namehash,
-				contenttypes: Contenttypes_namehash,
-				users: Users_namehash,
-				assets: Assets_namehash
-			});
-		}
+	], function (err/*, results*/) {
+			getCollectionIdsFromCollectionArrayAsyncCallBack(err, Collections_namehash);
 	});
 };
 
-var getItemIdsFromItemArray = function (callback) {
+/**
+ * insert items into database, update Items_namehash array, also update author in item
+ * @param  {Function} getItemIdsFromItemArrayAsyncCallBack
+ * @return {Function} async callback getItemIdsFromItemArrayAsyncCallBack(err,results);
+ */
+var getItemIdsFromItemArray = function (getItemIdsFromItemArrayAsyncCallBack) {
 	async.waterfall([
 		function (callback) {
 			Item.create(Items, function (err) {
 				if (err) {
-					callback(err, null);
+					// callback(err, null);
+					insertContentIntoDatabaseErrors.push({
+						createItemsError: err.toString()
+					});
 				}
-				else {
-					if (!arguments['0']) {
-						delete arguments['0'];
-					}
-					for (var x in arguments) {
-						// logger.silly('arguments[x]',x,arguments[x]);
+
+				if (!arguments['0']) {
+					delete arguments['0'];
+				}
+				for (var x in arguments) {
+					// logger.silly('arguments[x]',x,arguments[x]);
+					if(arguments[x]._id){
 						Items_namehash[arguments[x].name] = arguments[x]._id;
 					}
-					callback(null, arguments);
 				}
+				callback(null, 'updated Items_namehash');
 			});
 		},
 		function (NewItems, callback) {
@@ -853,7 +896,10 @@ var getItemIdsFromItemArray = function (callback) {
 				'_id name',
 				function (err, itemdata) {
 					if (err) {
-						callback(err, null, null);
+						// callback(err, null, null);
+						insertContentIntoDatabaseErrors.push({
+							searchforItemsError: err.toString()
+						});
 					}
 					else {
 						for (var x in itemdata) {
@@ -866,202 +912,17 @@ var getItemIdsFromItemArray = function (callback) {
 					}
 				});
 		}
-	], function (err, results) {
-		if (err) {
-			callback(err, null);
-		}
-		else {
-			console.log('Items_namehash', results);
-			getCollectionIdsFromCollectionArray(callback);
-		}
+	], function (err/*, results*/) {
+		getItemIdsFromItemArrayAsyncCallBack(err, Items_namehash);
 	});
 };
 
-var getTaxonomyIdsFromTaxonomiesArrays = function (callback) {
-	async.parallel({
-			contenttypes: function (callback) {
-				getContenttypeIdsFromContenttypeArray(callback);
-			},
-			categories: function (callback) {
-				getCategoryIdsFromCategoryArray(callback);
-			},
-			tags: function (callback) {
-				getTagIdsFromTagArray(callback);
-			}
-		},
-		function (err, results) {
-			if (err) {
-				callback(err, null);
-			}
-			else {
-				console.log('getTaxonomyIdsFromTaxonomiesArrays results', results);
-				async.parallel({
-					Items: function (callback) {
-						try {
-							var ItemTags = [],
-								ItemContenttypes = [],
-								ItemCategories = [],
-								ItemAssets = [],
-								ItemAuthors = [];
-							for (var y in Items) {
-								if (Items[y].tags) {
-									ItemTags = Items[y].tags;
-									Items[y].tags = [];
-									for (var z in ItemTags) {
-										if (Tags_namehash[ItemTags[z]]) {
-											Items[y].tags.push(Tags_namehash[ItemTags[z]]);
-										}
-									}
-								}
-								if (Items[y].categories) {
-									ItemCategories = Items[y].categories;
-									Items[y].categories = [];
-									for (var zc in ItemCategories) {
-										if (Categories_namehash[ItemCategories[zc]]) {
-											Items[y].categories.push(Categories_namehash[ItemCategories[zc]]);
-										}
-									}
-								}
-								if (Items[y].contenttypes) {
-									ItemContenttypes = Items[y].contenttypes;
-									Items[y].contenttypes = [];
-									for (var zct in ItemContenttypes) {
-										if (Contenttypes_namehash[ItemContenttypes[zct]]) {
-											Items[y].contenttypes.push(Contenttypes_namehash[ItemContenttypes[zct]]);
-										}
-									}
-								}
-								if (Items[y].assets) {
-									ItemAssets = Items[y].assets;
-									Items[y].assets = [];
-									for (var za in ItemAssets) {
-										if (Assets_namehash[ItemAssets[za]]) {
-											Items[y].assets.push(Assets_namehash[ItemAssets[za]]);
-										}
-									}
-								}
-								if (Items[y].primaryasset) {
-									if (Assets_namehash[Items[y].primaryasset]) {
-										Items[y].primaryasset = Assets_namehash[Items[y].primaryasset];
-									}
-									else {
-										delete Items[y].primaryasset;
-									}
-								}
-								if (Items[y].authors) {
-									ItemAuthors = Items[y].authors;
-									Items[y].authors = [];
-									for (var zu in ItemAuthors) {
-										if (Users_namehash[ItemAuthors[zu]]) {
-											Items[y].authors.push(Users_namehash[ItemAuthors[zu]]);
-										}
-									}
-								}
-								if (Items[y].primaryauthor) {
-									if (Users_namehash[Items[y].primaryauthor]) {
-										Items[y].primaryauthor = Users_namehash[Items[y].primaryauthor];
-									}
-									else {
-										delete Items[y].primaryauthor;
-									}
-								}
-							}
-							callback(null, 'set post meta');
-						}
-						catch (e) {
-							callback(e, null);
-						}
-					},
-					Collections: function (callback) {
-						try {
-							var CollectionTags = [],
-								CollectionContenttypes = [],
-								CollectionCategories = [],
-								CollectionAssets = [],
-								CollectionAuthors = [];
-							for (var y in Collections) {
-								if (Collections[y].tags) {
-									CollectionTags = Collections[y].tags;
-									Collections[y].tags = [];
-									for (var z in CollectionTags) {
-										if (Tags_namehash[CollectionTags[z]]) {
-											Collections[y].tags.push(Tags_namehash[CollectionTags[z]]);
-										}
-									}
-								}
-								if (Collections[y].categories) {
-									CollectionCategories = Collections[y].categories;
-									Collections[y].categories = [];
-									for (var zc in CollectionCategories) {
-										if (Categories_namehash[CollectionCategories[zc]]) {
-											Collections[y].categories.push(Categories_namehash[CollectionCategories[zc]]);
-										}
-									}
-								}
-								if (Collections[y].contenttypes) {
-									CollectionContenttypes = Collections[y].contenttypes;
-									Collections[y].contenttypes = [];
-									for (var zct in CollectionContenttypes) {
-										if (Contenttypes_namehash[CollectionContenttypes[zct]]) {
-											Collections[y].contenttypes.push(Contenttypes_namehash[CollectionContenttypes[zct]]);
-										}
-									}
-								}
-								if (Collections[y].assets) {
-									CollectionAssets = Collections[y].assets;
-									Collections[y].assets = [];
-									for (var za in CollectionAssets) {
-										if (Assets_namehash[CollectionAssets[za]]) {
-											Collections[y].assets.push(Assets_namehash[CollectionAssets[za]]);
-										}
-									}
-								}
-								if (Collections[y].primaryasset) {
-									if (Assets_namehash[Collections[y].primaryasset]) {
-										Collections[y].primaryasset = Assets_namehash[Collections[y].primaryasset];
-									}
-									else {
-										delete Collections[y].primaryasset;
-									}
-								}
-								if (Collections[y].authors) {
-									CollectionAuthors = Collections[y].authors;
-									Collections[y].authors = [];
-									for (var zu in CollectionAuthors) {
-										if (Users_namehash[CollectionAuthors[zu]]) {
-											Collections[y].authors.push(Users_namehash[CollectionAuthors[zu]]);
-										}
-									}
-								}
-								if (Collections[y].primaryauthor) {
-									if (Users_namehash[Collections[y].primaryauthor]) {
-										Collections[y].primaryauthor = Users_namehash[Collections[y].primaryauthor];
-									}
-									else {
-										delete Collections[y].primaryauthor;
-									}
-								}
-							}
-							callback(null, 'set collection meta');
-						}
-						catch (e) {
-							callback(e, null);
-						}
-					}
-				}, function (err, results) {
-					if (err) {
-						callback(err, null);
-					}
-					else {
-						console.log('setting meta for items and collections', results);
-						getItemIdsFromItemArray(callback);
-					}
-				});
-			}
-		});
-};
-
-var getTagIdsFromTagArray = function (callback) {
+/**
+ * insert tags into database, update Tags_namehash array, also update author in tag
+ * @param  {Function} getTagIdsFromTagArrayAsyncCallBack
+ * @return {Function} async callback getTagIdsFromTagArrayAsyncCallBack(err,results);
+ */
+var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 	async.waterfall([
 		function (callback) {
 			for (var y in Tags) {
@@ -1076,18 +937,22 @@ var getTagIdsFromTagArray = function (callback) {
 			}
 			Tag.create(Tags, function (err) {
 				if (err) {
-					callback(err, null);
+					// callback(err, null);
+					insertContentIntoDatabaseErrors.push({
+						createTagsError: err.toString()
+					});
 				}
-				else {
-					if (!arguments['0']) {
-						delete arguments['0'];
-					}
-					for (var x in arguments) {
-						// logger.silly('arguments[x]',x,arguments[x]);
+
+				if (!arguments['0']) {
+					delete arguments['0'];
+				}
+				for (var x in arguments) {
+					// logger.silly('arguments[x]',x,arguments[x]);
+					if(arguments[x]._id){
 						Tags_namehash[arguments[x].name] = arguments[x]._id;
 					}
-					callback(null, arguments);
 				}
+				callback(null, 'updated Tags_namehash');
 			});
 		},
 		function (NewTags, callback) {
@@ -1099,7 +964,10 @@ var getTagIdsFromTagArray = function (callback) {
 				'_id name',
 				function (err, tagdata) {
 					if (err) {
-						callback(err, null, null);
+						// callback(err, null, null);
+						insertContentIntoDatabaseErrors.push({
+							searchforTagsError: err.toString()
+						});
 					}
 					else {
 						for (var x in tagdata) {
@@ -1112,18 +980,17 @@ var getTagIdsFromTagArray = function (callback) {
 					}
 				});
 		}
-	], function (err, results) {
-		if (err) {
-			callback(err, null);
-		}
-		else {
-			//logger.silly(Tags_namehash);
-			callback(null, results);
-		}
+	], function (err/*, results*/) {
+		getTagIdsFromTagArrayAsyncCallBack(err, Tags_namehash);
 	});
 };
 
-var getCategoryIdsFromCategoryArray = function (callback) {
+/**
+ * insert categories into database, update Categories_namehash array, also update author in category
+ * @param  {Function} getCategoryIdsFromCategoryArrayAsyncCallBack
+ * @return {Function} async callback getCategoryIdsFromCategoryArrayAsyncCallBack(err,results);
+ */
+var getCategoryIdsFromCategoryArray = function (getCategoryIdsFromCategoryArrayAsyncCallBack) {
 	async.waterfall([
 		function (callback) {
 			for (var y in Categories) {
@@ -1132,24 +999,30 @@ var getCategoryIdsFromCategoryArray = function (callback) {
 						Categories[y].author = Users_namehash[Categories[y].author];
 					}
 					else {
+						insertContentIntoDatabaseErrors.push({
+							invalidCategoryAuthor: Contenttypes[y].author
+						});
 						delete Categories[y].author;
 					}
 				}
 			}
 			Category.create(Categories, function (err) {
 				if (err) {
-					callback(err, null);
+					// callback(err, null);
+					insertContentIntoDatabaseErrors.push({
+						createCategoryError: err.toString()
+					});
 				}
-				else {
-					if (!arguments['0']) {
-						delete arguments['0'];
-					}
-					for (var x in arguments) {
-						// logger.silly('arguments[x]',x,arguments[x]);
+				if (!arguments['0']) {
+					delete arguments['0'];
+				}
+				for (var x in arguments) {
+					// logger.silly('arguments[x]',x,arguments[x]);
+					if(arguments[x]._id){
 						Categories_namehash[arguments[x].name] = arguments[x]._id;
 					}
-					callback(null, arguments);
 				}
+				callback(null, 'updated Categories_namehash');
 			});
 		},
 		function (NewCategories, callback) {
@@ -1161,7 +1034,10 @@ var getCategoryIdsFromCategoryArray = function (callback) {
 				'_id name',
 				function (err, categorydata) {
 					if (err) {
-						callback(err, null, null);
+						// callback(err, null, null);
+						insertContentIntoDatabaseErrors.push({
+							searchforCategoriesError: err.toString()
+						});
 					}
 					else {
 						for (var x in categorydata) {
@@ -1174,18 +1050,17 @@ var getCategoryIdsFromCategoryArray = function (callback) {
 					}
 				});
 		}
-	], function (err, results) {
-		if (err) {
-			callback(err, null);
-		}
-		else {
-			//logger.silly(Categories_namehash);
-			callback(null, results);
-		}
+	], function (err/*, results*/) {
+		getCategoryIdsFromCategoryArrayAsyncCallBack(err,Categories_namehash);
 	});
 };
 
-var getContenttypeIdsFromContenttypeArray = function (callback) {
+/**
+ * insert contentypes into database, update Contenttypes_namehash array, also update author in contenttype
+ * @param  {Function} getContenttypeIdsFromContenttypeArrayAsyncCallBack
+ * @return {Function} async callback getContenttypeIdsFromContenttypeArrayAsyncCallBack(err,results);
+ */
+var getContenttypeIdsFromContenttypeArray = function (getContenttypeIdsFromContenttypeArrayAsyncCallBack) {
 	async.waterfall([
 		function (callback) {
 			for (var y in Contenttypes) {
@@ -1194,24 +1069,30 @@ var getContenttypeIdsFromContenttypeArray = function (callback) {
 						Contenttypes[y].author = Users_namehash[Contenttypes[y].author];
 					}
 					else {
+						insertContentIntoDatabaseErrors.push({
+							invalidContenttypeAuthor: Contenttypes[y].author
+						});
 						delete Contenttypes[y].author;
 					}
 				}
 			}
 			Contenttype.create(Contenttypes, function (err) {
 				if (err) {
-					callback(err, null);
+					// callback(err, null);
+					insertContentIntoDatabaseErrors.push({
+						createContentypesError: err.toString()
+					});
 				}
-				else {
-					if (!arguments['0']) {
-						delete arguments['0'];
-					}
-					for (var x in arguments) {
-						// //logger.silly('arguments[x]',x,arguments[x]);
-						Contenttypes_namehash[arguments[x].name] = arguments[x]._id;
-					}
-					callback(null, arguments);
+				if (!arguments['0']) {
+					delete arguments['0'];
 				}
+				for (var x in arguments) {
+					// //logger.silly('arguments[x]',x,arguments[x]);
+					if(arguments[x]._id){
+						Contenttypes_namehash[arguments[x].name] = arguments[x]._id;						
+					}
+				}
+				callback(null, 'updated Contenttypes_namehash');
 			});
 		},
 		function (NewContenttypes, callback) {
@@ -1223,51 +1104,253 @@ var getContenttypeIdsFromContenttypeArray = function (callback) {
 				'_id name',
 				function (err, contenttypedata) {
 					if (err) {
-						callback(err, null, null);
-					}
-					else {
-						for (var x in contenttypedata) {
-							Contenttypes_namehash[contenttypedata[x].name] = contenttypedata[x]._id;
-						}
-						callback(null, {
-							newcontenttypes: NewContenttypes,
-							queriedcontenttypes: contenttypedata
+						// callback(err, null, null);
+						insertContentIntoDatabaseErrors.push({
+							searchforContentypesError: err.toString()
 						});
 					}
+					for (var x in contenttypedata) {
+						Contenttypes_namehash[contenttypedata[x].name] = contenttypedata[x]._id;
+					}
+					callback(null, {
+						newcontenttypes: NewContenttypes,
+						queriedcontenttypes: contenttypedata
+					});
 				});
 		}
-	], function (err, results) {
-		if (err) {
-			callback(err, null);
-		}
-		else {
-			//logger.silly(Contenttypes_namehash);
-			callback(null, results);
-		}
+	], function (err /*, results*/) {
+		getContenttypeIdsFromContenttypeArrayAsyncCallBack(err, Contenttypes_namehash);
 	});
 };
 
-var getUsersIdsFromUserNameArray = function (callback) {
+/**
+ * insert tags,categories,contentypes into database, update hash arrays
+ * @param  {Function} getTaxonomyIdsFromTaxonomiesArraysAsyncCallBack
+ * @return {Function} async callback getTaxonomyIdsFromTaxonomiesArraysAsyncCallBack(err,results);
+ */
+var getTaxonomyIdsFromTaxonomiesArrays = function (getTaxonomyIdsFromTaxonomiesArraysAsyncCallBack) {
+	async.parallel({
+		contenttypes: getContenttypeIdsFromContenttypeArray,
+		categories: getCategoryIdsFromCategoryArray,
+		tags: getTagIdsFromTagArray
+	},
+	function (err , createdtagscatstype ) {
+		if (err) {
+			insertContentIntoDatabaseErrors.push({
+				createTaxonomiesError: err.toString()
+			});
+		}
+		// console.log('getTaxonomyIdsFromTaxonomiesArrays results', results);
+		async.parallel({
+			Items: function (callback) {
+				try {
+					var ItemTags = [],
+						ItemContenttypes = [],
+						ItemCategories = [],
+						ItemAssets = [],
+						ItemAuthors = [];
+					for (var y in Items) {
+						if (Items[y].tags) {
+							ItemTags = Items[y].tags;
+							Items[y].tags = [];
+							for (var z in ItemTags) {
+								if (Tags_namehash[ItemTags[z]]) {
+									Items[y].tags.push(Tags_namehash[ItemTags[z]]);
+								}
+							}
+						}
+						if (Items[y].categories) {
+							ItemCategories = Items[y].categories;
+							Items[y].categories = [];
+							for (var zc in ItemCategories) {
+								if (Categories_namehash[ItemCategories[zc]]) {
+									Items[y].categories.push(Categories_namehash[ItemCategories[zc]]);
+								}
+							}
+						}
+						if (Items[y].contenttypes) {
+							ItemContenttypes = Items[y].contenttypes;
+							Items[y].contenttypes = [];
+							for (var zct in ItemContenttypes) {
+								if (Contenttypes_namehash[ItemContenttypes[zct]]) {
+									Items[y].contenttypes.push(Contenttypes_namehash[ItemContenttypes[zct]]);
+								}
+							}
+						}
+						if (Items[y].assets) {
+							ItemAssets = Items[y].assets;
+							Items[y].assets = [];
+							for (var za in ItemAssets) {
+								if (Assets_namehash[ItemAssets[za]]) {
+									Items[y].assets.push(Assets_namehash[ItemAssets[za]]);
+								}
+							}
+						}
+						if (Items[y].primaryasset) {
+							if (Assets_namehash[Items[y].primaryasset]) {
+								Items[y].primaryasset = Assets_namehash[Items[y].primaryasset];
+							}
+							else {
+								delete Items[y].primaryasset;
+							}
+						}
+						if (Items[y].authors) {
+							ItemAuthors = Items[y].authors;
+							Items[y].authors = [];
+							for (var zu in ItemAuthors) {
+								if (Users_namehash[ItemAuthors[zu]]) {
+									Items[y].authors.push(Users_namehash[ItemAuthors[zu]]);
+								}
+							}
+						}
+						if (Items[y].primaryauthor) {
+							if (Users_namehash[Items[y].primaryauthor]) {
+								Items[y].primaryauthor = Users_namehash[Items[y].primaryauthor];
+							}
+							else {
+								delete Items[y].primaryauthor;
+							}
+						}
+					}
+					callback(null, 'set post meta');
+				}
+				catch (e) {
+					callback(e, null);
+				}
+			},
+			Collections: function (callback) {
+				try {
+					var CollectionTags = [],
+						CollectionContenttypes = [],
+						CollectionCategories = [],
+						CollectionAssets = [],
+						CollectionAuthors = [];
+					for (var y in Collections) {
+						if (Collections[y].tags) {
+							CollectionTags = Collections[y].tags;
+							Collections[y].tags = [];
+							for (var z in CollectionTags) {
+								if (Tags_namehash[CollectionTags[z]]) {
+									Collections[y].tags.push(Tags_namehash[CollectionTags[z]]);
+								}
+							}
+						}
+						if (Collections[y].categories) {
+							CollectionCategories = Collections[y].categories;
+							Collections[y].categories = [];
+							for (var zc in CollectionCategories) {
+								if (Categories_namehash[CollectionCategories[zc]]) {
+									Collections[y].categories.push(Categories_namehash[CollectionCategories[zc]]);
+								}
+							}
+						}
+						if (Collections[y].contenttypes) {
+							CollectionContenttypes = Collections[y].contenttypes;
+							Collections[y].contenttypes = [];
+							for (var zct in CollectionContenttypes) {
+								if (Contenttypes_namehash[CollectionContenttypes[zct]]) {
+									Collections[y].contenttypes.push(Contenttypes_namehash[CollectionContenttypes[zct]]);
+								}
+							}
+						}
+						if (Collections[y].assets) {
+							CollectionAssets = Collections[y].assets;
+							Collections[y].assets = [];
+							for (var za in CollectionAssets) {
+								if (Assets_namehash[CollectionAssets[za]]) {
+									Collections[y].assets.push(Assets_namehash[CollectionAssets[za]]);
+								}
+							}
+						}
+						if (Collections[y].primaryasset) {
+							if (Assets_namehash[Collections[y].primaryasset]) {
+								Collections[y].primaryasset = Assets_namehash[Collections[y].primaryasset];
+							}
+							else {
+								delete Collections[y].primaryasset;
+							}
+						}
+						if (Collections[y].authors) {
+							CollectionAuthors = Collections[y].authors;
+							Collections[y].authors = [];
+							for (var zu in CollectionAuthors) {
+								if (Users_namehash[CollectionAuthors[zu]]) {
+									Collections[y].authors.push(Users_namehash[CollectionAuthors[zu]]);
+								}
+							}
+						}
+						if (Collections[y].primaryauthor) {
+							if (Users_namehash[Collections[y].primaryauthor]) {
+								Collections[y].primaryauthor = Users_namehash[Collections[y].primaryauthor];
+							}
+							else {
+								delete Collections[y].primaryauthor;
+							}
+						}
+					}
+					callback(null, 'set collection meta');
+				}
+				catch (e) {
+					callback(e, null);
+				}
+			}
+		}, function (err, updatedItemsCollections) {
+
+				// getItemIdsFromItemArray(callback);
+			getTaxonomyIdsFromTaxonomiesArraysAsyncCallBack(
+				err,{
+					updatedItemsCollections:updatedItemsCollections,
+					contenttypes:createdtagscatstype.contenttypes,
+					categories:createdtagscatstype.categories,
+					tags:createdtagscatstype.tags
+			});
+		});
+
+	});
+};
+
+/**
+ * insert users into the database, then put users with hashes in Users_namehash, put the authors in the
+ * @param  {Function} getUsersIdsFromUserNameArrayAsyncCallBack
+ * @return {Function} async callback getUsersIdsFromUserNameArrayAsyncCallBack(err,results);
+ */
+var getUsersIdsFromUserNameArray = function (getUsersIdsFromUserNameArrayAsyncCallBack) {
 	// console.log('Users in getting ids',Users);
 	async.waterfall([
 		function (callback) {
+			/**
+			 * create new users from Users array
+			 * @param  {error} err mongoose error
+			 * @return {function}     callback(err,users)
+			 */
 			User.create(Users, function (err) {
 				if (err) {
-					callback(err, null);
+					insertContentIntoDatabaseErrors.push({
+						createUsersError: err.toString()
+					});
 				}
-				else {
-					if (!arguments['0']) {
-						delete arguments['0'];
-					}
-					for (var x in arguments) {
-						// logger.silly('arguments[x]',x,arguments[x]);
-						Users_namehash[arguments[x].username] = arguments[x]._id;
-					}
-					callback(null, arguments);
+				if (!arguments['0']) {
+					delete arguments['0'];
 				}
+				for (var x in arguments) {
+					/**
+					 * add new users to name nash array
+					 */
+					if(arguments[x]._id){
+						Users_namehash[arguments[x].username] = arguments[x]._id;	
+					}
+				}
+				callback(null, arguments);
 			});
 		},
 		function (NewUsers, callback) {
+			/**
+			 * update username hash array
+			 * @param  {object} query
+			 * @param  {string} selection
+			 * @param {function} callback
+			 * @return {Function} callback(err,results)
+			 */
 			User.find({
 					'username': {
 						$in: Users_namehash_array
@@ -1276,65 +1359,71 @@ var getUsersIdsFromUserNameArray = function (callback) {
 				'_id username',
 				function (err, userdata) {
 					if (err) {
-						callback(err, null, null);
-					}
-					else {
-						for (var x in userdata) {
-							Users_namehash[userdata[x].username] = userdata[x]._id;
-						}
-						callback(null, {
-							newusers: NewUsers,
-							queriedusers: userdata
+						insertContentIntoDatabaseErrors.push({
+							usernameHashSearchError: err.toString()
 						});
 					}
+					for (var x in userdata) {
+						Users_namehash[userdata[x].username] = userdata[x]._id;
+					}
+					callback(null, {
+						newusers: NewUsers,
+						queriedusers: userdata
+					});
 				});
 		}
-	], function (err, results) {
-		if (err) {
-			callback(err, null);
-		}
-		else {
-			//logger.silly(Users_namehash);
-			console.log('getUsersIdsFromUserNameArray results', results);
-			getTaxonomyIdsFromTaxonomiesArrays(callback);
-		}
+	], function (err /*, results*/) {
+		// getTaxonomyIdsFromTaxonomiesArrays(callback);
+		getUsersIdsFromUserNameArrayAsyncCallBack(err,Users_namehash);
 	});
 };
 
-var getAssetIdsFromAssetNameArray = function (callback) {
+/**
+ * insert asset items into the database, if there are assets, put the authors in the
+ * @param  {Function} asyncCallBack
+ * @return {Function} async callback asyncCallBack(err,results);
+ */
+var getAssetIdsFromAssetNameArray = function (asyncCallBack) {
 	Asset.find({
 		'name': {
 			$in: Assets_namehash_array
 		}
 	}, '_id name', function (err, assetdata) {
 		if (err) {
-			callback(err, null);
+			insertContentIntoDatabaseErrors.push({
+				getAssetFromNameArrayError: err.toString()
+			});
 		}
-		else {
-			for (var x in assetdata) {
-				Assets_namehash[assetdata[x].name] = assetdata[x]._id;
-			}
-			for (var y in Users) {
-				if (Users[y].userasset) {
-					if (Assets_namehash[Users[y].userasset]) {
-						Users[y].userasset = Assets_namehash[Users[y].userasset];
-					}
-					else {
-						delete Users[y].userasset;
-					}
+		for (var x in assetdata) {
+			Assets_namehash[assetdata[x].name] = assetdata[x]._id;
+		}
+		for (var y in Users) {
+			if (Users[y].userasset) {
+				if (Assets_namehash[Users[y].userasset]) {
+					Users[y].userasset = Assets_namehash[Users[y].userasset];
 				}
-				if (Users[y].coverimage) {
-					if (Assets_namehash[Users[y].coverimage]) {
-						Users[y].coverimage = Assets_namehash[Users[y].coverimage];
-					}
-					else {
-						delete Users[y].coverimage;
-					}
+				else {
+					insertContentIntoDatabaseErrors.push({
+						invalidAssetInUserasset: Users[y].userasset
+					});
+					delete Users[y].userasset;
 				}
 			}
-			//logger.silly('Assets_namehash',Assets_namehash);
-			getUsersIdsFromUserNameArray(callback);
+			if (Users[y].coverimage) {
+				if (Assets_namehash[Users[y].coverimage]) {
+					Users[y].coverimage = Assets_namehash[Users[y].coverimage];
+				}
+				else {
+					insertContentIntoDatabaseErrors.push({
+						invalidAssetInUsercoverimage: Users[y].coverimage
+					});
+					delete Users[y].coverimage;
+				}
+			}
 		}
+		//logger.silly('Assets_namehash',Assets_namehash);
+		// getUsersIdsFromUserNameArray(callback);
+		asyncCallBack(null,Assets_namehash);
 	});
 };
 
@@ -1351,11 +1440,20 @@ var getAssetIdsFromAssetNameArray = function (callback) {
  *              -> Items
  *                  |
  *                  ->Collections
- * @param  {Function} asyncCallBack
- * @return {Function} async callback asyncCallBack(err,results);
+ * @param  {Function} insertContentIntoDatabaseAsyncCallBack
+ * @return {Function} async callback insertContentIntoDatabaseAsyncCallBack(err,results);
  */
-var insertContentIntoDatabase = function (cb) {
-	getAssetIdsFromAssetNameArray(cb);
+var insertContentIntoDatabase = function (insertContentIntoDatabaseAsyncCallBack) {
+	async.series({
+				createassets:getAssetIdsFromAssetNameArray,
+				createusers:getUsersIdsFromUserNameArray,
+				createtaxonomies:getTaxonomyIdsFromTaxonomiesArrays,
+				createitems:getItemIdsFromItemArray,
+				createcollections:getCollectionIdsFromCollectionArray
+			},function(err,results){
+			insertContentIntoDatabaseAsyncCallBack(err,results);
+	});
+	// getAssetIdsFromAssetNameArray(cb);
 	// cb(null, 'insetintocontent');
 };
 
@@ -1398,7 +1496,6 @@ var insertAssetsIntoDatabase = function (asyncCallBack) {
 		asyncCallBack(null, 'no new assets');
 	}
 };
-
 
 /**
  * create user groups and add roles from Userroles_namehash
@@ -1458,7 +1555,7 @@ var getUsergroupsIdsFromUsergroupsIdArray = function (getUsergroupsIdsFromUsergr
 				//logger.silly('Assets_namehash',Assets_namehash);
 			});
 		}
-	}, function (err, results) {
+	}, function (err /*, results */ ) {
 
 		/**
 		 * add usergroup names from Users in seedfile to Usergroups_namehash {name:_id}
@@ -1475,7 +1572,7 @@ var getUsergroupsIdsFromUsergroupsIdArray = function (getUsergroupsIdsFromUsergr
 			}
 		}
 		// console.log('Users', results);
-		getUsergroupsIdsFromUsergroupsIdArrayasyncCallBack(err, 'created user groups');
+		getUsergroupsIdsFromUsergroupsIdArrayasyncCallBack(err, Usergroups_namehash);
 	});
 };
 
@@ -1553,8 +1650,8 @@ var getUserroleIdsFromUserroleIdArray = function (asyncCallBack) {
 				callback(null, 'got userroles name hash updated');
 			});
 		}
-	}, function (err, results) {
-		asyncCallBack(err, 'created user roles');
+	}, function (err /*, results */) {
+		asyncCallBack(err, Userroles_namehash);
 	});
 };
 
@@ -1582,7 +1679,7 @@ var getUserprivilegeIdsFromUserPrivilegeIdArray = function (asyncCallBack) {
 				// Assets_namehash[arguments[x].name]=arguments[x]._id;
 			}
 			// console.log('Userprivileges_namehash', Userprivileges_namehash);
-			asyncCallBack(null, 'created user privilges');
+			asyncCallBack(null, Userprivileges_namehash);
 		});
 	}
 	else {
