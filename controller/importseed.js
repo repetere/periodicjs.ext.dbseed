@@ -654,20 +654,20 @@ var setSeedDataCollection = function (options) {
 	var index = options.index,
 		seedObject = options.seedobject;
 
-	ItemsObj = seedItemData({
-		seeddocument: seedObject.datadocument
-	});
-	if (ItemsObj.err) {
-		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
-			index: index,
-			seed: seedObject,
-			error: ItemsObj.err
-		}));
-	}
-	else {
-		Items.push(ItemsObj.doc);
-		Items_namehash_array.push(ItemsObj.docs_namehash);
-	}
+	// ItemsObj = seedItemData({
+	// 	seeddocument: seedObject.datadocument
+	// });
+	// if (ItemsObj.err) {
+	// 	seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+	// 		index: index,
+	// 		seed: seedObject,
+	// 		error: ItemsObj.err
+	// 	}));
+	// }
+	// else {
+	// 	Items.push(ItemsObj.doc);
+	// 	Items_namehash_array.push(ItemsObj.docs_namehash);
+	// }
 
 
 	CollectionsObj = seedCollectionData({
@@ -796,6 +796,7 @@ var setSeedObjectArrays = function (options, callback) {
  * @return {Function} async callback getCollectionIdsFromCollectionArrayAsyncCallBack(err,results);
  */
 var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollectionArrayAsyncCallBack) {
+	console.log('Collections',Collections);
 	var CollectionItems = [];
 	for (var y in Collections) {
 		if (Collections[y].items) {
@@ -1232,6 +1233,7 @@ var getTaxonomyIdsFromTaxonomiesArrays = function (getTaxonomyIdsFromTaxonomiesA
 						CollectionAssets = [],
 						CollectionAuthors = [];
 					for (var y in Collections) {
+						console.log('Collections[y].tags',Collections[y].tags);
 						if (Collections[y].tags) {
 							CollectionTags = Collections[y].tags;
 							Collections[y].tags = [];
