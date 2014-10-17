@@ -36,7 +36,7 @@ var exportSeedFilePath,
  * @return {Function} async callback writeSeedToDiskCallback(err,results);
  */
 var writeSeedToDisk = function(writeSeedToDiskCallback){
-	console.log('writeSeedToDisk exportSeedFilePath',exportSeedFilePath);
+	logger.warn('writeSeedToDisk exportSeedFilePath',exportSeedFilePath);
 	exportSeedData.data = exportSeedDataArray;
 	fs.outputJson(exportSeedFilePath, exportSeedData, function (err) {
 		if(err){
@@ -54,8 +54,6 @@ var writeSeedToDisk = function(writeSeedToDiskCallback){
  * @return {object}     collection.items[{item.name,order}]
  */
 var getCollectionItemsFromDoc = function(collectionitems){
-	console.log('item_id_name_hash',item_id_name_hash);
-
 	var collectionitemsArray = [];
 	if(collectionitems.length>0){
 		for(var gcifd=0 ; gcifd<collectionitems.length; gcifd++){
@@ -68,6 +66,22 @@ var getCollectionItemsFromDoc = function(collectionitems){
 		}	
 	}
 	return collectionitemsArray;
+};
+
+/**
+ * return seed format for a userprivileges object
+ * @return {object}     userprivileges[name]
+ */
+var getUserprivilegesFromDoc = function(userprivileges){
+	var userprivilegesArray = [];
+	if(userprivileges.length>0){
+		for(var guprid=0 ; guprid<userprivileges.length; guprid++){
+			if(userprivileges[guprid].userprivilegeid){
+				userprivilegesArray.push(userprivileges[guprid].userprivilegeid);
+			}
+		}	
+	}
+	return userprivilegesArray;
 };
 
 /**
@@ -236,7 +250,6 @@ var getCollectionSeed = function(doc){
 	if(doc.categories && doc.categories.length>0){
 		returnseed.datadocument.categories = getCategoriesFromDoc(doc.categories);
 	}
-	console.log('doc.contenttypes',doc.contenttypes);
 	if(doc.contenttypes && doc.contenttypes.length>0){
 		returnseed.datadocument.contenttypes = getContenttypesFromDoc(doc.contenttypes);
 	}
@@ -416,6 +429,92 @@ var getTagSeed = function(doc){
 	}
 	if(doc.contenttypeattributes){
 		returnseed.datadocument.contenttypeattributes = doc.contenttypeattributes;
+	}
+	if(doc.extensionattributes){
+		returnseed.datadocument.extensionattributes = doc.extensionattributes;
+	}
+			
+	return returnseed;
+};
+
+
+/**
+ * return seed format for an usergroup object
+ * @param  {object} doc mongo document
+ * @return {object}     seed object
+ */
+var getUsergroupSeed = function(doc){
+	var returnseed = {
+		datatype:'usergroup',
+		datadocument:{}
+	};
+	returnseed.datadocument.usergroupid = doc.usergroupid;
+	returnseed.datadocument.title = doc.title;
+	returnseed.datadocument.name = doc.name;
+	if(doc.author){
+		returnseed.datadocument.author = getPrimaryAuthorFromDoc(doc.author);
+	}
+	if(doc.description){
+		returnseed.datadocument.description = doc.description;
+	}
+	if(doc.extensionattributes){
+		returnseed.datadocument.extensionattributes = doc.extensionattributes;
+	}
+	if(doc.roles && doc.roles.length>0){
+		returnseed.datadocument.roles = getUserrolesFromDoc(doc.roles);
+	}
+			
+	return returnseed;
+};
+
+/**
+ * return seed format for an userrole object
+ * @param  {object} doc mongo document
+ * @return {object}     seed object
+ */
+var getUserroleSeed = function(doc){
+	var returnseed = {
+		datatype:'userrole',
+		datadocument:{}
+	};
+	returnseed.datadocument.userroleid = doc.userroleid;
+	returnseed.datadocument.title = doc.title;
+	returnseed.datadocument.name = doc.name;
+	if(doc.author){
+		returnseed.datadocument.author = getPrimaryAuthorFromDoc(doc.author);
+	}
+	if(doc.description){
+		returnseed.datadocument.description = doc.description;
+	}
+	if(doc.extensionattributes){
+		returnseed.datadocument.extensionattributes = doc.extensionattributes;
+	}
+	if(doc.privileges && doc.privileges.length>0){
+		returnseed.datadocument.privileges = getUserprivilegesFromDoc(doc.privileges);
+	}
+			
+	return returnseed;
+};
+
+
+/**
+ * return seed format for an userprivilege object
+ * @param  {object} doc mongo document
+ * @return {object}     seed object
+ */
+var getUserprivilegeSeed = function(doc){
+	var returnseed = {
+		datatype:'userprivilege',
+		datadocument:{}
+	};
+	returnseed.datadocument.userprivilegeid = doc.userprivilegeid;
+	returnseed.datadocument.title = doc.title;
+	returnseed.datadocument.name = doc.name;
+	if(doc.author){
+		returnseed.datadocument.author = getPrimaryAuthorFromDoc(doc.author);
+	}
+	if(doc.description){
+		returnseed.datadocument.description = doc.description;
 	}
 	if(doc.extensionattributes){
 		returnseed.datadocument.extensionattributes = doc.extensionattributes;
@@ -681,6 +780,78 @@ var createTagSeeds = function(createTagSeedsAsyncCallback){
 };
 
 /**
+ * create usergroup seeds from the database, if there are assets
+ * @param  {object} err
+ * @param  {Function} createUsergroupSeedsAsyncCallback
+ * @return {Function} async callback createUsergroupSeedsAsyncCallback(err,results);
+ */
+var createUsergroupSeeds = function(createUsergroupSeedsAsyncCallback){
+	Usergroup.find({}).select('-_id -__v').populate('author roles').exec(function(err,Usergroups){
+		if(err){
+			exportSeedErrorsArray.push({
+				error:err,
+				errortype:'createUsergroupSeeds'
+			});
+		}
+		if(Usergroups){
+			for(var i in Usergroups){
+				var usergroupdoc = Usergroups[i];
+				exportSeedDataArray.push(getUsergroupSeed(usergroupdoc));
+			}
+		}
+		createUsergroupSeedsAsyncCallback(null,'created usergroup seeds');
+	});
+};
+
+/**
+ * create userrole seeds from the database, if there are assets
+ * @param  {object} err
+ * @param  {Function} createUserroleSeedsAsyncCallback
+ * @return {Function} async callback createUserroleSeedsAsyncCallback(err,results);
+ */
+var createUserroleSeeds = function(createUserroleSeedsAsyncCallback){
+	Userrole.find({}).select('-_id -__v').populate('author privileges').exec(function(err,Userroles){
+		if(err){
+			exportSeedErrorsArray.push({
+				error:err,
+				errortype:'createUserroleSeeds'
+			});
+		}
+		if(Userroles){
+			for(var i in Userroles){
+				var userroledoc = Userroles[i];
+				exportSeedDataArray.push(getUserroleSeed(userroledoc));
+			}
+		}
+		createUserroleSeedsAsyncCallback(null,'created userrole seeds');
+	});
+};
+
+/**
+ * create userprivilege seeds from the database, if there are assets
+ * @param  {object} err
+ * @param  {Function} createUserprivilegeSeedsAsyncCallback
+ * @return {Function} async callback createUserprivilegeSeedsAsyncCallback(err,results);
+ */
+var createUserprivilegeSeeds = function(createUserprivilegeSeedsAsyncCallback){
+	Userprivilege.find({}).select('-_id -__v').populate('author').exec(function(err,Userprivileges){
+		if(err){
+			exportSeedErrorsArray.push({
+				error:err,
+				errortype:'createUserprivilegeSeeds'
+			});
+		}
+		if(Userprivileges){
+			for(var i in Userprivileges){
+				var userprivilegedoc = Userprivileges[i];
+				exportSeedDataArray.push(getUserprivilegeSeed(userprivilegedoc));
+			}
+		}
+		createUserprivilegeSeedsAsyncCallback(null,'created userprivilege seeds');
+	});
+};
+
+/**
  * create contenttype seeds from the database, if there are assets
  * @param  {object} err
  * @param  {Function} createContenttypeSeedsAsyncCallback
@@ -764,6 +935,9 @@ var createSeeds = function(seedoptions,createSeedsCallback){
 	};
 
 	async.series([
+		createUserprivilegeSeeds,
+		createUserroleSeeds,
+		createUsergroupSeeds,
 		createAssetSeeds,
 		createUserSeeds,
 		createContenttypeSeeds,
@@ -807,6 +981,7 @@ var exportSeed = function(options,exportSeedCallback){
 		exportSeedCallback(err, {
 			exportseedresult:exportseedresult,
 			exportSeedFilePath: exportSeedFilePath,
+			numOfSeeds:exportSeedDataArray.length,
 			exportSeedErrorsArray:exportSeedErrorsArray
 		});
 	});
