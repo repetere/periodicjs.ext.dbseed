@@ -24,6 +24,8 @@ var exportSeedFilePath,
 	exportSeedErrorsArray = [],
 	exportSeedData={},	
 	exportSeedDataArray=[],
+	item_id_name_hash={},
+	collection_id_name_hash={},
 	d = new Date(),
 	defaultExportDir = 'content/backups/seeds/',
 	defaultExportFileName = 'dbseed'+'-' + d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate()+'-' + d.getTime()+'.json';
@@ -56,7 +58,7 @@ var getUserrolesFromDoc = function(userroles){
 	if(userroles.length>0){
 		for(var gurfd=0 ; gurfd<userroles.length; gurfd++){
 			if(userroles[gurfd].userroleid){
-				userrolesArray.push(userroles[gurfd].userroleid);
+				userrolesArray.push(userroles[gurfd].userroleidgu);
 			}
 		}	
 	}
@@ -160,6 +162,82 @@ var getPrimaryAssetFromDoc = function(primaryasset){
 };
 
 /**
+ * return seed format for an collection object
+ * @param  {object} doc mongo document
+ * @return {object}     seed object
+ */
+var getCollectionSeed = function(doc){
+	var returnseed = {
+		datatype:'collection',
+		datadocument:{}
+	};
+	returnseed.datadocument.random = doc.random;
+	returnseed.datadocument.title = doc.title;
+	returnseed.datadocument.name = doc.name;
+	returnseed.datadocument.content = doc.content;
+	returnseed.datadocument.collectionitemonly = doc.collectionitemonly;
+	returnseed.datadocument.updatedat = doc.updatedat;
+	returnseed.datadocument.createdat = doc.createdat;
+	returnseed.datadocument.publishat = doc.publishat;
+	returnseed.datadocument.entitytype = doc.entitytype;
+	returnseed.datadocument.status = doc.status;
+
+	if(typeof doc.contenttypeattributes!=='undefined'){
+		returnseed.datadocument.contenttypeattributes = doc.contenttypeattributes;
+	}
+	if(typeof doc.itemauthorname!=='undefined'){
+		returnseed.datadocument.itemauthorname = doc.itemauthorname;
+	}
+	if(doc.primaryauthor){
+		returnseed.datadocument.primaryauthor = getPrimaryAuthorFromDoc(doc.primaryauthor);
+	}
+	if(doc.primaryasset){
+		returnseed.datadocument.primaryasset = getPrimaryAssetFromDoc(doc.primaryasset);
+	}
+	if(doc.contenttypeattributes){
+		returnseed.datadocument.contenttypeattributes = doc.contenttypeattributes;
+	}
+	if(doc.link){
+		returnseed.datadocument.link = doc.link;
+	}
+	if(doc.dek){
+		returnseed.datadocument.dek = doc.dek;
+	}
+	if(doc.changes){
+		returnseed.datadocument.changes = doc.changes;
+	}
+	if(doc.tags){
+		returnseed.datadocument.tags = getTagsFromDoc(doc.tags);
+	}
+	if(doc.categories){
+		returnseed.datadocument.categories = getCategoriesFromDoc(doc.categories);
+	}
+	if(doc.contenttypes){
+		returnseed.datadocument.contenttypes = getContenttypesFromDoc(doc.contenttypes);
+	}
+	if(doc.authors){
+		returnseed.datadocument.authors = getAuthorsFromDoc(doc.authors);
+	}
+	if(doc.assets){
+		returnseed.datadocument.assets = getAssetsFromDoc(doc.assets);
+	}
+	if(doc.visibility){
+		returnseed.datadocument.visibility = doc.visibility;
+	}
+	if(doc.visibilitypassword){
+		returnseed.datadocument.visibilitypassword = doc.visibilitypassword;
+	}
+	if(doc.extensionattributes){
+		returnseed.datadocument.extensionattributes = doc.extensionattributes;
+	}
+	if(doc.originalitem){
+		returnseed.datadocument.originalitem = doc.originalitem;
+	}
+			
+	return returnseed;
+};
+
+/**
  * return seed format for an asset object
  * @param  {object} doc mongo document
  * @return {object}     seed object
@@ -233,6 +311,109 @@ var getItemSeed = function(doc){
 };
 
 /**
+ * return seed format for an category object
+ * @param  {object} doc mongo document
+ * @return {object}     seed object
+ */
+var getCategorySeed = function(doc){
+	var returnseed = {
+		datatype:'category',
+		datadocument:{}
+	};
+	returnseed.datadocument.title = doc.title;
+	returnseed.datadocument.name = doc.name;
+	if(doc.content){
+		returnseed.datadocument.content = getPrimaryAuthorFromDoc(doc.content);
+	}
+	if(doc.dek){
+		returnseed.datadocument.dek = getPrimaryAuthorFromDoc(doc.dek);
+	}
+	if(doc.author){
+		returnseed.datadocument.author = getPrimaryAuthorFromDoc(doc.author);
+	}
+	if(doc.primaryasset){
+		returnseed.datadocument.primaryasset = getPrimaryAssetFromDoc(doc.primaryasset);
+	}
+	if(doc.parent){
+		returnseed.datadocument.parent = getCategoriesFromDoc(doc.parent);
+	}
+	if(doc.attributes){
+		returnseed.datadocument.attributes = doc.attributes;
+	}
+	if(doc.contenttypeattributes){
+		returnseed.datadocument.contenttypeattributes = doc.contenttypeattributes;
+	}
+	if(doc.extensionattributes){
+		returnseed.datadocument.extensionattributes = doc.extensionattributes;
+	}
+			
+	return returnseed;
+};
+
+/**
+ * return seed format for an tag object
+ * @param  {object} doc mongo document
+ * @return {object}     seed object
+ */
+var getTagSeed = function(doc){
+	var returnseed = {
+		datatype:'tag',
+		datadocument:{}
+	};
+	returnseed.datadocument.title = doc.title;
+	returnseed.datadocument.name = doc.name;
+	if(doc.content){
+		returnseed.datadocument.content = getPrimaryAuthorFromDoc(doc.content);
+	}
+	if(doc.dek){
+		returnseed.datadocument.dek = getPrimaryAuthorFromDoc(doc.dek);
+	}
+	if(doc.author){
+		returnseed.datadocument.author = getPrimaryAuthorFromDoc(doc.author);
+	}
+	if(doc.primaryasset){
+		returnseed.datadocument.primaryasset = getPrimaryAssetFromDoc(doc.primaryasset);
+	}
+	if(doc.parent){
+		returnseed.datadocument.parent = getTagsFromDoc(doc.parent);
+	}
+	if(doc.attributes){
+		returnseed.datadocument.attributes = doc.attributes;
+	}
+	if(doc.contenttypeattributes){
+		returnseed.datadocument.contenttypeattributes = doc.contenttypeattributes;
+	}
+	if(doc.extensionattributes){
+		returnseed.datadocument.extensionattributes = doc.extensionattributes;
+	}
+			
+	return returnseed;
+};
+
+/**
+ * return seed format for an contenttype object
+ * @param  {object} doc mongo document
+ * @return {object}     seed object
+ */
+var getContenttypeSeed = function(doc){
+	var returnseed = {
+		datatype:'contenttype',
+		datadocument:{}
+	};
+	returnseed.datadocument.title = doc.title;
+	returnseed.datadocument.name = doc.name;
+	if(doc.author){
+		returnseed.datadocument.author = getPrimaryAuthorFromDoc(doc.author);
+	}
+	returnseed.datadocument.attributes = doc.attributes;
+	if(doc.extensionattributes){
+		returnseed.datadocument.extensionattributes = doc.extensionattributes;
+	}
+			
+	return returnseed;
+};
+
+/**
  * return seed format for an user object
  * @param  {object} doc mongo document
  * @return {object}     seed object
@@ -295,6 +476,15 @@ var getUserSeed = function(doc){
 	}
 	if(doc.apikey){
 		returnseed.datadocument.apikey = doc.apikey;
+	}
+	if(doc.attributes){
+		returnseed.datadocument.attributes = doc.attributes;
+	}
+	if(doc.extensionattributes){
+		returnseed.datadocument.extensionattributes = doc.extensionattributes;
+	}
+	if(doc.random){
+		returnseed.datadocument.random = doc.random;
 	}
 
 	console.log(doc);
@@ -361,13 +551,38 @@ var getAssetSeed = function(doc){
 };
 
 /**
+ * create collection seeds from the database, if there are collections
+ * @param  {object} err
+ * @param  {Function} createCollectionSeedsAsyncCallback
+ * @return {Function} async callback createCollectionSeedsAsyncCallback(err,results);
+ */
+var createCollectionSeeds = function(createCollectionSeedsAsyncCallback){
+	Collection.find({}).select('-_id -__v').populate('tags categories assets primaryasset authors contenttypes items primaryauthor').exec(function(err,Collections){
+		if(err){
+			exportSeedErrorsArray.push({
+				error:err,
+				errortype:'createCollectionSeeds'
+			});
+		}
+		if(Collections){
+			for(var i in Collections){
+				var collectiondoc = Collections[i];
+				collection_id_name_hash[Collections[i]._id]=Collections[i].name;
+				exportSeedDataArray.push(getCollectionSeed(collectiondoc));
+			}
+		}
+		createCollectionSeedsAsyncCallback(null,'created collection seeds');
+	});
+};
+
+/**
  * create item seeds from the database, if there are assets
  * @param  {object} err
- * @param  {Function} createAssetSeedsAsyncCallback
- * @return {Function} async callback createAssetSeedsAsyncCallback(err,results);
+ * @param  {Function} createItemSeedsAsyncCallback
+ * @return {Function} async callback createItemSeedsAsyncCallback(err,results);
  */
 var createItemSeeds = function(createItemSeedsAsyncCallback){
-	Item.find({}).select('-_id -__v').populate('tags categories assets primaryasset authors contenttypes primaryauthor').exec(function(err,Items){
+	Item.find({}).select('-__v').populate('tags categories assets primaryasset authors contenttypes primaryauthor').exec(function(err,Items){
 		if(err){
 			exportSeedErrorsArray.push({
 				error:err,
@@ -377,10 +592,83 @@ var createItemSeeds = function(createItemSeedsAsyncCallback){
 		if(Items){
 			for(var i in Items){
 				var itemdoc = Items[i];
+				item_id_name_hash[Items[i]._id]=Items[i].name;
 				exportSeedDataArray.push(getItemSeed(itemdoc));
 			}
 		}
 		createItemSeedsAsyncCallback(null,'created item seeds');
+	});
+};
+
+/**
+ * create category seeds from the database, if there are categories
+ * @param  {object} err
+ * @param  {Function} createCategorySeedsAsyncCallback
+ * @return {Function} async callback createCategorySeedsAsyncCallback(err,results);
+ */
+var createCategorySeeds = function(createCategorySeedsAsyncCallback){
+	Category.find({}).select('-_id -__v').populate('author primary asset parent contenttypes').exec(function(err,Categorys){
+		if(err){
+			exportSeedErrorsArray.push({
+				error:err,
+				errortype:'createCategorySeeds'
+			});
+		}
+		if(Categorys){
+			for(var i in Categorys){
+				var categorydoc = Categorys[i];
+				exportSeedDataArray.push(getCategorySeed(categorydoc));
+			}
+		}
+		createCategorySeedsAsyncCallback(null,'created category seeds');
+	});
+};
+
+/**
+ * create tag seeds from the database, if there are assets
+ * @param  {object} err
+ * @param  {Function} createTagSeedsAsyncCallback
+ * @return {Function} async callback createTagSeedsAsyncCallback(err,results);
+ */
+var createTagSeeds = function(createTagSeedsAsyncCallback){
+	Tag.find({}).select('-_id -__v').populate('author primary asset parent contenttypes').exec(function(err,Tags){
+		if(err){
+			exportSeedErrorsArray.push({
+				error:err,
+				errortype:'createTagSeeds'
+			});
+		}
+		if(Tags){
+			for(var i in Tags){
+				var tagdoc = Tags[i];
+				exportSeedDataArray.push(getTagSeed(tagdoc));
+			}
+		}
+		createTagSeedsAsyncCallback(null,'created tag seeds');
+	});
+};
+
+/**
+ * create contenttype seeds from the database, if there are assets
+ * @param  {object} err
+ * @param  {Function} createContenttypeSeedsAsyncCallback
+ * @return {Function} async callback createContenttypeSeedsAsyncCallback(err,results);
+ */
+var createContenttypeSeeds = function(createContenttypeSeedsAsyncCallback){
+	Contenttype.find({}).select('-_id -__v').populate('author').exec(function(err,Contenttypes){
+		if(err){
+			exportSeedErrorsArray.push({
+				error:err,
+				errortype:'createContenttypeSeeds'
+			});
+		}
+		if(Contenttypes){
+			for(var i in Contenttypes){
+				var contenttypedoc = Contenttypes[i];
+				exportSeedDataArray.push(getContenttypeSeed(contenttypedoc));
+			}
+		}
+		createContenttypeSeedsAsyncCallback(null,'created contenttype seeds');
 	});
 };
 
@@ -446,7 +734,11 @@ var createSeeds = function(seedoptions,createSeedsCallback){
 	async.series([
 		createAssetSeeds,
 		createUserSeeds,
-		createItemSeeds
+		createContenttypeSeeds,
+		createTagSeeds,
+		createCategorySeeds,
+		createItemSeeds,
+		createCollectionSeeds
 	],
 	function(err){
 		createSeedsCallback(err);
