@@ -72,7 +72,8 @@ var UsersObj,
 	insertsetting,
 	seedDocumentErrors,
 	validDocuments,
-	invalidDocuments;
+	invalidDocuments,
+	numOfSeededDocuments=0;
 
 /**
  * create seed {Userprivilege|Userrole|Usergroup} Object
@@ -826,6 +827,7 @@ var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollecti
 						Collections_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
+				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
 				callback(null, 'updated Collections_namehash');
 			});
 		},
@@ -884,6 +886,7 @@ var getItemIdsFromItemArray = function (getItemIdsFromItemArrayAsyncCallBack) {
 						Items_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
+				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
 				callback(null, 'updated Items_namehash');
 			});
 		},
@@ -952,6 +955,7 @@ var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 						Tags_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
+				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
 				callback(null, 'updated Tags_namehash');
 			});
 		},
@@ -1022,6 +1026,7 @@ var getCategoryIdsFromCategoryArray = function (getCategoryIdsFromCategoryArrayA
 						Categories_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
+				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
 				callback(null, 'updated Categories_namehash');
 			});
 		},
@@ -1092,6 +1097,7 @@ var getContenttypeIdsFromContenttypeArray = function (getContenttypeIdsFromConte
 						Contenttypes_namehash[arguments[x].name] = arguments[x]._id;						
 					}
 				}
+				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
 				callback(null, 'updated Contenttypes_namehash');
 			});
 		},
@@ -1340,6 +1346,7 @@ var getUsersIdsFromUserNameArray = function (getUsersIdsFromUserNameArrayAsyncCa
 						Users_namehash[arguments[x].username] = arguments[x]._id;	
 					}
 				}
+				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
 				callback(null, arguments);
 			});
 		},
@@ -1489,6 +1496,7 @@ var insertAssetsIntoDatabase = function (asyncCallBack) {
 			for (var x in arguments) {
 				Assets_namehash[arguments[x].name] = arguments[x]._id;
 			}
+			numOfSeededDocuments=numOfSeededDocuments+arguments.length;
 			asyncCallBack(null, 'created new assets');
 		});
 	}
@@ -1736,7 +1744,9 @@ var insertDataIntoDatabase = function (seedObjectsArrayStatus, insertDataIntoDat
 					seedObjectsArrayStatus: seedObjectsArrayStatus,
 					seedDocumentErrors: seedDocumentErrors,
 					validDocuments: validDocuments,
-					invalidDocuments: invalidDocuments
+					invalidDocuments: invalidDocuments,
+					numOfSeededDocuments:numOfSeededDocuments,
+					skippedSeeds:((validDocuments+invalidDocuments)-numOfSeededDocuments)
 				});
 
 			});

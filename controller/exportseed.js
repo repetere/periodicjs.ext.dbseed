@@ -8,62 +8,19 @@ var async = require('async'),
 	CoreController,
 	appSettings,
 	mongoose,
-	logger;
-
-var UsersObj,
+	logger,
 	User, // = mongoose.model('User')
-	Users = [],
-	Users_namehash = {},
-	Users_namehash_array = [],
-	ItemsObj,
 	Item, // = mongoose.model('Item')
-	Items = [],
-	Items_namehash = {},
-	Items_namehash_array = [],
-	AssetsObj,
 	Asset, //  = mongoose.model('Asset')
-	Assets = [],
-	Assets_namehash_array = [],
-	Assets_namehash = {},
-	ContenttypesObj,
 	Contenttype, // = mongoose.model('Contenttype')
-	Contenttypes = [],
-	Contenttypes_namehash_array = [],
-	Contenttypes_namehash = {},
-	CategoriesObj,
 	Category, // = mongoose.model('Category')
-	Categories = [],
-	Categories_namehash_array = [],
-	Categories_namehash = {},
-	TagsObj,
 	Tag, // = mongoose.model('Tag')
-	Tags = [],
-	Tags_namehash_array = [],
-	Tags_namehash = {},
-	CollectionsObj,
 	Collection, // = mongoose.model('Collection')
-	Collections = [],
-	Collections_namehash_array = [],
-	Collections_namehash = {},
-	UserprivilegesObj,
 	Userprivilege, // = mongoose.model('Userprivilege')
-	Userprivileges = [],
-	Userprivileges_userprivilegeid_array = [],
-	Userprivileges_namehash = {},
-	UserrolesObj,
 	Userrole, // = mongoose.model('Userrole')
-	Userroles = [],
-	Userroles_userroleid_array = [],
-	Userroles_namehash = {},
-	UsergroupsObj,
-	Usergroup, // = mongoose.model('Usergroup')
-	Usergroups = [],
-	Usergroups_usergroupid_array = [],
-	Usergroups_namehash = {},
-	exportSeedDocumentErrors,
-	validDocuments,
-	invalidDocuments,
-	exportSeedFilePath,
+	Usergroup; // = mongoose.model('Usergroup');
+
+var exportSeedFilePath,
 	exportSeedErrorsArray = [],
 	exportSeedData={},	
 	exportSeedDataArray=[],
@@ -88,6 +45,22 @@ var writeSeedToDisk = function(writeSeedToDiskCallback){
 		}
 		writeSeedToDiskCallback(null,'file written created');
 	});
+};
+
+/**
+ * return seed format for a userroles object
+ * @return {object}     userroles[name]
+ */
+var getUserrolesFromDoc = function(userroles){
+	var userrolesArray = [];
+	if(userroles.length>0){
+		for(var gurfd=0 ; gurfd<userroles.length; gurfd++){
+			if(userroles[gurfd].userroleid){
+				userrolesArray.push(userroles[gurfd].userroleid);
+			}
+		}	
+	}
+	return userrolesArray;
 };
 
 /**
@@ -260,6 +233,75 @@ var getItemSeed = function(doc){
 };
 
 /**
+ * return seed format for an user object
+ * @param  {object} doc mongo document
+ * @return {object}     seed object
+ */
+var getUserSeed = function(doc){
+	var returnseed = {
+		datatype:'user',
+		datadocument:{}
+	};
+	returnseed.datadocument.email = doc.email;
+	if(doc.firstname){
+		returnseed.datadocument.firstname = doc.firstname;
+	}
+	if(doc.lastname){
+		returnseed.datadocument.lastname = doc.lastname;
+	}
+	if(doc.username){
+		returnseed.datadocument.username = doc.username;
+	}
+	if(doc.password){
+		returnseed.datadocument.password = doc.password;
+	}
+	if(doc.url){
+		returnseed.datadocument.url = doc.url;
+	}
+	if(doc.birthday){
+		returnseed.datadocument.birthday = doc.birthday;
+	}
+	if(doc.userid){
+		returnseed.datadocument.userid = doc.userid;
+	}
+	if(doc.accesstoken){
+		returnseed.datadocument.accesstoken = doc.accesstoken;
+	}
+	if(doc.description){
+		returnseed.datadocument.description = doc.description;
+	}
+	returnseed.datadocument.activated = doc.activated;
+	if(doc.location){
+		returnseed.datadocument.location = doc.location;
+	}
+	returnseed.datadocument.updatedat = doc.updatedat;
+	returnseed.datadocument.createdat = doc.createdat;
+	returnseed.datadocument.accounttype = doc.accounttype;
+	returnseed.datadocument.gender = doc.gender;
+	if(doc.primaryasset){
+		returnseed.datadocument.primaryasset = getPrimaryAssetFromDoc(doc.primaryasset);
+	}
+	if(doc.coverimage){
+		returnseed.datadocument.coverimage = getPrimaryAssetFromDoc(doc.coverimage);
+	}
+	if(doc.assets){
+		returnseed.datadocument.assets = getAssetsFromDoc(doc.assets);
+	}
+	if(doc.coverimages){
+		returnseed.datadocument.coverimages = getAssetsFromDoc(doc.coverimages);
+	}
+	if(doc.userroles){
+		returnseed.datadocument.userroles = getUserrolesFromDoc(doc.userroles);
+	}
+	if(doc.apikey){
+		returnseed.datadocument.apikey = doc.apikey;
+	}
+
+	console.log(doc);
+	return returnseed;
+};
+
+/**
  * return seed format for an asset object
  * @param  {object} doc mongo document
  * @return {object}     seed object
@@ -267,25 +309,56 @@ var getItemSeed = function(doc){
 var getAssetSeed = function(doc){
 	var returnseed = {
 		datatype:'asset',
-		datadocument:{
-			random:doc.random,
-			primaryauthor:getPrimaryAuthorFromDoc(doc.primaryauthor)
-		}
+		datadocument:{}
 	};
-	// try{
-	// 	seed.datadocument.primaryauthor = getPrimaryAuthorFromAuthorDoc(doc.primaryauthor);
-	// }
-	// catch(e){
-	// 	exportSeedErrorsArray.push({
-	// 		error:e,
-	// 		errortype:'getAssetSeed'
-	// 	});
-	// 	seed.datadocument=e;
-	// }
-	console.log(returnseed);
+	returnseed.datadocument.random = doc.random;
+	if(doc.title){
+		returnseed.datadocument.title = doc.title;
+	}
+	returnseed.datadocument.name = doc.name;
+	returnseed.datadocument.status = doc.status;
+	if(doc.updatedat){
+		returnseed.datadocument.updatedat = doc.updatedat;
+	}
+	returnseed.datadocument.createdat = doc.createdat;
+	if(doc.author){
+		returnseed.datadocument.author = getPrimaryAuthorFromDoc(doc.author);
+	}
+	returnseed.datadocument.entitytype = doc.entitytype;
+	if(doc.userid){
+		returnseed.datadocument.userid = getPrimaryAuthorFromDoc(doc.userid);
+	}
+	if(doc.username){
+		returnseed.datadocument.username = getPrimaryAuthorFromDoc(doc.username);
+	}
+	returnseed.datadocument.assettype = doc.assettype;
+	if(doc.contenttypes){
+		returnseed.datadocument.contenttypes = getContenttypesFromDoc(doc.contenttypes);
+	}
+	returnseed.datadocument.fileurl = doc.fileurl;
+	returnseed.datadocument.locationtype = doc.locationtype;
+	if(doc.description){
+		returnseed.datadocument.description = doc.description;
+	}
+	if(doc.content){
+		returnseed.datadocument.content = doc.content;
+	}
+	if(doc.filedata){
+		returnseed.datadocument.filedata = doc.filedata;
+	}
+	if(doc.attributes){
+		returnseed.datadocument.attributes = doc.attributes;
+	}
+	if(doc.contenttypeattributes){
+		returnseed.datadocument.contenttypeattributes = doc.contenttypeattributes;
+	}
+	if(doc.extensionattributes){
+		returnseed.datadocument.extensionattributes = doc.extensionattributes;
+	}
+
+	console.log(doc);
 	return returnseed;
 };
-
 
 /**
  * create item seeds from the database, if there are assets
@@ -294,7 +367,7 @@ var getAssetSeed = function(doc){
  * @return {Function} async callback createAssetSeedsAsyncCallback(err,results);
  */
 var createItemSeeds = function(createItemSeedsAsyncCallback){
-	Item.find({}).select('-_id status entitytype publishat createdat updatedat title name content contenttypes tags categories assets primaryasset authors primaryauthor source collectionitemonly itemauthorname originalitem changes link visibility visiblitypassword contenttypeattributes extentionattributes random').populate('tags categories assets primaryasset authors contenttypes primaryauthor').exec(function(err,Items){
+	Item.find({}).select('-_id -__v').populate('tags categories assets primaryasset authors contenttypes primaryauthor').exec(function(err,Items){
 		if(err){
 			exportSeedErrorsArray.push({
 				error:err,
@@ -318,7 +391,7 @@ var createItemSeeds = function(createItemSeedsAsyncCallback){
  * @return {Function} async callback createAssetSeedsAsyncCallback(err,results);
  */
 var createAssetSeeds = function(createAssetSeedsAsyncCallback){
-	Asset.find({}).select('-_id title name status createdat author entitytype userid username assettype contenttypes fileurl locationtype description content filedata attributes contenttypeattributes extentionattributes random').populate('author contenttypes').exec(function(err,Assets){
+	Asset.find({}).select('-_id -__v').populate('author contenttypes').exec(function(err,Assets){
 		if(err){
 			exportSeedErrorsArray.push({
 				error:err,
@@ -336,6 +409,30 @@ var createAssetSeeds = function(createAssetSeedsAsyncCallback){
 };
 
 /**
+ * create user seeds from the database, if there are users
+ * @param  {object} err
+ * @param  {Function} createUserSeedsAsyncCallback
+ * @return {Function} async callback createUserSeedsAsyncCallback(err,results);
+ */
+var createUserSeeds = function(createUserSeedsAsyncCallback){
+	User.find({}).select('-_id -__v').populate('assets primaryasset coverimages coverimage userroles').exec(function(err,Users){
+		if(err){
+			exportSeedErrorsArray.push({
+				error:err,
+				errortype:'createUserSeeds'
+			});
+		}
+		if(Users){
+			for(var a in Users){
+				var userdoc = Users[a];
+				exportSeedDataArray.push(getUserSeed(userdoc));
+			}
+		}
+		createUserSeedsAsyncCallback(null,'created user seeds');
+	});
+};
+
+/**
  * exports a models to seeds format
  * @param  {object} options - filepath,limits-tags,collections,etc
  * @param  {object} createSeedsCallback
@@ -348,6 +445,7 @@ var createSeeds = function(seedoptions,createSeedsCallback){
 
 	async.series([
 		createAssetSeeds,
+		createUserSeeds,
 		createItemSeeds
 	],
 	function(err){
