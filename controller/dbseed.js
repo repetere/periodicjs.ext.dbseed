@@ -4,6 +4,7 @@ var Utilities = require('periodicjs.core.utilities'),
 	ControllerHelper = require('periodicjs.core.controller'),
 	exportSeedModule,
 	importSeedModule,
+	dbopsModule,
 	CoreUtilities,
 	CoreController,
 	appSettings,
@@ -63,12 +64,14 @@ var controller = function (resources) {
 	CoreUtilities = new Utilities(resources);
 	exportSeedModule = require('./exportseed')(resources);
 	importSeedModule = require('./importseed')(resources);
+	dbopsModule = require('./dbops')(resources);
 
 	return {
 		index: index,
 		seedDocuments: importSeedModule.seedDocuments,
 		importSeed: importSeedModule.importSeed,
 		exportSeed: exportSeedModule.exportSeed,
+		emptyDB: dbopsModule.emptyDB,
 		isValidSeedJSONSync: importSeedModule.isValidSeedJSONSync
 	};
 };

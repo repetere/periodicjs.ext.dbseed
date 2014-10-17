@@ -101,6 +101,23 @@ var extscript = function (resources) {
 				process.exit(0);
 			});
 		}
+		else if (argv.task === 'empty' && argv.confirm) {
+			console.time('Empty Database Data');
+			seedController.emptyDB({
+				filepath: argv.file,
+				limits: argv
+			}, function (err, status) {
+				console.timeEnd('Empty Database Data');
+				if (err) {
+					console.log(err);
+					logger.error(err.toString());
+				}
+				else {
+					console.info('Empty status', util.inspect(status));
+				}
+				process.exit(0);
+			});
+		}
 		else {
 			logger.silly('invalid dbseed task', argv);
 			process.exit(0);

@@ -50,6 +50,27 @@ var writeSeedToDisk = function(writeSeedToDiskCallback){
 };
 
 /**
+ * return seed format for a collection.items object
+ * @return {object}     collection.items[{item.name,order}]
+ */
+var getCollectionItemsFromDoc = function(collectionitems){
+	console.log('item_id_name_hash',item_id_name_hash);
+
+	var collectionitemsArray = [];
+	if(collectionitems.length>0){
+		for(var gcifd=0 ; gcifd<collectionitems.length; gcifd++){
+			if(collectionitems[gcifd].item){
+				collectionitemsArray.push({
+					item:item_id_name_hash[collectionitems[gcifd].item],
+					order:collectionitems[gcifd].order
+				});
+			}
+		}	
+	}
+	return collectionitemsArray;
+};
+
+/**
  * return seed format for a userroles object
  * @return {object}     userroles[name]
  */
@@ -58,7 +79,7 @@ var getUserrolesFromDoc = function(userroles){
 	if(userroles.length>0){
 		for(var gurfd=0 ; gurfd<userroles.length; gurfd++){
 			if(userroles[gurfd].userroleid){
-				userrolesArray.push(userroles[gurfd].userroleidgu);
+				userrolesArray.push(userroles[gurfd].userroleid);
 			}
 		}	
 	}
@@ -206,20 +227,27 @@ var getCollectionSeed = function(doc){
 	if(doc.changes){
 		returnseed.datadocument.changes = doc.changes;
 	}
-	if(doc.tags){
+	if(doc.items){
+		returnseed.datadocument.items = doc.items;
+	}
+	if(doc.tags  && doc.tags.length>0){
 		returnseed.datadocument.tags = getTagsFromDoc(doc.tags);
 	}
-	if(doc.categories){
+	if(doc.categories && doc.categories.length>0){
 		returnseed.datadocument.categories = getCategoriesFromDoc(doc.categories);
 	}
-	if(doc.contenttypes){
+	console.log('doc.contenttypes',doc.contenttypes);
+	if(doc.contenttypes && doc.contenttypes.length>0){
 		returnseed.datadocument.contenttypes = getContenttypesFromDoc(doc.contenttypes);
 	}
-	if(doc.authors){
+	if(doc.authors && doc.authors.length>0){
 		returnseed.datadocument.authors = getAuthorsFromDoc(doc.authors);
 	}
-	if(doc.assets){
+	if(doc.assets && doc.assets.length>0){
 		returnseed.datadocument.assets = getAssetsFromDoc(doc.assets);
+	}
+	if(doc.items && doc.items.length>0){
+		returnseed.datadocument.items = getCollectionItemsFromDoc(doc.items);
 	}
 	if(doc.visibility){
 		returnseed.datadocument.visibility = doc.visibility;
@@ -276,22 +304,22 @@ var getItemSeed = function(doc){
 	if(doc.link){
 		returnseed.datadocument.link = doc.link;
 	}
-	if(doc.changes){
+	if(doc.changes && doc.changes.length>0){
 		returnseed.datadocument.changes = doc.changes;
 	}
-	if(doc.tags){
+	if(doc.tags && doc.tags.length>0){
 		returnseed.datadocument.tags = getTagsFromDoc(doc.tags);
 	}
-	if(doc.categories){
+	if(doc.categories && doc.categories.length>0){
 		returnseed.datadocument.categories = getCategoriesFromDoc(doc.categories);
 	}
-	if(doc.contenttypes){
+	if(doc.contenttypes && doc.contenttypes.length>0){
 		returnseed.datadocument.contenttypes = getContenttypesFromDoc(doc.contenttypes);
 	}
-	if(doc.authors){
+	if(doc.authors && doc.authors.length>0){
 		returnseed.datadocument.authors = getAuthorsFromDoc(doc.authors);
 	}
-	if(doc.assets){
+	if(doc.assets && doc.assets.length>0){
 		returnseed.datadocument.assets = getAssetsFromDoc(doc.assets);
 	}
 	if(doc.visibility){
@@ -334,8 +362,11 @@ var getCategorySeed = function(doc){
 	if(doc.primaryasset){
 		returnseed.datadocument.primaryasset = getPrimaryAssetFromDoc(doc.primaryasset);
 	}
-	if(doc.parent){
+	if(doc.parent && doc.parent.length>0){
 		returnseed.datadocument.parent = getCategoriesFromDoc(doc.parent);
+	}
+	if(doc.contenttypes){
+		returnseed.datadocument.contenttypes = getContenttypesFromDoc(doc.contenttypes);
 	}
 	if(doc.attributes){
 		returnseed.datadocument.attributes = doc.attributes;
@@ -374,8 +405,11 @@ var getTagSeed = function(doc){
 	if(doc.primaryasset){
 		returnseed.datadocument.primaryasset = getPrimaryAssetFromDoc(doc.primaryasset);
 	}
-	if(doc.parent){
+	if(doc.parent && doc.parent.length>0){
 		returnseed.datadocument.parent = getTagsFromDoc(doc.parent);
+	}
+	if(doc.contenttypes){
+		returnseed.datadocument.contenttypes = getContenttypesFromDoc(doc.contenttypes);
 	}
 	if(doc.attributes){
 		returnseed.datadocument.attributes = doc.attributes;
@@ -465,13 +499,13 @@ var getUserSeed = function(doc){
 	if(doc.coverimage){
 		returnseed.datadocument.coverimage = getPrimaryAssetFromDoc(doc.coverimage);
 	}
-	if(doc.assets){
+	if(doc.assets && doc.assets.length>0){
 		returnseed.datadocument.assets = getAssetsFromDoc(doc.assets);
 	}
-	if(doc.coverimages){
+	if(doc.coverimages && doc.coverimages.length>0){
 		returnseed.datadocument.coverimages = getAssetsFromDoc(doc.coverimages);
 	}
-	if(doc.userroles){
+	if(doc.userroles && doc.userroles.length>0){
 		returnseed.datadocument.userroles = getUserrolesFromDoc(doc.userroles);
 	}
 	if(doc.apikey){
@@ -487,7 +521,6 @@ var getUserSeed = function(doc){
 		returnseed.datadocument.random = doc.random;
 	}
 
-	console.log(doc);
 	return returnseed;
 };
 
@@ -522,7 +555,7 @@ var getAssetSeed = function(doc){
 		returnseed.datadocument.username = getPrimaryAuthorFromDoc(doc.username);
 	}
 	returnseed.datadocument.assettype = doc.assettype;
-	if(doc.contenttypes){
+	if(doc.contenttypes  && doc.contenttypes.length>0){
 		returnseed.datadocument.contenttypes = getContenttypesFromDoc(doc.contenttypes);
 	}
 	returnseed.datadocument.fileurl = doc.fileurl;
@@ -546,7 +579,6 @@ var getAssetSeed = function(doc){
 		returnseed.datadocument.extensionattributes = doc.extensionattributes;
 	}
 
-	console.log(doc);
 	return returnseed;
 };
 
