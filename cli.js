@@ -3,6 +3,7 @@
 var path = require('path'),
 	fs = require('fs-extra'),
 	util = require('util'),
+	async = require('async'),
 	seedController,
 	// Collection,
 	mongoose,
@@ -102,20 +103,37 @@ var extscript = function (resources) {
 			});
 		}
 		else if (argv.task === 'empty' && argv.confirm) {
-			console.time('Empty Database Data');
-			seedController.emptyDB({
-				filepath: argv.file,
-				limits: argv
-			}, function (err, status) {
-				console.timeEnd('Empty Database Data');
-				if (err) {
-					console.log(err);
-					logger.error(err.toString());
+			async.series([
+				function(cb){
+					console.time('Exporting Seed Data');
+					seedController.exportSeed({
+						filepath: 'content/backups/dbemptybackup.json',
+						limits: argv
+					}, function (err, status) {
+						console.timeEnd('Exporting Seed Data');
+						cb(err,status);
+					});
+				},
+				function(cb){
+					console.time('Empty Database Data');
+					seedController.emptyDB({
+						filepath: argv.file,
+						limits: argv
+					}, function (err, status) {
+						console.timeEnd('Empty Database Data');
+						cb(err,status);
+					});
 				}
-				else {
-					console.info('Empty status', util.inspect(status));
-				}
-				process.exit(0);
+				],
+				function(err,status){
+					if (err) {
+						console.log(err);
+						logger.error(err.toString());
+					}
+					else {
+						console.info('Export status', util.inspect(status));
+					}
+					process.exit(0);
 			});
 		}
 		else {
