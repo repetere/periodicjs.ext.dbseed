@@ -17,7 +17,7 @@ var async = require('async'),
 	Userprivilege, // = mongoose.model('Userprivilege')
 	Userrole, // = mongoose.model('Userrole')
 	Usergroup, // = mongoose.model('Usergroup');
-	dbOpsErrorsArray=[];
+	dbOpsErrorsArray = [];
 
 /**
  * removes all Usergroups from the database
@@ -25,15 +25,15 @@ var async = require('async'),
  * @param  {Function} emptyUsergroupsAsyncCallback
  * @return {Function} async callback emptyUsergroupsAsyncCallback(err,results);
  */
-var emptyUsergroups = function(emptyUsergroupsAsyncCallback){
-	Usergroup.remove({}).exec(function(err){
-		if(err){
+var emptyUsergroups = function (emptyUsergroupsAsyncCallback) {
+	Usergroup.remove({}).exec(function (err) {
+		if (err) {
 			dbOpsErrorsArray.push({
-				error:err,
-				errortype:'emptyUsergroups'
+				error: err,
+				errortype: 'emptyUsergroups'
 			});
 		}
-		emptyUsergroupsAsyncCallback(null,'removed all Usergroups');
+		emptyUsergroupsAsyncCallback(null, 'removed all Usergroups');
 	});
 };
 /**
@@ -42,15 +42,15 @@ var emptyUsergroups = function(emptyUsergroupsAsyncCallback){
  * @param  {Function} emptyUserrolesAsyncCallback
  * @return {Function} async callback emptyUserrolesAsyncCallback(err,results);
  */
-var emptyUserroles = function(emptyUserrolesAsyncCallback){
-	Userrole.remove({}).exec(function(err){
-		if(err){
+var emptyUserroles = function (emptyUserrolesAsyncCallback) {
+	Userrole.remove({}).exec(function (err) {
+		if (err) {
 			dbOpsErrorsArray.push({
-				error:err,
-				errortype:'emptyUserroles'
+				error: err,
+				errortype: 'emptyUserroles'
 			});
 		}
-		emptyUserrolesAsyncCallback(null,'removed all Userroles');
+		emptyUserrolesAsyncCallback(null, 'removed all Userroles');
 	});
 };
 /**
@@ -59,15 +59,15 @@ var emptyUserroles = function(emptyUserrolesAsyncCallback){
  * @param  {Function} emptyUserprivilegesAsyncCallback
  * @return {Function} async callback emptyUserprivilegesAsyncCallback(err,results);
  */
-var emptyUserprivileges = function(emptyUserprivilegesAsyncCallback){
-	Userprivilege.remove({}).exec(function(err){
-		if(err){
+var emptyUserprivileges = function (emptyUserprivilegesAsyncCallback) {
+	Userprivilege.remove({}).exec(function (err) {
+		if (err) {
 			dbOpsErrorsArray.push({
-				error:err,
-				errortype:'emptyUserprivileges'
+				error: err,
+				errortype: 'emptyUserprivileges'
 			});
 		}
-		emptyUserprivilegesAsyncCallback(null,'removed all Userprivileges');
+		emptyUserprivilegesAsyncCallback(null, 'removed all Userprivileges');
 	});
 };
 /**
@@ -76,15 +76,15 @@ var emptyUserprivileges = function(emptyUserprivilegesAsyncCallback){
  * @param  {Function} emptyCollectionsAsyncCallback
  * @return {Function} async callback emptyCollectionsAsyncCallback(err,results);
  */
-var emptyCollections = function(emptyCollectionsAsyncCallback){
-	Collection.remove({}).exec(function(err){
-		if(err){
+var emptyCollections = function (emptyCollectionsAsyncCallback) {
+	Collection.remove({}).exec(function (err) {
+		if (err) {
 			dbOpsErrorsArray.push({
-				error:err,
-				errortype:'emptyCollections'
+				error: err,
+				errortype: 'emptyCollections'
 			});
 		}
-		emptyCollectionsAsyncCallback(null,'removed all Collections');
+		emptyCollectionsAsyncCallback(null, 'removed all Collections');
 	});
 };
 /**
@@ -93,15 +93,15 @@ var emptyCollections = function(emptyCollectionsAsyncCallback){
  * @param  {Function} emptyItemsAsyncCallback
  * @return {Function} async callback emptyItemsAsyncCallback(err,results);
  */
-var emptyItems = function(emptyItemsAsyncCallback){
-	Item.remove({}).exec(function(err){
-		if(err){
+var emptyItems = function (emptyItemsAsyncCallback) {
+	Item.remove({}).exec(function (err) {
+		if (err) {
 			dbOpsErrorsArray.push({
-				error:err,
-				errortype:'emptyItems'
+				error: err,
+				errortype: 'emptyItems'
 			});
 		}
-		emptyItemsAsyncCallback(null,'removed all Items');
+		emptyItemsAsyncCallback(null, 'removed all Items');
 	});
 };
 /**
@@ -110,15 +110,15 @@ var emptyItems = function(emptyItemsAsyncCallback){
  * @param  {Function} emptyCategorysAsyncCallback
  * @return {Function} async callback emptyCategorysAsyncCallback(err,results);
  */
-var emptyCategories = function(emptyCategorysAsyncCallback){
-	Category.remove({}).exec(function(err){
-		if(err){
+var emptyCategories = function (emptyCategorysAsyncCallback) {
+	Category.remove({}).exec(function (err) {
+		if (err) {
 			dbOpsErrorsArray.push({
-				error:err,
-				errortype:'emptyCategorys'
+				error: err,
+				errortype: 'emptyCategorys'
 			});
 		}
-		emptyCategorysAsyncCallback(null,'removed all Categorys');
+		emptyCategorysAsyncCallback(null, 'removed all Categorys');
 	});
 };
 /**
@@ -127,15 +127,15 @@ var emptyCategories = function(emptyCategorysAsyncCallback){
  * @param  {Function} emptyTagsAsyncCallback
  * @return {Function} async callback emptyTagsAsyncCallback(err,results);
  */
-var emptyTags = function(emptyTagsAsyncCallback){
-	Tag.remove({}).exec(function(err){
-		if(err){
+var emptyTags = function (emptyTagsAsyncCallback) {
+	Tag.remove({}).exec(function (err) {
+		if (err) {
 			dbOpsErrorsArray.push({
-				error:err,
-				errortype:'emptyTags'
+				error: err,
+				errortype: 'emptyTags'
 			});
 		}
-		emptyTagsAsyncCallback(null,'removed all Tags');
+		emptyTagsAsyncCallback(null, 'removed all Tags');
 	});
 };
 /**
@@ -144,15 +144,15 @@ var emptyTags = function(emptyTagsAsyncCallback){
  * @param  {Function} emptyContenttypesAsyncCallback
  * @return {Function} async callback emptyContenttypesAsyncCallback(err,results);
  */
-var emptyContenttypes = function(emptyContenttypesAsyncCallback){
-	Contenttype.remove({}).exec(function(err){
-		if(err){
+var emptyContenttypes = function (emptyContenttypesAsyncCallback) {
+	Contenttype.remove({}).exec(function (err) {
+		if (err) {
 			dbOpsErrorsArray.push({
-				error:err,
-				errortype:'emptyContenttypes'
+				error: err,
+				errortype: 'emptyContenttypes'
 			});
 		}
-		emptyContenttypesAsyncCallback(null,'removed all Contenttypes');
+		emptyContenttypesAsyncCallback(null, 'removed all Contenttypes');
 	});
 };
 /**
@@ -161,15 +161,15 @@ var emptyContenttypes = function(emptyContenttypesAsyncCallback){
  * @param  {Function} emptyUsersAsyncCallback
  * @return {Function} async callback emptyUsersAsyncCallback(err,results);
  */
-var emptyUsers = function(emptyUsersAsyncCallback){
-	User.remove({}).exec(function(err){
-		if(err){
+var emptyUsers = function (emptyUsersAsyncCallback) {
+	User.remove({}).exec(function (err) {
+		if (err) {
 			dbOpsErrorsArray.push({
-				error:err,
-				errortype:'emptyUsers'
+				error: err,
+				errortype: 'emptyUsers'
 			});
 		}
-		emptyUsersAsyncCallback(null,'removed all Users');
+		emptyUsersAsyncCallback(null, 'removed all Users');
 	});
 };
 /**
@@ -178,15 +178,15 @@ var emptyUsers = function(emptyUsersAsyncCallback){
  * @param  {Function} emptyAssetsAsyncCallback
  * @return {Function} async callback emptyAssetsAsyncCallback(err,results);
  */
-var emptyAssets = function(emptyAssetsAsyncCallback){
-	Asset.remove({}).exec(function(err){
-		if(err){
+var emptyAssets = function (emptyAssetsAsyncCallback) {
+	Asset.remove({}).exec(function (err) {
+		if (err) {
 			dbOpsErrorsArray.push({
-				error:err,
-				errortype:'emptyAssets'
+				error: err,
+				errortype: 'emptyAssets'
 			});
 		}
-		emptyAssetsAsyncCallback(null,'removed all assets');
+		emptyAssetsAsyncCallback(null, 'removed all assets');
 	});
 };
 
@@ -196,7 +196,7 @@ var emptyAssets = function(emptyAssetsAsyncCallback){
  * @param  {object} emptyDBCallback
  * @return {Function} async callback emptyDBCallback(err,results);
  */
-var emptyDB = function(options,emptyDBCallback){
+var emptyDB = function (options, emptyDBCallback) {
 	/*
 		// try{
 		// exportSeedFilePath = (typeof options.filepath ==='string') ? path.join(options.filepath) : path.resolve(process.cwd(),defaultExportDir,defaultExportFileName);
@@ -208,34 +208,34 @@ var emptyDB = function(options,emptyDBCallback){
 		// 	});
 		// }
 	*/
-console.log('got here');
-	var setupEmptyDB= function(setupEmptyDBCallback){
-		var dataforseeds=options;
-		setupEmptyDBCallback(null,dataforseeds);
+	console.log('got here');
+	var setupEmptyDB = function (setupEmptyDBCallback) {
+		var dataforseeds = options;
+		setupEmptyDBCallback(null, dataforseeds);
 	};
 	async.parallel([
-		setupEmptyDB,
-		emptyAssets,
-		emptyUsers,
-		emptyContenttypes,
-		emptyTags,
-		emptyCategories,
-		emptyItems,
-		emptyCollections,
-		emptyUserprivileges,
-		emptyUserroles,
-		emptyUsergroups
-	],
-	function (err, emptydbresult) {
-		emptyDBCallback(err, {
-			emptydbresult:emptydbresult,
-			dbOpsErrorsArray:dbOpsErrorsArray
+			setupEmptyDB,
+			emptyAssets,
+			emptyUsers,
+			emptyContenttypes,
+			emptyTags,
+			emptyCategories,
+			emptyItems,
+			emptyCollections,
+			emptyUserprivileges,
+			emptyUserroles,
+			emptyUsergroups
+		],
+		function (err, emptydbresult) {
+			emptyDBCallback(err, {
+				emptydbresult: emptydbresult,
+				dbOpsErrorsArray: dbOpsErrorsArray
+			});
 		});
-	});
 };
 
 /**
- * exportseed module 
+ * exportseed module
  * @module exportseed
  * @{@link https://github.com/typesettin/periodicjs.ext.dbseed}
  * @author Yaw Joseph Etse
@@ -247,7 +247,7 @@ console.log('got here');
  * @param  {object} resources variable injection from current periodic instance with references to the active logger and mongo session
  * @return {object}           dbseed
  */
-var dbOpsModule = function(resources){
+var dbOpsModule = function (resources) {
 	logger = resources.logger;
 	mongoose = resources.mongoose;
 	appSettings = resources.settings;
@@ -263,8 +263,8 @@ var dbOpsModule = function(resources){
 	Userprivilege = mongoose.model('Userprivilege');
 	Userrole = mongoose.model('Userrole');
 	Usergroup = mongoose.model('Usergroup');
-	return{
-		emptyDB:emptyDB
+	return {
+		emptyDB: emptyDB
 	};
 };
 

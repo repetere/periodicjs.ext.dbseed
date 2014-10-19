@@ -73,7 +73,7 @@ var UsersObj,
 	seedDocumentErrors,
 	validDocuments,
 	invalidDocuments,
-	numOfSeededDocuments=0;
+	numOfSeededDocuments = 0;
 
 /**
  * create seed {Userprivilege|Userrole|Usergroup} Object
@@ -796,7 +796,7 @@ var setSeedObjectArrays = function (options, callback) {
  * @return {Function} async callback getCollectionIdsFromCollectionArrayAsyncCallBack(err,results);
  */
 var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollectionArrayAsyncCallBack) {
-	console.log('Collections',Collections);
+	console.log('Collections', Collections);
 	var CollectionItems = [];
 	for (var y in Collections) {
 		if (Collections[y].items) {
@@ -824,11 +824,11 @@ var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollecti
 				}
 				for (var x in arguments) {
 					// logger.silly('arguments[x]',x,arguments[x]);
-					if(arguments[x]._id){
+					if (arguments[x]._id) {
 						Collections_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
+				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
 				callback(null, 'updated Collections_namehash');
 			});
 		},
@@ -857,8 +857,8 @@ var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollecti
 					}
 				});
 		}
-	], function (err/*, results*/) {
-			getCollectionIdsFromCollectionArrayAsyncCallBack(err, Collections_namehash);
+	], function (err /*, results*/ ) {
+		getCollectionIdsFromCollectionArrayAsyncCallBack(err, Collections_namehash);
 	});
 };
 
@@ -883,11 +883,11 @@ var getItemIdsFromItemArray = function (getItemIdsFromItemArrayAsyncCallBack) {
 				}
 				for (var x in arguments) {
 					// logger.silly('arguments[x]',x,arguments[x]);
-					if(arguments[x]._id){
+					if (arguments[x]._id) {
 						Items_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
+				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
 				callback(null, 'updated Items_namehash');
 			});
 		},
@@ -916,7 +916,7 @@ var getItemIdsFromItemArray = function (getItemIdsFromItemArrayAsyncCallBack) {
 					}
 				});
 		}
-	], function (err/*, results*/) {
+	], function (err /*, results*/ ) {
 		getItemIdsFromItemArrayAsyncCallBack(err, Items_namehash);
 	});
 };
@@ -952,11 +952,11 @@ var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 				}
 				for (var x in arguments) {
 					// logger.silly('arguments[x]',x,arguments[x]);
-					if(arguments[x]._id){
+					if (arguments[x]._id) {
 						Tags_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
+				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
 				callback(null, 'updated Tags_namehash');
 			});
 		},
@@ -985,7 +985,7 @@ var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 					}
 				});
 		}
-	], function (err/*, results*/) {
+	], function (err /*, results*/ ) {
 		getTagIdsFromTagArrayAsyncCallBack(err, Tags_namehash);
 	});
 };
@@ -1023,11 +1023,11 @@ var getCategoryIdsFromCategoryArray = function (getCategoryIdsFromCategoryArrayA
 				}
 				for (var x in arguments) {
 					// logger.silly('arguments[x]',x,arguments[x]);
-					if(arguments[x]._id){
+					if (arguments[x]._id) {
 						Categories_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
+				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
 				callback(null, 'updated Categories_namehash');
 			});
 		},
@@ -1056,8 +1056,8 @@ var getCategoryIdsFromCategoryArray = function (getCategoryIdsFromCategoryArrayA
 					}
 				});
 		}
-	], function (err/*, results*/) {
-		getCategoryIdsFromCategoryArrayAsyncCallBack(err,Categories_namehash);
+	], function (err /*, results*/ ) {
+		getCategoryIdsFromCategoryArrayAsyncCallBack(err, Categories_namehash);
 	});
 };
 
@@ -1094,11 +1094,11 @@ var getContenttypeIdsFromContenttypeArray = function (getContenttypeIdsFromConte
 				}
 				for (var x in arguments) {
 					// //logger.silly('arguments[x]',x,arguments[x]);
-					if(arguments[x]._id){
-						Contenttypes_namehash[arguments[x].name] = arguments[x]._id;						
+					if (arguments[x]._id) {
+						Contenttypes_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
+				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
 				callback(null, 'updated Contenttypes_namehash');
 			});
 		},
@@ -1125,7 +1125,7 @@ var getContenttypeIdsFromContenttypeArray = function (getContenttypeIdsFromConte
 					});
 				});
 		}
-	], function (err /*, results*/) {
+	], function (err /*, results*/ ) {
 		getContenttypeIdsFromContenttypeArrayAsyncCallBack(err, Contenttypes_namehash);
 	});
 };
@@ -1137,184 +1137,184 @@ var getContenttypeIdsFromContenttypeArray = function (getContenttypeIdsFromConte
  */
 var getTaxonomyIdsFromTaxonomiesArrays = function (getTaxonomyIdsFromTaxonomiesArraysAsyncCallBack) {
 	async.parallel({
-		contenttypes: getContenttypeIdsFromContenttypeArray,
-		categories: getCategoryIdsFromCategoryArray,
-		tags: getTagIdsFromTagArray
-	},
-	function (err , createdtagscatstype ) {
-		if (err) {
-			insertContentIntoDatabaseErrors.push({
-				createTaxonomiesError: err.toString()
-			});
-		}
-		// console.log('getTaxonomyIdsFromTaxonomiesArrays results', results);
-		async.parallel({
-			Items: function (callback) {
-				try {
-					var ItemTags = [],
-						ItemContenttypes = [],
-						ItemCategories = [],
-						ItemAssets = [],
-						ItemAuthors = [];
-					for (var y in Items) {
-						if (Items[y].tags) {
-							ItemTags = Items[y].tags;
-							Items[y].tags = [];
-							for (var z in ItemTags) {
-								if (Tags_namehash[ItemTags[z]]) {
-									Items[y].tags.push(Tags_namehash[ItemTags[z]]);
-								}
-							}
-						}
-						if (Items[y].categories) {
-							ItemCategories = Items[y].categories;
-							Items[y].categories = [];
-							for (var zc in ItemCategories) {
-								if (Categories_namehash[ItemCategories[zc]]) {
-									Items[y].categories.push(Categories_namehash[ItemCategories[zc]]);
-								}
-							}
-						}
-						if (Items[y].contenttypes) {
-							ItemContenttypes = Items[y].contenttypes;
-							Items[y].contenttypes = [];
-							for (var zct in ItemContenttypes) {
-								if (Contenttypes_namehash[ItemContenttypes[zct]]) {
-									Items[y].contenttypes.push(Contenttypes_namehash[ItemContenttypes[zct]]);
-								}
-							}
-						}
-						if (Items[y].assets) {
-							ItemAssets = Items[y].assets;
-							Items[y].assets = [];
-							for (var za in ItemAssets) {
-								if (Assets_namehash[ItemAssets[za]]) {
-									Items[y].assets.push(Assets_namehash[ItemAssets[za]]);
-								}
-							}
-						}
-						if (Items[y].primaryasset) {
-							if (Assets_namehash[Items[y].primaryasset]) {
-								Items[y].primaryasset = Assets_namehash[Items[y].primaryasset];
-							}
-							else {
-								delete Items[y].primaryasset;
-							}
-						}
-						if (Items[y].authors) {
-							ItemAuthors = Items[y].authors;
-							Items[y].authors = [];
-							for (var zu in ItemAuthors) {
-								if (Users_namehash[ItemAuthors[zu]]) {
-									Items[y].authors.push(Users_namehash[ItemAuthors[zu]]);
-								}
-							}
-						}
-						if (Items[y].primaryauthor) {
-							if (Users_namehash[Items[y].primaryauthor]) {
-								Items[y].primaryauthor = Users_namehash[Items[y].primaryauthor];
-							}
-							else {
-								delete Items[y].primaryauthor;
-							}
-						}
-					}
-					callback(null, 'set post meta');
-				}
-				catch (e) {
-					callback(e, null);
-				}
-			},
-			Collections: function (callback) {
-				try {
-					var CollectionTags = [],
-						CollectionContenttypes = [],
-						CollectionCategories = [],
-						CollectionAssets = [],
-						CollectionAuthors = [];
-					for (var y in Collections) {
-						console.log('Collections[y].tags',Collections[y].tags);
-						if (Collections[y].tags) {
-							CollectionTags = Collections[y].tags;
-							Collections[y].tags = [];
-							for (var z in CollectionTags) {
-								if (Tags_namehash[CollectionTags[z]]) {
-									Collections[y].tags.push(Tags_namehash[CollectionTags[z]]);
-								}
-							}
-						}
-						if (Collections[y].categories) {
-							CollectionCategories = Collections[y].categories;
-							Collections[y].categories = [];
-							for (var zc in CollectionCategories) {
-								if (Categories_namehash[CollectionCategories[zc]]) {
-									Collections[y].categories.push(Categories_namehash[CollectionCategories[zc]]);
-								}
-							}
-						}
-						if (Collections[y].contenttypes) {
-							CollectionContenttypes = Collections[y].contenttypes;
-							Collections[y].contenttypes = [];
-							for (var zct in CollectionContenttypes) {
-								if (Contenttypes_namehash[CollectionContenttypes[zct]]) {
-									Collections[y].contenttypes.push(Contenttypes_namehash[CollectionContenttypes[zct]]);
-								}
-							}
-						}
-						if (Collections[y].assets) {
-							CollectionAssets = Collections[y].assets;
-							Collections[y].assets = [];
-							for (var za in CollectionAssets) {
-								if (Assets_namehash[CollectionAssets[za]]) {
-									Collections[y].assets.push(Assets_namehash[CollectionAssets[za]]);
-								}
-							}
-						}
-						if (Collections[y].primaryasset) {
-							if (Assets_namehash[Collections[y].primaryasset]) {
-								Collections[y].primaryasset = Assets_namehash[Collections[y].primaryasset];
-							}
-							else {
-								delete Collections[y].primaryasset;
-							}
-						}
-						if (Collections[y].authors) {
-							CollectionAuthors = Collections[y].authors;
-							Collections[y].authors = [];
-							for (var zu in CollectionAuthors) {
-								if (Users_namehash[CollectionAuthors[zu]]) {
-									Collections[y].authors.push(Users_namehash[CollectionAuthors[zu]]);
-								}
-							}
-						}
-						if (Collections[y].primaryauthor) {
-							if (Users_namehash[Collections[y].primaryauthor]) {
-								Collections[y].primaryauthor = Users_namehash[Collections[y].primaryauthor];
-							}
-							else {
-								delete Collections[y].primaryauthor;
-							}
-						}
-					}
-					callback(null, 'set collection meta');
-				}
-				catch (e) {
-					callback(e, null);
-				}
+			contenttypes: getContenttypeIdsFromContenttypeArray,
+			categories: getCategoryIdsFromCategoryArray,
+			tags: getTagIdsFromTagArray
+		},
+		function (err, createdtagscatstype) {
+			if (err) {
+				insertContentIntoDatabaseErrors.push({
+					createTaxonomiesError: err.toString()
+				});
 			}
-		}, function (err, updatedItemsCollections) {
+			// console.log('getTaxonomyIdsFromTaxonomiesArrays results', results);
+			async.parallel({
+				Items: function (callback) {
+					try {
+						var ItemTags = [],
+							ItemContenttypes = [],
+							ItemCategories = [],
+							ItemAssets = [],
+							ItemAuthors = [];
+						for (var y in Items) {
+							if (Items[y].tags) {
+								ItemTags = Items[y].tags;
+								Items[y].tags = [];
+								for (var z in ItemTags) {
+									if (Tags_namehash[ItemTags[z]]) {
+										Items[y].tags.push(Tags_namehash[ItemTags[z]]);
+									}
+								}
+							}
+							if (Items[y].categories) {
+								ItemCategories = Items[y].categories;
+								Items[y].categories = [];
+								for (var zc in ItemCategories) {
+									if (Categories_namehash[ItemCategories[zc]]) {
+										Items[y].categories.push(Categories_namehash[ItemCategories[zc]]);
+									}
+								}
+							}
+							if (Items[y].contenttypes) {
+								ItemContenttypes = Items[y].contenttypes;
+								Items[y].contenttypes = [];
+								for (var zct in ItemContenttypes) {
+									if (Contenttypes_namehash[ItemContenttypes[zct]]) {
+										Items[y].contenttypes.push(Contenttypes_namehash[ItemContenttypes[zct]]);
+									}
+								}
+							}
+							if (Items[y].assets) {
+								ItemAssets = Items[y].assets;
+								Items[y].assets = [];
+								for (var za in ItemAssets) {
+									if (Assets_namehash[ItemAssets[za]]) {
+										Items[y].assets.push(Assets_namehash[ItemAssets[za]]);
+									}
+								}
+							}
+							if (Items[y].primaryasset) {
+								if (Assets_namehash[Items[y].primaryasset]) {
+									Items[y].primaryasset = Assets_namehash[Items[y].primaryasset];
+								}
+								else {
+									delete Items[y].primaryasset;
+								}
+							}
+							if (Items[y].authors) {
+								ItemAuthors = Items[y].authors;
+								Items[y].authors = [];
+								for (var zu in ItemAuthors) {
+									if (Users_namehash[ItemAuthors[zu]]) {
+										Items[y].authors.push(Users_namehash[ItemAuthors[zu]]);
+									}
+								}
+							}
+							if (Items[y].primaryauthor) {
+								if (Users_namehash[Items[y].primaryauthor]) {
+									Items[y].primaryauthor = Users_namehash[Items[y].primaryauthor];
+								}
+								else {
+									delete Items[y].primaryauthor;
+								}
+							}
+						}
+						callback(null, 'set post meta');
+					}
+					catch (e) {
+						callback(e, null);
+					}
+				},
+				Collections: function (callback) {
+					try {
+						var CollectionTags = [],
+							CollectionContenttypes = [],
+							CollectionCategories = [],
+							CollectionAssets = [],
+							CollectionAuthors = [];
+						for (var y in Collections) {
+							console.log('Collections[y].tags', Collections[y].tags);
+							if (Collections[y].tags) {
+								CollectionTags = Collections[y].tags;
+								Collections[y].tags = [];
+								for (var z in CollectionTags) {
+									if (Tags_namehash[CollectionTags[z]]) {
+										Collections[y].tags.push(Tags_namehash[CollectionTags[z]]);
+									}
+								}
+							}
+							if (Collections[y].categories) {
+								CollectionCategories = Collections[y].categories;
+								Collections[y].categories = [];
+								for (var zc in CollectionCategories) {
+									if (Categories_namehash[CollectionCategories[zc]]) {
+										Collections[y].categories.push(Categories_namehash[CollectionCategories[zc]]);
+									}
+								}
+							}
+							if (Collections[y].contenttypes) {
+								CollectionContenttypes = Collections[y].contenttypes;
+								Collections[y].contenttypes = [];
+								for (var zct in CollectionContenttypes) {
+									if (Contenttypes_namehash[CollectionContenttypes[zct]]) {
+										Collections[y].contenttypes.push(Contenttypes_namehash[CollectionContenttypes[zct]]);
+									}
+								}
+							}
+							if (Collections[y].assets) {
+								CollectionAssets = Collections[y].assets;
+								Collections[y].assets = [];
+								for (var za in CollectionAssets) {
+									if (Assets_namehash[CollectionAssets[za]]) {
+										Collections[y].assets.push(Assets_namehash[CollectionAssets[za]]);
+									}
+								}
+							}
+							if (Collections[y].primaryasset) {
+								if (Assets_namehash[Collections[y].primaryasset]) {
+									Collections[y].primaryasset = Assets_namehash[Collections[y].primaryasset];
+								}
+								else {
+									delete Collections[y].primaryasset;
+								}
+							}
+							if (Collections[y].authors) {
+								CollectionAuthors = Collections[y].authors;
+								Collections[y].authors = [];
+								for (var zu in CollectionAuthors) {
+									if (Users_namehash[CollectionAuthors[zu]]) {
+										Collections[y].authors.push(Users_namehash[CollectionAuthors[zu]]);
+									}
+								}
+							}
+							if (Collections[y].primaryauthor) {
+								if (Users_namehash[Collections[y].primaryauthor]) {
+									Collections[y].primaryauthor = Users_namehash[Collections[y].primaryauthor];
+								}
+								else {
+									delete Collections[y].primaryauthor;
+								}
+							}
+						}
+						callback(null, 'set collection meta');
+					}
+					catch (e) {
+						callback(e, null);
+					}
+				}
+			}, function (err, updatedItemsCollections) {
 
 				// getItemIdsFromItemArray(callback);
-			getTaxonomyIdsFromTaxonomiesArraysAsyncCallBack(
-				err,{
-					updatedItemsCollections:updatedItemsCollections,
-					contenttypes:createdtagscatstype.contenttypes,
-					categories:createdtagscatstype.categories,
-					tags:createdtagscatstype.tags
+				getTaxonomyIdsFromTaxonomiesArraysAsyncCallBack(
+					err, {
+						updatedItemsCollections: updatedItemsCollections,
+						contenttypes: createdtagscatstype.contenttypes,
+						categories: createdtagscatstype.categories,
+						tags: createdtagscatstype.tags
+					});
 			});
-		});
 
-	});
+		});
 };
 
 /**
@@ -1344,11 +1344,11 @@ var getUsersIdsFromUserNameArray = function (getUsersIdsFromUserNameArrayAsyncCa
 					/**
 					 * add new users to name nash array
 					 */
-					if(arguments[x]._id){
-						Users_namehash[arguments[x].username] = arguments[x]._id;	
+					if (arguments[x]._id) {
+						Users_namehash[arguments[x].username] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments=numOfSeededDocuments+arguments.length;
+				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
 				callback(null, arguments);
 			});
 		},
@@ -1381,9 +1381,9 @@ var getUsersIdsFromUserNameArray = function (getUsersIdsFromUserNameArrayAsyncCa
 					});
 				});
 		}
-	], function (err /*, results*/) {
+	], function (err /*, results*/ ) {
 		// getTaxonomyIdsFromTaxonomiesArrays(callback);
-		getUsersIdsFromUserNameArrayAsyncCallBack(err,Users_namehash);
+		getUsersIdsFromUserNameArrayAsyncCallBack(err, Users_namehash);
 	});
 };
 
@@ -1432,7 +1432,7 @@ var getAssetIdsFromAssetNameArray = function (asyncCallBack) {
 		}
 		//logger.silly('Assets_namehash',Assets_namehash);
 		// getUsersIdsFromUserNameArray(callback);
-		asyncCallBack(null,Assets_namehash);
+		asyncCallBack(null, Assets_namehash);
 	});
 };
 
@@ -1454,13 +1454,13 @@ var getAssetIdsFromAssetNameArray = function (asyncCallBack) {
  */
 var insertContentIntoDatabase = function (insertContentIntoDatabaseAsyncCallBack) {
 	async.series({
-				createassets:getAssetIdsFromAssetNameArray,
-				createusers:getUsersIdsFromUserNameArray,
-				createtaxonomies:getTaxonomyIdsFromTaxonomiesArrays,
-				createitems:getItemIdsFromItemArray,
-				createcollections:getCollectionIdsFromCollectionArray
-			},function(err,results){
-			insertContentIntoDatabaseAsyncCallBack(err,results);
+		createassets: getAssetIdsFromAssetNameArray,
+		createusers: getUsersIdsFromUserNameArray,
+		createtaxonomies: getTaxonomyIdsFromTaxonomiesArrays,
+		createitems: getItemIdsFromItemArray,
+		createcollections: getCollectionIdsFromCollectionArray
+	}, function (err, results) {
+		insertContentIntoDatabaseAsyncCallBack(err, results);
 	});
 	// getAssetIdsFromAssetNameArray(cb);
 	// cb(null, 'insetintocontent');
@@ -1498,7 +1498,7 @@ var insertAssetsIntoDatabase = function (asyncCallBack) {
 			for (var x in arguments) {
 				Assets_namehash[arguments[x].name] = arguments[x]._id;
 			}
-			numOfSeededDocuments=numOfSeededDocuments+arguments.length;
+			numOfSeededDocuments = numOfSeededDocuments + arguments.length;
 			asyncCallBack(null, 'created new assets');
 		});
 	}
@@ -1544,6 +1544,7 @@ var getUsergroupsIdsFromUsergroupsIdArray = function (getUsergroupsIdsFromUsergr
 					newgroup = arguments[x];
 					Usergroups_namehash[newgroup.usergroupid] = newgroup._id;
 				}
+				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
 				callback(null, 'created new user groups');
 			});
 		},
@@ -1622,6 +1623,7 @@ var getUserroleIdsFromUserroleIdArray = function (asyncCallBack) {
 					newrole = arguments[x];
 					Userroles_namehash[newrole.userroleid] = newrole._id;
 				}
+				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
 				callback(null, 'created new user roles');
 			});
 		},
@@ -1660,7 +1662,7 @@ var getUserroleIdsFromUserroleIdArray = function (asyncCallBack) {
 				callback(null, 'got userroles name hash updated');
 			});
 		}
-	}, function (err /*, results */) {
+	}, function (err /*, results */ ) {
 		asyncCallBack(err, Userroles_namehash);
 	});
 };
@@ -1688,7 +1690,7 @@ var getUserprivilegeIdsFromUserPrivilegeIdArray = function (asyncCallBack) {
 				Userprivileges_namehash[newprivilege.userprivilegeid] = newprivilege._id;
 				// Assets_namehash[arguments[x].name]=arguments[x]._id;
 			}
-			// console.log('Userprivileges_namehash', Userprivileges_namehash);
+			numOfSeededDocuments = numOfSeededDocuments + arguments.length;
 			asyncCallBack(null, Userprivileges_namehash);
 		});
 	}
@@ -1747,8 +1749,8 @@ var insertDataIntoDatabase = function (seedObjectsArrayStatus, insertDataIntoDat
 					seedDocumentErrors: seedDocumentErrors,
 					validDocuments: validDocuments,
 					invalidDocuments: invalidDocuments,
-					numOfSeededDocuments:numOfSeededDocuments,
-					skippedSeeds:((validDocuments+invalidDocuments)-numOfSeededDocuments)
+					numOfSeededDocuments: numOfSeededDocuments,
+					skippedSeeds: (numOfSeededDocuments - (validDocuments + invalidDocuments))
 				});
 
 			});
@@ -1808,7 +1810,7 @@ var importSeed = function (options, importSeedCallback) {
 };
 
 /**
- * importseed module 
+ * importseed module
  * @module importseed
  * @{@link https://github.com/typesettin/periodicjs.ext.dbseed}
  * @author Yaw Joseph Etse

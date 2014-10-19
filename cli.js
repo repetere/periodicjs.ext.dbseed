@@ -44,7 +44,7 @@ var extscript = function (resources) {
 					seedController.importSeed({
 						jsondata: seedjson,
 						insertsetting: 'upsert'
-					},function (err, seeds) {
+					}, function (err, seeds) {
 						console.timeEnd('Seeding Data Started');
 						if (err) {
 							logger.error(err.toString());
@@ -104,28 +104,28 @@ var extscript = function (resources) {
 		}
 		else if (argv.task === 'empty' && argv.confirm) {
 			async.series([
-				function(cb){
-					console.time('Exporting Seed Data');
-					seedController.exportSeed({
-						filepath: 'content/backups/dbemptybackup.json',
-						limits: argv
-					}, function (err, status) {
-						console.timeEnd('Exporting Seed Data');
-						cb(err,status);
-					});
-				},
-				function(cb){
-					console.time('Empty Database Data');
-					seedController.emptyDB({
-						filepath: argv.file,
-						limits: argv
-					}, function (err, status) {
-						console.timeEnd('Empty Database Data');
-						cb(err,status);
-					});
-				}
+					function (cb) {
+						console.time('Exporting Seed Data');
+						seedController.exportSeed({
+							filepath: 'content/backups/dbemptybackup.json',
+							limits: argv
+						}, function (err, status) {
+							console.timeEnd('Exporting Seed Data');
+							cb(err, status);
+						});
+					},
+					function (cb) {
+						console.time('Empty Database Data');
+						seedController.emptyDB({
+							filepath: argv.file,
+							limits: argv
+						}, function (err, status) {
+							console.timeEnd('Empty Database Data');
+							cb(err, status);
+						});
+					}
 				],
-				function(err,status){
+				function (err, status) {
 					if (err) {
 						console.log(err);
 						logger.error(err.toString());
@@ -134,7 +134,7 @@ var extscript = function (resources) {
 						console.info('Export status', util.inspect(status));
 					}
 					process.exit(0);
-			});
+				});
 		}
 		else {
 			logger.silly('invalid dbseed task', argv);
