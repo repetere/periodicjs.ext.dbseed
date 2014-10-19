@@ -31,7 +31,7 @@ var extscript = function (resources) {
 	// node index.js --cli --extension dbseed --task sampledata
 	var cli = function (argv) {
 		if (argv.task === 'sampledata') {
-			datafile = path.resolve(__dirname, './sampledata/sampledata.json');
+			datafile = path.resolve(__dirname, './config/sampledata/sampledata.json');
 
 			fs.readJson(datafile, function (err, seedjson) {
 				if (err) {
