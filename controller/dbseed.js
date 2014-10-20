@@ -193,7 +193,7 @@ var index = function (req, res) {
 			renderView: result.templatepath,
 			responseData: {
 				pagedata: {
-					title: 'Seed Admin',
+					title: 'DBSeed Import/Export',
 					headerjs: ['/extensions/periodicjs.ext.dbseed/js/dbseed.min.js'],
 					extensions: CoreUtilities.getAdminMenu()
 				},

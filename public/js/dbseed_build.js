@@ -495,7 +495,7 @@ module.exports = letterpress;
 if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.letterpress = letterpress;
 }
-},{"classie":1,"domhelper":5,"events":12,"superagent":7,"util":16,"util-extend":23}],5:[function(require,module,exports){
+},{"classie":1,"domhelper":5,"events":13,"superagent":8,"util":17,"util-extend":7}],5:[function(require,module,exports){
 /*
  * domhelper
  * http://github.com/yawetse/domhelper
@@ -846,6 +846,41 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.domhelper = domhelper;
 }
 },{"classie":1}],7:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+module.exports = extend;
+function extend(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || typeof add !== 'object') return origin;
+
+  var keys = Object.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+}
+
+},{}],8:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -1896,7 +1931,7 @@ request.put = function(url, data, fn){
 
 module.exports = request;
 
-},{"emitter":8,"reduce":9}],8:[function(require,module,exports){
+},{"emitter":9,"reduce":10}],9:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -2062,7 +2097,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 
 /**
  * Reduce `arr` with `fn`.
@@ -2087,7 +2122,7 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent'),
@@ -2325,7 +2360,7 @@ contententry.prototype.uploadMediaFiles = function (e) {
 
 module.exports = contententry;
 
-},{"./updatemedia":11,"letterpressjs":3,"superagent":7}],11:[function(require,module,exports){
+},{"./updatemedia":12,"letterpressjs":3,"superagent":8}],12:[function(require,module,exports){
 'use strict';
 
 var updatemedia = function (element, mediadoc, additem) {
@@ -2425,7 +2460,7 @@ updatemedia.uploadFile = function (mediafilesresult, file, options) {
 
 module.exports = updatemedia;
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2728,7 +2763,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -2753,7 +2788,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -2818,14 +2853,14 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -3415,7 +3450,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":15,"_process":14,"inherits":13}],17:[function(require,module,exports){
+},{"./support/isBuffer":16,"_process":15,"inherits":14}],18:[function(require,module,exports){
 /*
  * component.tabs
  * http://github.amexpub.com/modules/component.tabs
@@ -3427,7 +3462,7 @@ function hasOwnProperty(obj, prop) {
 
 module.exports = require('./lib/component.tabs');
 
-},{"./lib/component.tabs":18}],18:[function(require,module,exports){
+},{"./lib/component.tabs":19}],19:[function(require,module,exports){
 /*
  * component.tabs
  * http://github.amexpub.com/modules
@@ -3527,46 +3562,13 @@ componentTabs.prototype._show = function (idx) {
 };
 module.exports = componentTabs;
 
-},{"classie":19,"events":12,"util":16,"util-extend":21}],19:[function(require,module,exports){
+},{"classie":20,"events":13,"util":17,"util-extend":22}],20:[function(require,module,exports){
 module.exports=require(1)
-},{"./lib/classie":20,"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/index.js":1}],20:[function(require,module,exports){
+},{"./lib/classie":21,"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/index.js":1}],21:[function(require,module,exports){
 module.exports=require(2)
-},{"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/lib/classie.js":2}],21:[function(require,module,exports){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-module.exports = extend;
-function extend(origin, add) {
-  // Don't do anything if add isn't an object
-  if (!add || typeof add !== 'object') return origin;
-
-  var keys = Object.keys(add);
-  var i = keys.length;
-  while (i--) {
-    origin[keys[i]] = add[keys[i]];
-  }
-  return origin;
-}
-
-},{}],22:[function(require,module,exports){
+},{"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/lib/classie.js":2}],22:[function(require,module,exports){
+module.exports=require(7)
+},{"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/letterpressjs/node_modules/util-extend/extend.js":7}],23:[function(require,module,exports){
 'use strict';
 
 var componentTab1,
@@ -3578,16 +3580,27 @@ var componentTab1,
 	previousseedInput,
 	assetidInput,
 	existingseedlist,
+	importstatusoutputel,
+	importSeedSelectionEl,
+	importFormContainer,
 	ComponentTabs = require('periodicjs.component.tabs');
 
 var useExistingSeedListener = function (e) {
 	seedpathInput.value = e.target.value;
 	seedpathDisplayInput.value = e.target.value;
 	previousseedInput.value = 'usepreviousseed';
+	importSeedSelectionEl.style.display = 'none';
+	importFormContainer.style.display = 'block';
+};
+
+window.showImportStatusResult = function () {
+	document.getElementById('importstatuscontainer').style.display = 'block';
+	importstatusoutputel.innerHTML = 'Importing seed data';
 };
 
 window.displayImportSeedStatus = function (ajaxFormResponse) {
-	console.log(ajaxFormResponse);
+	// console.log(ajaxFormResponse);
+	importstatusoutputel.innerHTML = JSON.stringify(ajaxFormResponse, null, 2);
 };
 
 window.addEventListener('load', function () {
@@ -3596,7 +3609,10 @@ window.addEventListener('load', function () {
 	seedpathDisplayInput = document.getElementById('seedpathdisplay');
 	assetidInput = document.getElementById('assetid');
 	tabelement = document.getElementById('tabs');
+	importFormContainer = document.getElementById('importFormContainer');
 	existingseedlist = document.getElementById('existingseedlist');
+	importstatusoutputel = document.getElementById('seedimportstatus');
+	importSeedSelectionEl = document.getElementById('importSeedSelection');
 	window.ajaxFormEventListers('._pea-ajax-form');
 	if (tabelement) {
 		componentTab1 = new ComponentTabs(tabelement);
@@ -3608,6 +3624,8 @@ window.addEventListener('load', function () {
 			seedpathInput.value = mediadoc.fileurl;
 			seedpathDisplayInput.value = mediadoc.fileurl;
 			assetidInput.value = mediadoc._id;
+			importSeedSelectionEl.style.display = 'none';
+			importFormContainer.style.display = 'block';
 			// console.log('uploadmediaCallback mediadoc', mediadoc);
 		}
 	});
@@ -3616,6 +3634,4 @@ window.addEventListener('load', function () {
 	}
 });
 
-},{"./../../../periodicjs.ext.admin/resources/js/contententry":10,"periodicjs.component.tabs":17}],23:[function(require,module,exports){
-module.exports=require(21)
-},{"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.dbseed/node_modules/periodicjs.component.tabs/node_modules/util-extend/extend.js":21}]},{},[22]);
+},{"./../../../periodicjs.ext.admin/resources/js/contententry":11,"periodicjs.component.tabs":18}]},{},[23]);
