@@ -1,0 +1,60 @@
+<article class="_pea-form">
+	<div class="_pea-document">
+		<div class="_pea-row">
+			<div class="_pea-col-span8">
+				<p>Upload or select a seed file, select if you want to replace data or import new data.</p>
+			</div>
+			<div class="_pea-row">
+				<div class="_pea-col-span5">
+					<h3>Upload a seed file</h3>
+					<div class="_pea-row _pea-container-forminput _pea-text-center _pea-form" style="margin-bottom:2em;">
+						<input type="hidden" name="_csrf" value=<%= locals.token %> >
+						<input type="file" name="upload-seed_button" id="upload-seed_button" value="Upload" class="_pea-button _pea-col-span12 _pea-color-default"/>
+					</div>
+
+					<h3>OR</h3>
+					<h3 style="margin-top:2em;">Use an existing Seed File</h3>
+					<div class="_pea-row _pea-container-forminput _pea-text-center _pea-form">
+						<select>
+							<% if(existingseeds && existingseeds.length<1){%>
+							<option>No seeds files</option>
+							<%}
+							else{
+								existingseeds.forEach(function(seedfile){
+									%>
+									<option value="<%- seedfile%>"><%- seedfile%></option>
+									<%
+								});
+								} %>
+						</select>
+					</div>
+				</div>
+				<div class="_pea-col-span6 _pea-pull-right">
+					<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/dbseed/uploadseed" data-successfunction="displayImportSeedStatus">
+						<h3>Selected Import Seed</h3>
+						<input type="hidden" name="_csrf" value=<%= locals.token %> >
+
+						<div class="_pea-row _pea-container-forminput">
+							<div class="_pea-col-span2">
+								<small>Name:</small>
+							</div>
+							<input type="text" id="seedpathdisplay" class="_pea-col-span10" name="seedpathdisplay" value=""  disabled="disabled"  >
+							<input type="hidden" id="seedpath" class="_pea-col-span10" name="seedpath" value=""   >
+							<input type="hidden" id="assetid" class="_pea-col-span10" name="assetid" value="" >
+						</div>
+						<div class="_pea-row _pea-container-forminput">
+							<div class="_pea-col-span2">
+								<label class="_pea-text-small" for="wipecheckbox">Wipe & replace:</label>
+							</div>
+							<input type="checkbox" id="wipecheckbox" name="wipecheckbox" value="wipe"> <span class="_pea-color-error _pea-text-small">WARNING: This will replace all data in the database, a back up seed will be created in content/files/backups</span>
+						</div>
+						<div class="_pea-row _pea-container-forminput">
+							<input type="submit" name="save_button" style="font-size: 125%;" value="Import Seed" class="_pea-button _pea-color-success"/>
+						</div>
+					</form>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</article>

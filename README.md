@@ -24,7 +24,7 @@ $ node index.js --cli --extension dbseed --task import --file /path/to/file.json
 $ node index.js --cli --extension dbseed --task export --file /path/to/file.json
 ```
 
-If no file path is specified, the default file path is `content/backups/seeds/dbseed-[year]-[month]-[day]-[timestamp].json`
+If no file path is specified, the default file path is `content/files/backups/seeds/dbseed-[year]-[month]-[day]-[timestamp].json`
 
 ### import sample from cli
 
@@ -37,7 +37,7 @@ $ node index.js --cli --extension dbseed --task sampledata
 ```
 $ node index.js --cli --extension dbseed --task empty --confirm
 ```
-TThe file path is `content/backups/seeds/dbseed-[year]-[month]-[day]-[timestamp].json`
+TThe file path is `content/files/backups/dbemptybackup-[year]-[month]-[day]-[timestamp].json`
 
 ##Development
 *Make sure you have grunt installed*

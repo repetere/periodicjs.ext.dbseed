@@ -9,7 +9,9 @@ var path = require('path'),
 	mongoose,
 	logger,
 	datafile,
-	appSettings;
+	appSettings,
+	d = new Date(),
+	defaultExportFileName = 'dbemptybackup' + '-' + d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate() + '-' + d.getTime() + '.json';
 
 /**
  * cli dbseed controller
@@ -107,7 +109,7 @@ var extscript = function (resources) {
 					function (cb) {
 						console.time('Exporting Seed Data');
 						seedController.exportSeed({
-							filepath: 'content/backups/dbemptybackup.json',
+							filepath: 'content/files/dbseeds/' + defaultExportFileName,
 							limits: argv
 						}, function (err, status) {
 							console.timeEnd('Exporting Seed Data');

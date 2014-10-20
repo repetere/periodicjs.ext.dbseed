@@ -1,5 +1,5 @@
 'use strict';
-
+var path = require('path');
 /**
  * An extension to import json seeds into periodic mongodb.
  * @{@link https://github.com/typesettin/periodicjs.ext.dbseed}
@@ -16,11 +16,10 @@ module.exports = function (periodic) {
 
 	for (var x in periodic.settings.extconf.extensions) {
 		if (periodic.settings.extconf.extensions[x].name === 'periodicjs.ext.admin') {
+			seedRouter.post('/uploadseed', seedController.import_upload);
 			seedRouter.get('/', seedController.index);
-			// seedRouter.get('/status', seedController.status);
 		}
 	}
-	// seedRouter.post('/grow', seedController.grow);
 
 	periodic.app.use('/p-admin/dbseed', seedRouter);
 };

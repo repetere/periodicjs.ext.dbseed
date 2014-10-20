@@ -27,7 +27,7 @@ var exportSeedFilePath,
 	item_id_name_hash = {},
 	collection_id_name_hash = {},
 	d = new Date(),
-	defaultExportDir = 'content/backups/seeds/',
+	defaultExportDir = 'content/files/dbseeds/',
 	defaultExportFileName = 'dbseed' + '-' + d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate() + '-' + d.getTime() + '.json';
 /**
  * exports a seed data to seeds format

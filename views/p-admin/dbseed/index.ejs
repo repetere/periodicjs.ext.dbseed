@@ -3,70 +3,63 @@
 	<input type="hidden" name="_csrf" value=<%= locals.token %> >
 	<div class="_pea-container">
 		<div class="_pea-row">
-			<div class="_pea-col-span7">
-				<h2>Test Email</h2>
-				<form class="_pea-form _pea-ajax-form" method="post" action="/p-admin/mailer/testmail">
-					<div class="_pea-document">
-						<div class="_pea-row">
-							<div class="_pea-row _pea-container-forminput">
-								<label class="_pea-col-span1 _pea-label _pea-text-right">from</label>
-								<input class="_pea-col-span11 noFormSubmit" type="text" placeholder="from" value="local@local.getperiodic.com" name="from"/>
-							</div>
-							<div class="_pea-row _pea-container-forminput">
-								<label class="_pea-col-span1 _pea-label _pea-text-right">to</label>
-								<input class="_pea-col-span11 noFormSubmit" type="text" placeholder="subject" value="<%- user.email %>" name="to"/>
-							</div>
-							<div class="_pea-row _pea-container-forminput">
-								<label class="_pea-col-span1 _pea-label _pea-text-right">cc</label>
-								<input class="_pea-col-span11 noFormSubmit" type="text" placeholder="subject" value="<%- user.email %>" name="cc"/>
-							</div>
-							<div class="_pea-row _pea-container-forminput">
-								<label class="_pea-col-span1 _pea-label _pea-text-right">bcc</label>
-								<input class="_pea-col-span11 noFormSubmit" type="text" placeholder="subject" value="" name="bcc"/>
-							</div>
-							<div class="_pea-row _pea-container-forminput">
-								<label class="_pea-col-span1 _pea-label _pea-text-right">replyTo</label>
-								<input class="_pea-col-span11 noFormSubmit" type="text" placeholder="subject" value="<%- user.email %>" name="replyTo"/>
-							</div>
-							<div class="_pea-row _pea-text-center _pea-container-forminput no-margin">
-								<input type="submit" class="_pea-color-success _pea-button" value="Send Email" name="send_mail_button"/>
+			<div class="_pea-col-span8">
+				<div class="_pea-row">
+					<div class="_pea-col-span12">
+						<div id="tabs" class="tabs">
+							<nav>
+								<ul class="_pea-col-span12">
+									<li class="_pea-col-span4 _pea-no-margin">Import</li>
+									<li class="_pea-col-span4 _pea-no-margin">Export</li>
+									<li class="_pea-col-span4 _pea-no-margin">Custom Seeds</li>
+								</ul>
+							</nav>
+							<div class="content">
+								<section class="_pea-no-padding">
+									<% include _import_tab %>
+								</section>
+								<section class="_pea-no-padding">
+									<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateappsettings">
+										<div class="_pea-document">
+											export
+										</div>
+									</form>
+								</section>
+								<section class="_pea-no-padding">
+
+									<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateappsettings">
+										<div class="_pea-document">
+											custom
+										</div>
+									</form>
+								</section>
 							</div>
 						</div>
 					</div>
-				</form>
+				</div>
 			</div>
-			<div class="_pea-col-span4 _pea-pull-right">
-				<h2>Mail Settings</h2>
-				<form class="_pea-form _pea-ajax-form" method="post" action="/p-admin/mailer/updatesettings">
+			<div class="_pea-col-span3 _pea-pull-right">
+				<form class="_pea-form _pea-ajax-form" method="post" action="/p-admin/mailer/testmail">
 					<div class="_pea-document">
-						<div class="_pea-row _pea-container-forminput">
-						<% var docstatus = [{
-								"value":"publish",
-								"label":"Status: Publish"
-								},{
-								"value":"draft",
-								"label":"Status: Draft"
-								},{
-								"value":"review",
-								"label":"Status: Review"
-								},{
-								"value":"trash",
-								"label":"Status: Trash"
-								}]; %>
-							<select name="status" class="_pea-col-span12">
-								<% docstatus.forEach(function(status){
-									%>
-										<option <% if('publish' === status.value ){%> selected="selected"
-										<%}%> value="<%= status.value %>"><%= status.label %></option>
-									<%
-									}); %>
-							</select>
+						<div class="_pea-row">
+						<h3>About DB Seeds & Migrations</h3>
+							<p>Database seeds are an efficient way of populating your database using the same data models.</p>
+							<p>The seed format is a JSON document, that is inserted into the database and will automatically connect reference to other content documents, tag, and taxonimies if they're referenced by name.</p>
 						</div>
-						<div class="_pea-row _pea-container-forminput">
-							<small>Date: Publish Immediately</small>
-						</div>
-						<div class="_pea-text-center">
-							<input type="submit" name="save_button" value="Sendmail" class="_pea-button _pea-color-default"/>
+						<div class="_pea-row">
+							<h3>Example <select>
+								<option value="item">item</option>
+								<option value="collection">collection</option>
+								<option value="library">library</option>
+								<option value="tag">tag</option>
+								<option value="category">category</option>
+								<option value="contenttype">contenttype</option>
+								<option value="userprivilve">category</option>
+								<option value="userrole">userrole</option>
+								<option value="dbsetting">dbsetting</option>
+								<option value="user">user</option>
+							</select> seed</h3>
+							<textarea id="example-seed-ta" class="_pea-col-span12"></textarea>
 						</div>
 					</div>
 				</form>
