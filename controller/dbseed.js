@@ -69,6 +69,61 @@ var export_download = function (req, res) {
 };
 
 /**
+ * upload custom seed controller for seeds posted via admin interface
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} responds with dbseed page
+ */
+var import_customseed = function (req, res) {
+	var uploadSeedObject = CoreUtilities.removeEmptyObjectValues(req.body),
+		seedParseError,
+		customSeed;
+	try {
+		customSeed = JSON.parse(uploadSeedObject.customseedjson);
+	}
+	catch (e) {
+		seedParseError = e;
+	}
+
+	console.time('Importing Custom Seed Data');
+	importSeedModule.importSeed({
+			jsondata: customSeed,
+			insertsetting: 'upsert'
+		},
+		function (err, status) {
+			console.timeEnd('Importing Custom Seed Data');
+			if (seedParseError) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: seedParseError,
+					res: res,
+					req: req
+				});
+			}
+			else if (err) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: err,
+					res: res,
+					req: req
+				});
+			}
+			else {
+				CoreController.handleDocumentQueryRender({
+					res: res,
+					req: req,
+					renderView: 'home/index',
+					responseData: {
+						pagedata: {
+							title: 'New Item',
+						},
+						data: status,
+						user: req.user
+					}
+				});
+			}
+		});
+};
+
+/**
  * upload post controller for seeds uplaoded via admin interface
  * @param  {object} req
  * @param  {object} res
@@ -291,6 +346,7 @@ var controller = function (resources) {
 		index: index,
 		import_upload: import_upload,
 		export_download: export_download,
+		import_customseed: import_customseed,
 		seedDocuments: importSeedModule.seedDocuments,
 		importSeed: importSeedModule.importSeed,
 		exportSeed: exportSeedModule.exportSeed,

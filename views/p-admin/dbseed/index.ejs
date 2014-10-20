@@ -1,5 +1,10 @@
 <% include ../../../../periodicjs.ext.admin/views/shared/header %>
 <% include ../../../../periodicjs.ext.admin/views/shared/nav %>
+	<style>
+	.CodeMirror{
+		height:auto;
+	}
+	</style>
 	<input type="hidden" name="_csrf" value=<%= locals.token %> >
 	<div class="_pea-container">
 		<div class="_pea-row">
@@ -22,12 +27,7 @@
 									<% include _export_tab %>
 								</section>
 								<section class="_pea-no-padding">
-
-									<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateappsettings">
-										<div class="_pea-document">
-											custom
-										</div>
-									</form>
+									<% include _customseed_tab %>
 								</section>
 							</div>
 						</div>
