@@ -15,11 +15,13 @@
 					<h3>OR</h3>
 					<h3 style="margin-top:2em;">Use an existing Seed File</h3>
 					<div class="_pea-row _pea-container-forminput _pea-text-center _pea-form">
-						<select>
+						<select id="existingseedlist" name="existingseedlist">
 							<% if(existingseeds && existingseeds.length<1){%>
 							<option>No seeds files</option>
 							<%}
-							else{
+							else{%>
+								<option>Select an existing seed</option>
+							<%
 								existingseeds.forEach(function(seedfile){
 									%>
 									<option value="<%- seedfile%>"><%- seedfile%></option>
@@ -33,6 +35,7 @@
 					<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/dbseed/uploadseed" data-successfunction="displayImportSeedStatus">
 						<h3>Selected Import Seed</h3>
 						<input type="hidden" name="_csrf" value=<%= locals.token %> >
+						<input type="hidden" name="previousseed" id="previousseed" >
 
 						<div class="_pea-row _pea-container-forminput">
 							<div class="_pea-col-span2">

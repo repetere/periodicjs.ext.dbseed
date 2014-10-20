@@ -14,42 +14,42 @@ var async = require('async'),
  * UserObj - Seed Object for a 'User'
  * Users - Array Of User Object Seeds Documents from Seed File
  * Users_namehash - hash of {name:id} to look up Users by name and insert the object id into the document for population
- * Users_namehash_array - Array of username (or document names), to query mongoose to associate objectIds with later
+ * Users_username_array - Array of username (or document names), to query mongoose to associate objectIds with later
  */
 var UsersObj,
 	User, // = mongoose.model('User')
 	Users = [],
 	Users_namehash = {},
-	Users_namehash_array = [],
+	Users_username_array = [],
 	ItemsObj,
 	Item, // = mongoose.model('Item')
 	Items = [],
 	Items_namehash = {},
-	Items_namehash_array = [],
+	Items_name_array = [],
 	AssetsObj,
 	Asset, //  = mongoose.model('Asset')
 	Assets = [],
-	Assets_namehash_array = [],
+	Assets_name_array = [],
 	Assets_namehash = {},
 	ContenttypesObj,
 	Contenttype, // = mongoose.model('Contenttype')
 	Contenttypes = [],
-	Contenttypes_namehash_array = [],
+	Contenttypes_name_array = [],
 	Contenttypes_namehash = {},
 	CategoriesObj,
 	Category, // = mongoose.model('Category')
 	Categories = [],
-	Categories_namehash_array = [],
+	Categories_name_array = [],
 	Categories_namehash = {},
 	TagsObj,
 	Tag, // = mongoose.model('Tag')
 	Tags = [],
-	Tags_namehash_array = [],
+	Tags_name_array = [],
 	Tags_namehash = {},
 	CollectionsObj,
 	Collection, // = mongoose.model('Collection')
 	Collections = [],
-	Collections_namehash_array = [],
+	Collections_name_array = [],
 	Collections_namehash = {},
 	UserprivilegesObj,
 	Userprivilege, // = mongoose.model('Userprivilege')
@@ -78,7 +78,7 @@ var UsersObj,
 /**
  * create seed {Userprivilege|Userrole|Usergroup} Object
  * @param  {object} options seeddocument
- * @return {object}         {doc-{Userprivilege|Userrole|Usergroup},docs_namehash - {Userprivilege|Userrole|Usergroup}.name,err}
+ * @return {object}         {doc-{Userprivilege|Userrole|Usergroup},docs_name_array - {Userprivilege|Userrole|Usergroup}.name,err}
  */
 var seedUserGroupRolePrivilegeData = function (options) {
 	var seeddocument = options.seeddocument,
@@ -138,12 +138,12 @@ var seedUserGroupRolePrivilegeData = function (options) {
 /**
  * create seed Item Object
  * @param  {object} options seeddocument
- * @return {object}         {doc-Item,docs_namehash - Item.name,err}
+ * @return {object}         {doc-Item,docs_name_array - Item.name,err}
  */
 var seedItemData = function (options) {
 	// logger.silly('seedAssetData',options);
 	var seeddocument = options.seeddocument,
-		seed_namehash = null,
+		seed_name_array_item = null,
 		errorObj = null;
 
 	try {
@@ -156,6 +156,7 @@ var seedItemData = function (options) {
 		if (!seeddocument.name) {
 			seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
 		}
+		seed_name_array_item = seeddocument.name;
 	}
 	catch (e) {
 		errorObj = e;
@@ -163,7 +164,7 @@ var seedItemData = function (options) {
 
 	return {
 		doc: seeddocument,
-		docs_namehash: seed_namehash,
+		docs_name_array: seed_name_array_item,
 		err: errorObj
 	};
 };
@@ -171,12 +172,12 @@ var seedItemData = function (options) {
 /**
  * create seed Collection Object
  * @param  {object} options seeddocument
- * @return {object}         {doc-Collection,docs_namehash - Collection.name,err}
+ * @return {object}         {doc-Collection,docs_name_array - Collection.name,err}
  */
 var seedCollectionData = function (options) {
 	// logger.silly('seedAssetData',options);
 	var seeddocument = options.seeddocument,
-		seed_namehash = null,
+		seed_name_array_item = null,
 		errorObj = null;
 
 	try {
@@ -189,6 +190,7 @@ var seedCollectionData = function (options) {
 		if (!seeddocument.name) {
 			seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
 		}
+		seed_name_array_item = seeddocument.name;
 	}
 	catch (e) {
 		errorObj = e;
@@ -196,7 +198,7 @@ var seedCollectionData = function (options) {
 
 	return {
 		doc: seeddocument,
-		docs_namehash: seed_namehash,
+		docs_name_array: seed_name_array_item,
 		err: errorObj
 	};
 };
@@ -204,12 +206,12 @@ var seedCollectionData = function (options) {
 /**
  * create seed User Object
  * @param  {object} options seeddocument
- * @return {object}         {doc-User,docs_namehash - User.name,err}
+ * @return {object}         {doc-User,docs_name_array - User.name,err}
  */
 var seedUserData = function (options) {
 	// logger.silly('seedAssetData',options);
 	var seeddocument = options.seeddocument,
-		seed_namehash = null,
+		seed_name_array_item = null,
 		errorObj = null,
 		User = mongoose.model('User'),
 		salt,
@@ -228,7 +230,7 @@ var seedUserData = function (options) {
 			}
 			seeddocument.apikey = User.generateRandomTokenStatic();
 			if (seeddocument.username) {
-				seed_namehash = seeddocument.username;
+				seed_name_array_item = seeddocument.username;
 			}
 		}
 	}
@@ -238,7 +240,7 @@ var seedUserData = function (options) {
 
 	return {
 		doc: seeddocument,
-		docs_namehash: seed_namehash,
+		docs_name_array: seed_name_array_item,
 		err: errorObj
 	};
 };
@@ -246,12 +248,12 @@ var seedUserData = function (options) {
 /**
  * create seed Asset Object
  * @param  {object} options seeddocument
- * @return {object}         {doc-Asset,docs_namehash - Asset.name,err}
+ * @return {object}         {doc-Asset,docs_name_array - Asset.name,err}
  */
 var seedAssetData = function (options) {
 	// logger.silly('seedAssetData',options);
 	var seeddocument = options.seeddocument,
-		seed_namehash = null,
+		seed_name_array_item = null,
 		errorObj = null;
 	try {
 		if (seeddocument.locationtype === 'local') {
@@ -281,7 +283,7 @@ var seedAssetData = function (options) {
 			errorObj = new Error('asset ' + seeddocument.name + ' is missing title');
 		}
 		else {
-			seed_namehash = seeddocument.name;
+			seed_name_array_item = seeddocument.name;
 		}
 	}
 	catch (e) {
@@ -290,7 +292,7 @@ var seedAssetData = function (options) {
 
 	return {
 		doc: seeddocument,
-		docs_namehash: seed_namehash,
+		docs_name_array: seed_name_array_item,
 		err: errorObj
 	};
 };
@@ -298,11 +300,11 @@ var seedAssetData = function (options) {
 /**
  * create seed Contenttype Object
  * @param  {object} options seeddocument
- * @return {object}         {doc-Contenttype,docs_namehash - Contenttype.name,err}
+ * @return {object}         {doc-Contenttype,docs_name_array - Contenttype.name,err}
  */
 var seedContenttypeData = function (options) {
 	var seeddocument = options.seeddocument,
-		seed_namehash = null,
+		seed_name_array_item = null,
 		errorObj = null;
 
 	try {
@@ -312,6 +314,7 @@ var seedContenttypeData = function (options) {
 		if (!seeddocument.name) {
 			seeddocument.name = CoreUtilities.makeNiceAttribute(seeddocument.title);
 		}
+		seed_name_array_item = seeddocument.name;
 	}
 	catch (e) {
 		errorObj = e;
@@ -319,7 +322,7 @@ var seedContenttypeData = function (options) {
 
 	return {
 		doc: seeddocument,
-		docs_namehash: seed_namehash,
+		docs_name_array: seed_name_array_item,
 		err: errorObj
 	};
 };
@@ -327,11 +330,11 @@ var seedContenttypeData = function (options) {
 /**
  * create seed Category Object
  * @param  {object} options seeddocument
- * @return {object}         {doc-category,docs_namehash - category.name,err}
+ * @return {object}         {doc-category,docs_name_array - category.name,err}
  */
 var seedCategoryData = function (options) {
 	var seeddocument = options.seeddocument,
-		seed_namehash = null,
+		seed_name_array_item = null,
 		errorObj = null;
 
 	try {
@@ -341,6 +344,7 @@ var seedCategoryData = function (options) {
 		if (!seeddocument.name) {
 			seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
 		}
+		seed_name_array_item = seeddocument.name;
 	}
 	catch (e) {
 		errorObj = e;
@@ -348,7 +352,7 @@ var seedCategoryData = function (options) {
 
 	return {
 		doc: seeddocument,
-		docs_namehash: seed_namehash,
+		docs_name_array: seed_name_array_item,
 		err: errorObj
 	};
 };
@@ -356,11 +360,11 @@ var seedCategoryData = function (options) {
 /**
  * create seed Tag Object
  * @param  {object} options seeddocument
- * @return {object}         {doc-tag,docs_namehash - tag.name,err}
+ * @return {object}         {doc-tag,docs_name_array - tag.name,err}
  */
 var seedTagData = function (options) {
 	var seeddocument = options.seeddocument,
-		seed_namehash = null,
+		seed_name_array_item = null,
 		errorObj = null;
 
 	try {
@@ -370,6 +374,7 @@ var seedTagData = function (options) {
 		if (!seeddocument.name) {
 			seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
 		}
+		seed_name_array_item = seeddocument.name;
 	}
 	catch (e) {
 		errorObj = e;
@@ -377,7 +382,7 @@ var seedTagData = function (options) {
 
 	return {
 		doc: seeddocument,
-		docs_namehash: seed_namehash,
+		docs_name_array: seed_name_array_item,
 		err: errorObj
 	};
 };
@@ -508,7 +513,7 @@ var setSeedDataAsset = function (options) {
 	}
 	else {
 		Assets.push(AssetsObj.doc);
-		Assets_namehash_array.push(AssetsObj.docs_namehash);
+		Assets_name_array.push(AssetsObj.docs_name_array);
 	}
 };
 
@@ -532,7 +537,7 @@ var setSeedDataUser = function (options) {
 	}
 	else {
 		Users.push(UsersObj.doc);
-		Users_namehash_array.push(UsersObj.docs_namehash);
+		Users_username_array.push(UsersObj.docs_name_array);
 		if (UsersObj.doc.userroles && UsersObj.doc.userroles.length > 0) {
 			for (var q in UsersObj.doc.userroles) {
 				Userroles_userroleid_array.push(UsersObj.doc.userroles[q]);
@@ -561,9 +566,9 @@ var setSeedDataContentype = function (options) {
 	}
 	else {
 		Contenttypes.push(ContenttypesObj.doc);
-		Contenttypes_namehash_array.push(ContenttypesObj.docs_namehash);
+		Contenttypes_name_array.push(ContenttypesObj.docs_name_array);
 		if (ContenttypesObj.doc.author) {
-			Users_namehash_array.push(ContenttypesObj.doc.author);
+			Users_username_array.push(ContenttypesObj.doc.author);
 		}
 	}
 };
@@ -588,9 +593,9 @@ var setSeedDataCategory = function (options) {
 	}
 	else {
 		Categories.push(CategoriesObj.doc);
-		Categories_namehash_array.push(CategoriesObj.docs_namehash);
+		Categories_name_array.push(CategoriesObj.docs_name_array);
 		if (CategoriesObj.doc.author) {
-			Users_namehash_array.push(CategoriesObj.doc.author);
+			Users_username_array.push(CategoriesObj.doc.author);
 		}
 	}
 };
@@ -615,9 +620,9 @@ var setSeedDataTag = function (options) {
 	}
 	else {
 		Tags.push(TagsObj.doc);
-		Tags_namehash_array.push(TagsObj.docs_namehash);
+		Tags_name_array.push(TagsObj.docs_name_array);
 		if (TagsObj.doc.author) {
-			Users_namehash_array.push(TagsObj.doc.author);
+			Users_username_array.push(TagsObj.doc.author);
 		}
 	}
 };
@@ -642,7 +647,7 @@ var setSeedDataItem = function (options) {
 	}
 	else {
 		Items.push(ItemsObj.doc);
-		Items_namehash_array.push(ItemsObj.docs_namehash);
+		Items_name_array.push(ItemsObj.docs_name_array);
 	}
 };
 
@@ -666,7 +671,7 @@ var setSeedDataCollection = function (options) {
 	// }
 	// else {
 	// 	Items.push(ItemsObj.doc);
-	// 	Items_namehash_array.push(ItemsObj.docs_namehash);
+	// 	Items_name_array.push(ItemsObj.docs_name_array);
 	// }
 
 
@@ -682,7 +687,7 @@ var setSeedDataCollection = function (options) {
 	}
 	else {
 		Collections.push(CollectionsObj.doc);
-		Collections_namehash_array.push(CollectionsObj.docs_namehash);
+		Collections_name_array.push(CollectionsObj.docs_name_array);
 	}
 };
 
@@ -796,7 +801,7 @@ var setSeedObjectArrays = function (options, callback) {
  * @return {Function} async callback getCollectionIdsFromCollectionArrayAsyncCallBack(err,results);
  */
 var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollectionArrayAsyncCallBack) {
-	console.log('Collections', Collections);
+	// console.log('Collections', Collections);
 	var CollectionItems = [];
 	for (var y in Collections) {
 		if (Collections[y].items) {
@@ -835,7 +840,7 @@ var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollecti
 		function (NewCollections, callback) {
 			Collection.find({
 					'name': {
-						$in: Collections_namehash_array
+						$in: Collections_name_array
 					}
 				},
 				'_id name',
@@ -894,7 +899,7 @@ var getItemIdsFromItemArray = function (getItemIdsFromItemArrayAsyncCallBack) {
 		function (NewItems, callback) {
 			Item.find({
 					'name': {
-						$in: Items_namehash_array
+						$in: Items_name_array
 					}
 				},
 				'_id name',
@@ -910,7 +915,7 @@ var getItemIdsFromItemArray = function (getItemIdsFromItemArrayAsyncCallBack) {
 							Items_namehash[itemdata[x].name] = itemdata[x]._id;
 						}
 						callback(null, {
-							newcategories: NewItems,
+							newitems: NewItems,
 							querieditems: itemdata
 						});
 					}
@@ -963,7 +968,7 @@ var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 		function (NewTags, callback) {
 			Tag.find({
 					'name': {
-						$in: Tags_namehash_array
+						$in: Tags_name_array
 					}
 				},
 				'_id name',
@@ -979,7 +984,7 @@ var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 							Tags_namehash[tagdata[x].name] = tagdata[x]._id;
 						}
 						callback(null, {
-							newcategories: NewTags,
+							newtags: NewTags,
 							queriedtags: tagdata
 						});
 					}
@@ -1034,7 +1039,7 @@ var getCategoryIdsFromCategoryArray = function (getCategoryIdsFromCategoryArrayA
 		function (NewCategories, callback) {
 			Category.find({
 					'name': {
-						$in: Categories_namehash_array
+						$in: Categories_name_array
 					}
 				},
 				'_id name',
@@ -1105,7 +1110,7 @@ var getContenttypeIdsFromContenttypeArray = function (getContenttypeIdsFromConte
 		function (NewContenttypes, callback) {
 			Contenttype.find({
 					'name': {
-						$in: Contenttypes_namehash_array
+						$in: Contenttypes_name_array
 					}
 				},
 				'_id name',
@@ -1362,7 +1367,7 @@ var getUsersIdsFromUserNameArray = function (getUsersIdsFromUserNameArrayAsyncCa
 			 */
 			User.find({
 					'username': {
-						$in: Users_namehash_array
+						$in: Users_username_array
 					}
 				},
 				'_id username',
@@ -1395,7 +1400,7 @@ var getUsersIdsFromUserNameArray = function (getUsersIdsFromUserNameArrayAsyncCa
 var getAssetIdsFromAssetNameArray = function (asyncCallBack) {
 	Asset.find({
 		'name': {
-			$in: Assets_namehash_array
+			$in: Assets_name_array
 		}
 	}, '_id name', function (err, assetdata) {
 		if (err) {

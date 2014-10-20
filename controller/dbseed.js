@@ -29,14 +29,21 @@ var import_upload = function (req, res) {
 		originalseeduploadpath,
 		uploadseeddir = path.resolve(process.cwd(), 'content/files/dbseeds'),
 		seedname,
+		useExistingSeed = (uploadSeedObject.previousseed && uploadSeedObject.previousseed === 'usepreviousseed') ? true : false,
 		newseedpath;
 
 	async.series({
 			setupseeddata: function (cb) {
 				try {
-					originalseeduploadpath = path.join(process.cwd(), 'public', uploadSeedObject.seedpath);
-					seedname = path.basename(uploadSeedObject.seedpath);
-					newseedpath = path.resolve(process.cwd(), 'content/files/dbseeds', seedname);
+					if (useExistingSeed) {
+						seedname = path.basename(uploadSeedObject.seedpath);
+						newseedpath = path.resolve(process.cwd(), 'content/files/dbseeds', seedname);
+					}
+					else {
+						originalseeduploadpath = path.join(process.cwd(), 'public', uploadSeedObject.seedpath);
+						seedname = path.basename(uploadSeedObject.seedpath);
+						newseedpath = path.resolve(process.cwd(), 'content/files/dbseeds', seedname);
+					}
 					cb(null, 'setup seed data');
 				}
 				catch (e) {
@@ -44,13 +51,28 @@ var import_upload = function (req, res) {
 				}
 			},
 			checkdirexists: function (cb) {
-				fs.ensureDir(uploadseeddir, cb);
+				if (useExistingSeed) {
+					cb(null, 'skip directory check, useExistingSeed');
+				}
+				else {
+					fs.ensureDir(uploadseeddir, cb);
+				}
 			},
 			moveseed: function (cb) {
-				fs.rename(originalseeduploadpath, newseedpath, cb);
+				if (useExistingSeed) {
+					cb(null, 'skip move directory, useExistingSeed');
+				}
+				else {
+					fs.rename(originalseeduploadpath, newseedpath, cb);
+				}
 			},
 			deleteOldUpload: function (cb) {
-				fs.remove(originalseeduploadpath, cb);
+				if (useExistingSeed) {
+					cb(null, 'skip delete old seed, useExistingSeed');
+				}
+				else {
+					fs.remove(originalseeduploadpath, cb);
+				}
 			},
 			removeAssetFromDB: function (cb) {
 				if (uploadSeedObject.assetid) {

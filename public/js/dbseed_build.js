@@ -3575,8 +3575,16 @@ var componentTab1,
 	tabelement,
 	seedpathInput,
 	seedpathDisplayInput,
+	previousseedInput,
 	assetidInput,
+	existingseedlist,
 	ComponentTabs = require('periodicjs.component.tabs');
+
+var useExistingSeedListener = function (e) {
+	seedpathInput.value = e.target.value;
+	seedpathDisplayInput.value = e.target.value;
+	previousseedInput.value = 'usepreviousseed';
+};
 
 window.displayImportSeedStatus = function (ajaxFormResponse) {
 	console.log(ajaxFormResponse);
@@ -3584,9 +3592,11 @@ window.displayImportSeedStatus = function (ajaxFormResponse) {
 
 window.addEventListener('load', function () {
 	seedpathInput = document.getElementById('seedpath');
+	previousseedInput = document.getElementById('previousseed');
 	seedpathDisplayInput = document.getElementById('seedpathdisplay');
 	assetidInput = document.getElementById('assetid');
 	tabelement = document.getElementById('tabs');
+	existingseedlist = document.getElementById('existingseedlist');
 	window.ajaxFormEventListers('._pea-ajax-form');
 	if (tabelement) {
 		componentTab1 = new ComponentTabs(tabelement);
@@ -3601,8 +3611,10 @@ window.addEventListener('load', function () {
 			// console.log('uploadmediaCallback mediadoc', mediadoc);
 		}
 	});
+	if (existingseedlist) {
+		existingseedlist.addEventListener('change', useExistingSeedListener, false);
+	}
 });
-//9178050772
 
 },{"./../../../periodicjs.ext.admin/resources/js/contententry":10,"periodicjs.component.tabs":17}],23:[function(require,module,exports){
 module.exports=require(21)
