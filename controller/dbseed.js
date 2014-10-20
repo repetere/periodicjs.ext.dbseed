@@ -14,9 +14,59 @@ var Utilities = require('periodicjs.core.utilities'),
 	appSettings,
 	mongoose,
 	logger,
+	uploadseeddir = path.resolve(process.cwd(), 'content/files/dbseeds'),
 	d = new Date(),
 	defaultExportFileName = 'dbemptybackup' + '-' + d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate() + '-' + d.getTime() + '.json';
 
+/**
+ * exports seeds via admin interface
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} responds with dbseed download
+ */
+var export_download = function (req, res) {
+	// var downloadSeedObject = CoreUtilities.removeEmptyObjectValues(req.body);
+
+	async.series({
+		exportseed: function (cb) {
+			exportSeedModule.exportSeed({}, function (err, status) {
+				cb(err, status);
+			});
+		}
+	}, function (err, result) {
+		if (err) {
+			CoreController.handleDocumentQueryErrorResponse({
+				err: err,
+				res: res,
+				req: req
+			});
+		}
+		else {
+			var downloadfile = result.exportseed.exportSeedFilePath,
+				exportFileName = path.basename(downloadfile);
+
+			res.setHeader('Content-disposition', 'attachment; filename=' + exportFileName);
+			res.setHeader('Content-type', 'application/json');
+			// res.setHeader('Content-length', downloadfileObj.length);
+
+			// var filestream = fs.createReadStream(downloadfile);
+			// filestream.pipe(res);
+			// var file = __dirname + '/upload-folder/dramaticpenguin.MOV';
+			res.download(downloadfile, exportFileName, function (err) {
+				if (err) {
+					logger.error(err);
+				}
+				else {
+					fs.remove(downloadfile, function (err) {
+						if (err) {
+							logger.error(err);
+						}
+					});
+				}
+			}); // Set disposition and send it.
+		}
+	});
+};
 
 /**
  * upload post controller for seeds uplaoded via admin interface
@@ -27,7 +77,6 @@ var Utilities = require('periodicjs.core.utilities'),
 var import_upload = function (req, res) {
 	var uploadSeedObject = CoreUtilities.removeEmptyObjectValues(req.body),
 		originalseeduploadpath,
-		uploadseeddir = path.resolve(process.cwd(), 'content/files/dbseeds'),
 		seedname,
 		useExistingSeed = (uploadSeedObject.previousseed && uploadSeedObject.previousseed === 'usepreviousseed') ? true : false,
 		newseedpath;
@@ -231,10 +280,17 @@ var controller = function (resources) {
 	importSeedModule = require('./importseed')(resources);
 	dbopsModule = require('./dbops')(resources);
 	Asset = mongoose.model('Asset');
+	//async ensure export directory
+	fs.ensureDir(uploadseeddir, function (err) {
+		if (err) {
+			logger.error(err);
+		}
+	});
 
 	return {
 		index: index,
 		import_upload: import_upload,
+		export_download: export_download,
 		seedDocuments: importSeedModule.seedDocuments,
 		importSeed: importSeedModule.importSeed,
 		exportSeed: exportSeedModule.exportSeed,

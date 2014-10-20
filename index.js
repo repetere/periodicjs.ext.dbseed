@@ -17,6 +17,7 @@ module.exports = function (periodic) {
 	for (var x in periodic.settings.extconf.extensions) {
 		if (periodic.settings.extconf.extensions[x].name === 'periodicjs.ext.admin') {
 			seedRouter.post('/uploadseed', seedController.import_upload);
+			seedRouter.post('/downloadseed', seedController.export_download);
 			seedRouter.get('/', seedController.index);
 		}
 	}

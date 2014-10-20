@@ -3562,13 +3562,11 @@ componentTabs.prototype._show = function (idx) {
 };
 module.exports = componentTabs;
 
-},{"classie":20,"events":13,"util":17,"util-extend":22}],20:[function(require,module,exports){
+},{"classie":20,"events":13,"util":17,"util-extend":23}],20:[function(require,module,exports){
 module.exports=require(1)
-},{"./lib/classie":21,"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/index.js":1}],21:[function(require,module,exports){
+},{"./lib/classie":21,"/Users/yawetse/Developer/test/testinstances/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/index.js":1}],21:[function(require,module,exports){
 module.exports=require(2)
-},{"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/lib/classie.js":2}],22:[function(require,module,exports){
-module.exports=require(7)
-},{"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/letterpressjs/node_modules/util-extend/extend.js":7}],23:[function(require,module,exports){
+},{"/Users/yawetse/Developer/test/testinstances/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/lib/classie.js":2}],22:[function(require,module,exports){
 'use strict';
 
 var componentTab1,
@@ -3634,4 +3632,6 @@ window.addEventListener('load', function () {
 	}
 });
 
-},{"./../../../periodicjs.ext.admin/resources/js/contententry":11,"periodicjs.component.tabs":18}]},{},[23]);
+},{"./../../../periodicjs.ext.admin/resources/js/contententry":11,"periodicjs.component.tabs":18}],23:[function(require,module,exports){
+module.exports=require(7)
+},{"/Users/yawetse/Developer/test/testinstances/periodicjs/node_modules/periodicjs.ext.admin/node_modules/letterpressjs/node_modules/util-extend/extend.js":7}]},{},[22]);
