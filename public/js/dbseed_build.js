@@ -14383,6 +14383,16 @@ window.displayImportSeedStatus = function (ajaxFormResponse) {
 	importstatusoutputel.innerHTML = JSON.stringify(ajaxFormResponse, null, 2);
 };
 
+window.showCustomStatusResult = function () {
+	document.getElementById('importstatuscontainer').style.display = 'block';
+	importstatusoutputel.innerHTML = 'Customing seed data';
+};
+
+window.displayCustomSeedStatus = function (ajaxFormResponse) {
+	// console.log(ajaxFormResponse);
+	importstatusoutputel.innerHTML = JSON.stringify(ajaxFormResponse, null, 2);
+};
+
 window.addEventListener('load', function () {
 	seedpathInput = document.getElementById('seedpath');
 	previousseedInput = document.getElementById('previousseed');
