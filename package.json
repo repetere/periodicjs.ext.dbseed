@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.dbseed",
   "description": "An extension for seeding db with data",
-  "version": "1.90.293",
+  "version": "1.90.294",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
