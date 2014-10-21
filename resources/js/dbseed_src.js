@@ -10,6 +10,7 @@ var componentTab1,
 	assetidInput,
 	existingseedlist,
 	importstatusoutputel,
+	seedcustomstatusoutputel,
 	importSeedSelectionEl,
 	importFormContainer,
 	codeMirrorJSEditorsElements,
@@ -91,13 +92,14 @@ window.displayImportSeedStatus = function (ajaxFormResponse) {
 };
 
 window.showCustomStatusResult = function () {
-	document.getElementById('importstatuscontainer').style.display = 'block';
-	importstatusoutputel.innerHTML = 'Customing seed data';
+	document.getElementById('customseed-codemirror').innerHTML = codeMirrors[0].getValue();
+	document.getElementById('customstatuscontainer').style.display = 'block';
+	seedcustomstatusoutputel.innerHTML = 'Customing seed data';
 };
 
 window.displayCustomSeedStatus = function (ajaxFormResponse) {
 	// console.log(ajaxFormResponse);
-	importstatusoutputel.innerHTML = JSON.stringify(ajaxFormResponse, null, 2);
+	seedcustomstatusoutputel.innerHTML = JSON.stringify(ajaxFormResponse, null, 2);
 };
 
 window.addEventListener('load', function () {
@@ -110,6 +112,7 @@ window.addEventListener('load', function () {
 	existingseedlist = document.getElementById('existingseedlist');
 	importstatusoutputel = document.getElementById('seedimportstatus');
 	importSeedSelectionEl = document.getElementById('importSeedSelection');
+	seedcustomstatusoutputel = document.getElementById('seedcustomstatus');
 	codeMirrorJSEditorsElements = document.querySelectorAll('.codemirroreditor');
 	window.ajaxFormEventListers('._pea-ajax-form');
 	if (tabelement) {

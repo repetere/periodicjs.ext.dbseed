@@ -75,6 +75,47 @@ var UsersObj,
 	invalidDocuments,
 	numOfSeededDocuments = 0;
 
+var resetSeedData = function () {
+	Users = [];
+	Users_namehash = {};
+	Users_username_array = [];
+	Items = [];
+	Items_namehash = {};
+	Items_name_array = [];
+	Assets = [];
+	Assets_name_array = [];
+	Assets_namehash = {};
+	Contenttypes = [];
+	Contenttypes_name_array = [];
+	Contenttypes_namehash = {};
+	Categories = [];
+	Categories_name_array = [];
+	Categories_namehash = {};
+	Tags = [];
+	Tags_name_array = [];
+	Tags_namehash = {};
+	Collections = [];
+	Collections_name_array = [];
+	Collections_namehash = {};
+	Userprivileges = [];
+	Userprivileges_userprivilegeid_array = [];
+	Userprivileges_namehash = {};
+	Userroles = [];
+	Userroles_userroleid_array = [];
+	Userroles_namehash = {};
+	Usergroups = [];
+	Usergroups_usergroupid_array = [];
+	Usergroups_namehash = {};
+	numOfSeededDocuments = 0;
+	validDocuments = 0;
+	invalidDocuments = 0;
+	numOfSeededDocuments = 0;
+	seedObjectArraysDocumentErrors = [];
+	insertContentIntoDatabaseErrors = [];
+	insertUACIntoDatabaseErrors = [];
+	seedDocumentErrors = [];
+};
+
 /**
  * create seed {Userprivilege|Userrole|Usergroup} Object
  * @param  {object} options seeddocument
@@ -824,16 +865,20 @@ var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollecti
 						createCollectionsError: err.toString()
 					});
 				}
-				if (!arguments['0']) {
-					delete arguments['0'];
-				}
+
+				delete arguments['0'];
+
 				for (var x in arguments) {
 					// logger.silly('arguments[x]',x,arguments[x]);
-					if (arguments[x]._id) {
+					if (arguments[x] && arguments[x]._id) {
 						Collections_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+
+				if (Object.keys(arguments).length > 0) {
+					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+					// console.log('Collection numberofdocuments', numOfSeededDocuments, arguments);
+				}
 				callback(null, 'updated Collections_namehash');
 			});
 		},
@@ -883,16 +928,17 @@ var getItemIdsFromItemArray = function (getItemIdsFromItemArrayAsyncCallBack) {
 					});
 				}
 
-				if (!arguments['0']) {
-					delete arguments['0'];
-				}
+				delete arguments['0'];
 				for (var x in arguments) {
 					// logger.silly('arguments[x]',x,arguments[x]);
-					if (arguments[x]._id) {
+					if (arguments[x] && arguments[x]._id) {
 						Items_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+				// console.log('Item arguments.length', arguments.length, arguments);
+				if (Object.keys(arguments).length > 0) {
+					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+				}
 				callback(null, 'updated Items_namehash');
 			});
 		},
@@ -952,16 +998,19 @@ var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 					});
 				}
 
-				if (!arguments['0']) {
-					delete arguments['0'];
-				}
+				delete arguments['0'];
 				for (var x in arguments) {
 					// logger.silly('arguments[x]',x,arguments[x]);
-					if (arguments[x]._id) {
+					if (arguments[x] && arguments[x]._id) {
 						Tags_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+				// console.log('Tag arguments.length', arguments.length, arguments);
+
+				if (Object.keys(arguments).length > 0) {
+					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+					// console.log('Tag numberofdocuments', numOfSeededDocuments);
+				}
 				callback(null, 'updated Tags_namehash');
 			});
 		},
@@ -1023,16 +1072,19 @@ var getCategoryIdsFromCategoryArray = function (getCategoryIdsFromCategoryArrayA
 						createCategoryError: err.toString()
 					});
 				}
-				if (!arguments['0']) {
-					delete arguments['0'];
-				}
+
+				delete arguments['0'];
 				for (var x in arguments) {
 					// logger.silly('arguments[x]',x,arguments[x]);
-					if (arguments[x]._id) {
+					if (arguments[x] && arguments[x]._id) {
 						Categories_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+
+				if (Object.keys(arguments).length > 0) {
+					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+					// console.log('Category numberofdocuments', numOfSeededDocuments);
+				}
 				callback(null, 'updated Categories_namehash');
 			});
 		},
@@ -1094,16 +1146,19 @@ var getContenttypeIdsFromContenttypeArray = function (getContenttypeIdsFromConte
 						createContentypesError: err.toString()
 					});
 				}
-				if (!arguments['0']) {
-					delete arguments['0'];
-				}
+
+				delete arguments['0'];
 				for (var x in arguments) {
 					// //logger.silly('arguments[x]',x,arguments[x]);
-					if (arguments[x]._id) {
+					if (arguments[x] && arguments[x]._id) {
 						Contenttypes_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+
+				if (Object.keys(arguments).length > 0) {
+					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+					// console.log('Contenttype numberofdocuments', numOfSeededDocuments);
+				}
 				callback(null, 'updated Contenttypes_namehash');
 			});
 		},
@@ -1342,18 +1397,20 @@ var getUsersIdsFromUserNameArray = function (getUsersIdsFromUserNameArrayAsyncCa
 						createUsersError: err.toString()
 					});
 				}
-				if (!arguments['0']) {
-					delete arguments['0'];
-				}
+				delete arguments['0'];
 				for (var x in arguments) {
 					/**
 					 * add new users to name nash array
 					 */
-					if (arguments[x]._id) {
+					if (arguments[x] && arguments[x]._id) {
 						Users_namehash[arguments[x].username] = arguments[x]._id;
 					}
 				}
-				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+
+				if (Object.keys(arguments).length > 0) {
+					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+					// console.log('User numberofdocuments', numOfSeededDocuments);
+				}
 				callback(null, arguments);
 			});
 		},
@@ -1497,13 +1554,17 @@ var insertAssetsIntoDatabase = function (asyncCallBack) {
 					creatingAssetsError: err.toString()
 				});
 			}
-			if (!arguments['0']) {
-				delete arguments['0'];
-			}
+			delete arguments['0'];
 			for (var x in arguments) {
-				Assets_namehash[arguments[x].name] = arguments[x]._id;
+				if (arguments[x] && arguments[x]._id) {
+					Assets_namehash[arguments[x].name] = arguments[x]._id;
+				}
 			}
-			numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+
+			if (Object.keys(arguments).length > 0) {
+				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+				// console.log('Asset numberofdocuments', numOfSeededDocuments);
+			}
 			asyncCallBack(null, 'created new assets');
 		});
 	}
@@ -1542,14 +1603,18 @@ var getUsergroupsIdsFromUsergroupsIdArray = function (getUsergroupsIdsFromUsergr
 						creatingUsergroupsError: err.toString()
 					});
 				}
-				if (!arguments['0']) {
-					delete arguments['0'];
-				}
+				delete arguments['0'];
 				for (var x in arguments) {
-					newgroup = arguments[x];
-					Usergroups_namehash[newgroup.usergroupid] = newgroup._id;
+					if (arguments[x] && arguments[x].usergroupid) {
+						newgroup = arguments[x];
+						Usergroups_namehash[newgroup.usergroupid] = newgroup._id;
+					}
 				}
-				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+
+				if (Object.keys(arguments).length > 0) {
+					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+					// console.log('Usergroup numberofdocuments', numOfSeededDocuments);
+				}
 				callback(null, 'created new user groups');
 			});
 		},
@@ -1621,14 +1686,18 @@ var getUserroleIdsFromUserroleIdArray = function (asyncCallBack) {
 						creatingUserrolesError: err.toString()
 					});
 				}
-				if (!arguments['0']) {
-					delete arguments['0'];
-				}
+				delete arguments['0'];
 				for (var x in arguments) {
-					newrole = arguments[x];
-					Userroles_namehash[newrole.userroleid] = newrole._id;
+					if (arguments[x] && arguments[x].userroleid) {
+						newrole = arguments[x];
+						Userroles_namehash[newrole.userroleid] = newrole._id;
+					}
 				}
-				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+
+				if (Object.keys(arguments).length > 0) {
+					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+					// console.log('Userrole numberofdocuments', numOfSeededDocuments);
+				}
 				callback(null, 'created new user roles');
 			});
 		},
@@ -1686,16 +1755,19 @@ var getUserprivilegeIdsFromUserPrivilegeIdArray = function (asyncCallBack) {
 					creatingUserprivilegesError: err.toString()
 				});
 			}
-			if (!arguments['0']) {
-				delete arguments['0'];
-			}
+			delete arguments['0'];
 			for (var x in arguments) {
-
-				newprivilege = arguments[x];
-				Userprivileges_namehash[newprivilege.userprivilegeid] = newprivilege._id;
+				if (arguments[x] && arguments[x].userprivilegeid) {
+					newprivilege = arguments[x];
+					Userprivileges_namehash[newprivilege.userprivilegeid] = newprivilege._id;
+				}
 				// Assets_namehash[arguments[x].name]=arguments[x]._id;
 			}
-			numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+
+			if (Object.keys(arguments).length > 0) {
+				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+				// console.log('Userprivilege numberofdocuments', numOfSeededDocuments);
+			}
 			asyncCallBack(null, Userprivileges_namehash);
 		});
 	}
@@ -1755,7 +1827,7 @@ var insertDataIntoDatabase = function (seedObjectsArrayStatus, insertDataIntoDat
 					validDocuments: validDocuments,
 					invalidDocuments: invalidDocuments,
 					numOfSeededDocuments: numOfSeededDocuments,
-					skippedSeeds: (numOfSeededDocuments - (validDocuments + invalidDocuments))
+					skippedSeeds: ((validDocuments + invalidDocuments) - numOfSeededDocuments)
 				});
 
 			});
@@ -1786,6 +1858,8 @@ var isValidSeedJSONSync = function (options) {
  */
 var importSeed = function (options, importSeedCallback) {
 	insertsetting = options.insertsetting;
+
+	resetSeedData();
 	var seedjsondata = options.jsondata,
 		statusResults = {},
 		seedDataValidationError = isValidSeedJSONSync({
