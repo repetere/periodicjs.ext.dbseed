@@ -2572,7 +2572,7 @@ module.exports = updatemedia;
   CodeMirror.defineExtension("uncomment", function(from, to, options) {
     if (!options) options = noOptions;
     var self = this, mode = self.getModeAt(from);
-    var end = Math.min(to.ch != 0 || to.line == from.line ? to.line : to.line - 1, self.lastLine()), start = Math.min(from.line, end);
+    var end = Math.min(to.line, self.lastLine()), start = Math.min(from.line, end);
 
     // Try finding line comments
     var lineString = options.lineComment || mode.lineComment, lines = [];
@@ -3413,7 +3413,7 @@ CodeMirror.registerHelper("fold", "indent", function(cm, start) {
   function CodeMirror(place, options) {
     if (!(this instanceof CodeMirror)) return new CodeMirror(place, options);
 
-    this.options = options = options ? copyObj(options) : {};
+    this.options = options = options || {};
     // Determine effective options based on given values and defaults.
     copyObj(defaults, options, false);
     setGuttersForLineNumbers(options);
@@ -3448,20 +3448,21 @@ CodeMirror.registerHelper("fold", "indent", function(cm, start) {
     registerEventHandlers(this);
     ensureGlobalHandlers();
 
-    startOperation(this);
-    this.curOp.forceUpdate = true;
-    attachDoc(this, doc);
+    var cm = this;
+    runInOp(this, function() {
+      cm.curOp.forceUpdate = true;
+      attachDoc(cm, doc);
 
-    if ((options.autofocus && !mobile) || activeElt() == display.input)
-      setTimeout(bind(onFocus, this), 20);
-    else
-      onBlur(this);
+      if ((options.autofocus && !mobile) || activeElt() == display.input)
+        setTimeout(bind(onFocus, cm), 20);
+      else
+        onBlur(cm);
 
-    for (var opt in optionHandlers) if (optionHandlers.hasOwnProperty(opt))
-      optionHandlers[opt](this, options[opt], Init);
-    maybeUpdateLineNumberWidth(this);
-    for (var i = 0; i < initHooks.length; ++i) initHooks[i](this);
-    endOperation(this);
+      for (var opt in optionHandlers) if (optionHandlers.hasOwnProperty(opt))
+        optionHandlers[opt](cm, options[opt], Init);
+      maybeUpdateLineNumberWidth(cm);
+      for (var i = 0; i < initHooks.length; ++i) initHooks[i](cm);
+    });
   }
 
   // DISPLAY CONSTRUCTOR
@@ -4074,10 +4075,9 @@ CodeMirror.registerHelper("fold", "indent", function(cm, start) {
   // view, so that we don't interleave reading and writing to the DOM.
   function getDimensions(cm) {
     var d = cm.display, left = {}, width = {};
-    var gutterLeft = d.gutters.clientLeft;
     for (var n = d.gutters.firstChild, i = 0; n; n = n.nextSibling, ++i) {
-      left[cm.options.gutters[i]] = n.offsetLeft + n.clientLeft + gutterLeft;
-      width[cm.options.gutters[i]] = n.clientWidth;
+      left[cm.options.gutters[i]] = n.offsetLeft;
+      width[cm.options.gutters[i]] = n.offsetWidth;
     }
     return {fixedPos: compensateForHScroll(d),
             gutterTotalWidth: d.gutters.offsetWidth,
@@ -7072,7 +7072,7 @@ CodeMirror.registerHelper("fold", "indent", function(cm, start) {
   // measured, the position of something may 'drift' during drawing).
   function scrollPosIntoView(cm, pos, end, margin) {
     if (margin == null) margin = 0;
-    for (var limit = 0; limit < 5; limit++) {
+    for (;;) {
       var changed = false, coords = cursorCoords(cm, pos);
       var endCoords = !end || end == pos ? coords : cursorCoords(cm, end);
       var scrollPos = calculateScrollPos(cm, Math.min(coords.left, endCoords.left),
@@ -7121,7 +7121,7 @@ CodeMirror.registerHelper("fold", "indent", function(cm, start) {
     var screenleft = cm.curOp && cm.curOp.scrollLeft != null ? cm.curOp.scrollLeft : display.scroller.scrollLeft;
     var screenw = display.scroller.clientWidth - scrollerCutOff - display.gutters.offsetWidth;
     var tooWide = x2 - x1 > screenw;
-    if (tooWide) x2 = x1 + screenw;
+    if (tooWide) x2 = y1 + screen;
     if (x1 < 10)
       result.scrollLeft = 0;
     else if (x1 < screenleft)
@@ -7922,8 +7922,10 @@ CodeMirror.registerHelper("fold", "indent", function(cm, start) {
   // load a mode. (Preferred mechanism is the require/define calls.)
   CodeMirror.defineMode = function(name, mode) {
     if (!CodeMirror.defaults.mode && name != "null") CodeMirror.defaults.mode = name;
-    if (arguments.length > 2)
-      mode.dependencies = Array.prototype.slice.call(arguments, 2);
+    if (arguments.length > 2) {
+      mode.dependencies = [];
+      for (var i = 2; i < arguments.length; ++i) mode.dependencies.push(arguments[i]);
+    }
     modes[name] = mode;
   };
 
@@ -8215,7 +8217,7 @@ CodeMirror.registerHelper("fold", "indent", function(cm, start) {
   // are simply ignored.
   keyMap.pcDefault = {
     "Ctrl-A": "selectAll", "Ctrl-D": "deleteLine", "Ctrl-Z": "undo", "Shift-Ctrl-Z": "redo", "Ctrl-Y": "redo",
-    "Ctrl-Home": "goDocStart", "Ctrl-End": "goDocEnd", "Ctrl-Up": "goLineUp", "Ctrl-Down": "goLineDown",
+    "Ctrl-Home": "goDocStart", "Ctrl-Up": "goDocStart", "Ctrl-End": "goDocEnd", "Ctrl-Down": "goDocEnd",
     "Ctrl-Left": "goGroupLeft", "Ctrl-Right": "goGroupRight", "Alt-Left": "goLineStart", "Alt-Right": "goLineEnd",
     "Ctrl-Backspace": "delGroupBefore", "Ctrl-Delete": "delGroupAfter", "Ctrl-S": "save", "Ctrl-F": "find",
     "Ctrl-G": "findNext", "Shift-Ctrl-G": "findPrev", "Shift-Ctrl-F": "replace", "Shift-Ctrl-R": "replaceAll",
@@ -8230,7 +8232,7 @@ CodeMirror.registerHelper("fold", "indent", function(cm, start) {
     "Ctrl-Alt-Backspace": "delGroupAfter", "Alt-Delete": "delGroupAfter", "Cmd-S": "save", "Cmd-F": "find",
     "Cmd-G": "findNext", "Shift-Cmd-G": "findPrev", "Cmd-Alt-F": "replace", "Shift-Cmd-Alt-F": "replaceAll",
     "Cmd-[": "indentLess", "Cmd-]": "indentMore", "Cmd-Backspace": "delWrappedLineLeft", "Cmd-Delete": "delWrappedLineRight",
-    "Cmd-U": "undoSelection", "Shift-Cmd-U": "redoSelection", "Ctrl-Up": "goDocStart", "Ctrl-Down": "goDocEnd",
+    "Cmd-U": "undoSelection", "Shift-Cmd-U": "redoSelection",
     fallthrough: ["basic", "emacsy"]
   };
   // Very basic readline/emacs-style bindings, which are standard on Mac.
@@ -8338,7 +8340,6 @@ CodeMirror.registerHelper("fold", "indent", function(cm, start) {
     cm.save = save;
     cm.getTextArea = function() { return textarea; };
     cm.toTextArea = function() {
-      cm.toTextArea = isNaN; // Prevent this from being ran twice
       save();
       textarea.parentNode.removeChild(cm.getWrapperElement());
       textarea.style.display = "";
@@ -11176,7 +11177,7 @@ CodeMirror.registerHelper("fold", "indent", function(cm, start) {
 
   // THE END
 
-  CodeMirror.version = "4.7.0";
+  CodeMirror.version = "4.6.0";
 
   return CodeMirror;
 });
@@ -12133,7 +12134,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   var jsonldMode = parserConfig.jsonld;
   var jsonMode = parserConfig.json || jsonldMode;
   var isTS = parserConfig.typescript;
-  var wordRE = parserConfig.wordCharacters || /[\w$\xa1-\uffff]/;
+  var wordRE = parserConfig.wordCharacters || /[\w$]/;
 
   // Tokenizer
 
@@ -12704,7 +12705,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   }
   function maybeArrayComprehension(type) {
     if (type == "for") return pass(comprehension, expect("]"));
-    if (type == ",") return cont(commasep(maybeexpressionNoComma, "]"));
+    if (type == ",") return cont(commasep(expressionNoComma, "]"));
     return pass(commasep(expressionNoComma, "]"));
   }
   function comprehension(type) {
@@ -12770,7 +12771,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
       else return lexical.indented + (closing ? 0 : indentUnit);
     },
 
-    electricInput: /^\s*(?:case .*?:|default:|\{|\})$/,
+    electricChars: ":{}",
     blockCommentStart: jsonMode ? null : "/*",
     blockCommentEnd: jsonMode ? null : "*/",
     lineComment: jsonMode ? null : "//",
@@ -14285,13 +14286,11 @@ componentTabs.prototype._show = function (idx) {
 };
 module.exports = componentTabs;
 
-},{"classie":34,"events":27,"util":31,"util-extend":36}],34:[function(require,module,exports){
+},{"classie":34,"events":27,"util":31,"util-extend":37}],34:[function(require,module,exports){
 module.exports=require(1)
-},{"./lib/classie":35,"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/index.js":1}],35:[function(require,module,exports){
+},{"./lib/classie":35,"/Users/yawetse/Developer/test/testinstances/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/index.js":1}],35:[function(require,module,exports){
 module.exports=require(2)
-},{"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/lib/classie.js":2}],36:[function(require,module,exports){
-module.exports=require(7)
-},{"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/letterpressjs/node_modules/util-extend/extend.js":7}],37:[function(require,module,exports){
+},{"/Users/yawetse/Developer/test/testinstances/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/lib/classie.js":2}],36:[function(require,module,exports){
 'use strict';
 
 var componentTab1,
@@ -14308,6 +14307,7 @@ var componentTab1,
 	importSeedSelectionEl,
 	importFormContainer,
 	codeMirrorJSEditorsElements,
+	exampleSeedSelect,
 	codeMirrors = [],
 	CodeMirror = require('codemirror'),
 	ComponentTabs = require('periodicjs.component.tabs');
@@ -14348,7 +14348,8 @@ var styleWindowResizeEventHandler = function () {
 
 var initCodemirrors = function () {
 	for (var cm = 0; cm < codeMirrorJSEditorsElements.length; cm++) {
-		codeMirrors[cm] = CodeMirror.fromTextArea(
+		console.log('codeMirrorJSEditorsElements[cm].id', codeMirrorJSEditorsElements[cm].id);
+		codeMirrors[codeMirrorJSEditorsElements[cm].id] = CodeMirror.fromTextArea(
 			codeMirrorJSEditorsElements[cm], {
 				lineNumbers: true,
 				lineWrapping: true,
@@ -14365,6 +14366,7 @@ var initCodemirrors = function () {
 			}
 		);
 	}
+	window.codeMirrors = codeMirrors;
 };
 
 var tabEvents = function () {
@@ -14373,6 +14375,12 @@ var tabEvents = function () {
 		styleWindowResizeEventHandler();
 	});
 };
+
+var exapmleSeedSelectEventHandler = function (e) {
+	var newCMValue = JSON.stringify(window.exampleseed[e.target.value], null, 2);
+	codeMirrors['example-seed-ta'].doc.setValue(newCMValue);
+};
+
 window.addEventListener('resize', styleWindowResizeEventHandler, false);
 
 window.showImportStatusResult = function () {
@@ -14386,7 +14394,7 @@ window.displayImportSeedStatus = function (ajaxFormResponse) {
 };
 
 window.showCustomStatusResult = function () {
-	document.getElementById('customseed-codemirror').innerHTML = codeMirrors[0].getValue();
+	document.getElementById('customseed-codemirror').innerHTML = codeMirrors['customseed-codemirror'].getValue();
 	document.getElementById('customstatuscontainer').style.display = 'block';
 	seedcustomstatusoutputel.innerHTML = 'Customing seed data';
 };
@@ -14402,6 +14410,7 @@ window.addEventListener('load', function () {
 	seedpathDisplayInput = document.getElementById('seedpathdisplay');
 	assetidInput = document.getElementById('assetid');
 	tabelement = document.getElementById('tabs');
+	exampleSeedSelect = document.getElementById('example-seed-select');
 	importFormContainer = document.getElementById('importFormContainer');
 	existingseedlist = document.getElementById('existingseedlist');
 	importstatusoutputel = document.getElementById('seedimportstatus');
@@ -14409,6 +14418,7 @@ window.addEventListener('load', function () {
 	seedcustomstatusoutputel = document.getElementById('seedcustomstatus');
 	codeMirrorJSEditorsElements = document.querySelectorAll('.codemirroreditor');
 	window.ajaxFormEventListers('._pea-ajax-form');
+	exampleSeedSelect.addEventListener('change', exapmleSeedSelectEventHandler, false);
 	if (tabelement) {
 		componentTab1 = new ComponentTabs(tabelement);
 	}
@@ -14431,4 +14441,6 @@ window.addEventListener('load', function () {
 	tabEvents();
 });
 
-},{"../../node_modules/codemirror/addon/comment/comment":13,"../../node_modules/codemirror/addon/comment/continuecomment":14,"../../node_modules/codemirror/addon/edit/matchbrackets":15,"../../node_modules/codemirror/addon/fold/brace-fold":16,"../../node_modules/codemirror/addon/fold/comment-fold":17,"../../node_modules/codemirror/addon/fold/foldcode":18,"../../node_modules/codemirror/addon/fold/foldgutter":19,"../../node_modules/codemirror/addon/fold/indent-fold":20,"../../node_modules/codemirror/mode/css/css":22,"../../node_modules/codemirror/mode/htmlembedded/htmlembedded":23,"../../node_modules/codemirror/mode/javascript/javascript":25,"./../../../periodicjs.ext.admin/resources/js/contententry":11,"codemirror":21,"periodicjs.component.tabs":32}]},{},[37]);
+},{"../../node_modules/codemirror/addon/comment/comment":13,"../../node_modules/codemirror/addon/comment/continuecomment":14,"../../node_modules/codemirror/addon/edit/matchbrackets":15,"../../node_modules/codemirror/addon/fold/brace-fold":16,"../../node_modules/codemirror/addon/fold/comment-fold":17,"../../node_modules/codemirror/addon/fold/foldcode":18,"../../node_modules/codemirror/addon/fold/foldgutter":19,"../../node_modules/codemirror/addon/fold/indent-fold":20,"../../node_modules/codemirror/mode/css/css":22,"../../node_modules/codemirror/mode/htmlembedded/htmlembedded":23,"../../node_modules/codemirror/mode/javascript/javascript":25,"./../../../periodicjs.ext.admin/resources/js/contententry":11,"codemirror":21,"periodicjs.component.tabs":32}],37:[function(require,module,exports){
+module.exports=require(7)
+},{"/Users/yawetse/Developer/test/testinstances/periodicjs/node_modules/periodicjs.ext.admin/node_modules/letterpressjs/node_modules/util-extend/extend.js":7}]},{},[36]);

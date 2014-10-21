@@ -8,7 +8,7 @@
 	<input type="hidden" name="_csrf" value=<%= locals.token %> >
 	<div class="_pea-container">
 		<div class="_pea-row">
-			<div class="_pea-col-span8">
+			<div class="_pea-col-span7">
 				<div class="_pea-row">
 					<div class="_pea-col-span12">
 						<div id="tabs" class="tabs">
@@ -34,31 +34,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="_pea-col-span3 _pea-pull-right">
-				<form class="_pea-form _pea-ajax-form" method="post" action="/p-admin/mailer/testmail">
-					<div class="_pea-document">
-						<div class="_pea-row">
-						<h3>About DB Seeds & Migrations</h3>
-							<p>Database seeds are an efficient way of populating your database using periodic's database models.</p>
-							<p>The seed format is a JSON document, that is inserted into the database and will automatically connect references to other content documents, tag, and taxonimies if they're referenced by name.</p>
-						</div>
-						<div class="_pea-row">
-							<h3>Example <select>
-								<option value="item">item</option>
-								<option value="collection">collection</option>
-								<option value="library">library</option>
-								<option value="tag">tag</option>
-								<option value="category">category</option>
-								<option value="contenttype">contenttype</option>
-								<option value="userprivilve">category</option>
-								<option value="userrole">userrole</option>
-								<option value="dbsetting">dbsetting</option>
-								<option value="user">user</option>
-							</select> seed</h3>
-							<textarea id="example-seed-ta" class="_pea-col-span12"></textarea>
-						</div>
-					</div>
-				</form>
+			<div class="_pea-col-span4 _pea-pull-right">
+				<% include _more_info_pane %>
 			</div>
 		</div>
 	</div>

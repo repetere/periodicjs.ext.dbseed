@@ -14,6 +14,7 @@ var componentTab1,
 	importSeedSelectionEl,
 	importFormContainer,
 	codeMirrorJSEditorsElements,
+	exampleSeedSelect,
 	codeMirrors = [],
 	CodeMirror = require('codemirror'),
 	ComponentTabs = require('periodicjs.component.tabs');
@@ -54,7 +55,8 @@ var styleWindowResizeEventHandler = function () {
 
 var initCodemirrors = function () {
 	for (var cm = 0; cm < codeMirrorJSEditorsElements.length; cm++) {
-		codeMirrors[cm] = CodeMirror.fromTextArea(
+		console.log('codeMirrorJSEditorsElements[cm].id', codeMirrorJSEditorsElements[cm].id);
+		codeMirrors[codeMirrorJSEditorsElements[cm].id] = CodeMirror.fromTextArea(
 			codeMirrorJSEditorsElements[cm], {
 				lineNumbers: true,
 				lineWrapping: true,
@@ -71,6 +73,7 @@ var initCodemirrors = function () {
 			}
 		);
 	}
+	window.codeMirrors = codeMirrors;
 };
 
 var tabEvents = function () {
@@ -79,6 +82,12 @@ var tabEvents = function () {
 		styleWindowResizeEventHandler();
 	});
 };
+
+var exapmleSeedSelectEventHandler = function (e) {
+	var newCMValue = JSON.stringify(window.exampleseed[e.target.value], null, 2);
+	codeMirrors['example-seed-ta'].doc.setValue(newCMValue);
+};
+
 window.addEventListener('resize', styleWindowResizeEventHandler, false);
 
 window.showImportStatusResult = function () {
@@ -92,7 +101,7 @@ window.displayImportSeedStatus = function (ajaxFormResponse) {
 };
 
 window.showCustomStatusResult = function () {
-	document.getElementById('customseed-codemirror').innerHTML = codeMirrors[0].getValue();
+	document.getElementById('customseed-codemirror').innerHTML = codeMirrors['customseed-codemirror'].getValue();
 	document.getElementById('customstatuscontainer').style.display = 'block';
 	seedcustomstatusoutputel.innerHTML = 'Customing seed data';
 };
@@ -108,6 +117,7 @@ window.addEventListener('load', function () {
 	seedpathDisplayInput = document.getElementById('seedpathdisplay');
 	assetidInput = document.getElementById('assetid');
 	tabelement = document.getElementById('tabs');
+	exampleSeedSelect = document.getElementById('example-seed-select');
 	importFormContainer = document.getElementById('importFormContainer');
 	existingseedlist = document.getElementById('existingseedlist');
 	importstatusoutputel = document.getElementById('seedimportstatus');
@@ -115,6 +125,7 @@ window.addEventListener('load', function () {
 	seedcustomstatusoutputel = document.getElementById('seedcustomstatus');
 	codeMirrorJSEditorsElements = document.querySelectorAll('.codemirroreditor');
 	window.ajaxFormEventListers('._pea-ajax-form');
+	exampleSeedSelect.addEventListener('change', exapmleSeedSelectEventHandler, false);
 	if (tabelement) {
 		componentTab1 = new ComponentTabs(tabelement);
 	}
