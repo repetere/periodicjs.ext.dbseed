@@ -49,7 +49,7 @@
 					<p>Custom your database.</p>
 				</div> -->
 				<div class="_pea-col-span12">
-					<form class="_pea-form  _pea-ajax-form" method="post" action="/p-admin/dbseed/customseed" >
+					<form class="_pea-form  _pea-ajax-form" method="post" action="/p-admin/dbseed/customseed"  data-successfunction="displayCustomSeedStatus" data-beforesubmitfunction="showCustomStatusResult">
 						<h3>Import a Custom Seed</h3>
 						<div class="_pea-row _pea-container-forminput">
 							<textarea  id="customseed-codemirror" name="customseedjson"  class="textarea-tall noFormSubmit codemirroreditor jsonEditor _pea-col-span12" style="height:60em;"><%- JSON.stringify(sampleseed,null,4) %></textarea>
