@@ -914,8 +914,7 @@ var setSeedDataCategory = function (options) {
 	}
 	else {
 		Categories.push(CategoriesObj.doc);
-		Categories_original_for_parent_update.push(CategoriesObj.doc);
-		Categories_original_for_parent_update.push({parent:CategoriesObj.doc.parent});
+		Categories_original_for_parent_update.push({parent:CategoriesObj.doc.parent,title:CategoriesObj.doc.title});
 		Categories_name_array.push(CategoriesObj.docs_name_array);
 		if (CategoriesObj.doc.author) {
 			Users_username_array.push(CategoriesObj.doc.author);
@@ -1179,8 +1178,8 @@ var getLibraryIdsFromLibraryArray = function (getLibraryIdsFromLibraryArrayAsync
 				// console.log('created library in async waterfall',Libraries_namehash);
 
 				if (Object.keys(arguments).length > 0) {
-					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
-					// console.log('Library numberofdocuments', numOfSeededDocuments, arguments);
+					numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+					// console.log('Library ('+ Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
 				}
 				callback(null, 'updated Libraries_namehash');
 			});
@@ -1257,8 +1256,8 @@ var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollecti
 				}
 
 				if (Object.keys(arguments).length > 0) {
-					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
-					// console.log('Collection numberofdocuments', numOfSeededDocuments, arguments);
+					numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+					// console.log('Collection ('+Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
 				}
 				callback(null, 'updated Collections_namehash');
 			});
@@ -1318,7 +1317,8 @@ var getItemIdsFromItemArray = function (getItemIdsFromItemArrayAsyncCallBack) {
 				}
 				// console.log('Item arguments.length', arguments.length, arguments);
 				if (Object.keys(arguments).length > 0) {
-					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+					numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+					// console.log('Item ('+Object.keys(arguments).length +') numOfSeededDocuments',numOfSeededDocuments)
 				}
 				callback(null, 'updated Items_namehash');
 			});
@@ -1410,8 +1410,8 @@ var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 				// console.log('Tag arguments.length', arguments.length, arguments);
 
 				if (Object.keys(arguments).length > 0) {
-					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
-					// console.log('Tag numberofdocuments', numOfSeededDocuments);
+					numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+					// console.log('Tag ('+Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
 				}
 				callback(null, 'updated Tags_namehash');
 			});
@@ -1505,8 +1505,8 @@ var getCategoryIdsFromCategoryArray = function (getCategoryIdsFromCategoryArrayA
 				}
 
 				if (Object.keys(arguments).length > 0) {
-					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
-					// console.log('Category numberofdocuments', numOfSeededDocuments);
+					numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+					// console.log('Category ('+Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
 				}
 				callback(null, 'updated Categories_namehash');
 			});
@@ -1580,8 +1580,8 @@ var getContenttypeIdsFromContenttypeArray = function (getContenttypeIdsFromConte
 				}
 
 				if (Object.keys(arguments).length > 0) {
-					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
-					// console.log('Contenttype numberofdocuments', numOfSeededDocuments);
+					numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+					// console.log('Contenttype ('+Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
 				}
 				callback(null, 'updated Contenttypes_namehash');
 			});
@@ -1907,8 +1907,8 @@ var getUsersIdsFromUserNameArray = function (getUsersIdsFromUserNameArrayAsyncCa
 				}
 
 				if (Object.keys(arguments).length > 0) {
-					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
-					// console.log('User numberofdocuments', numOfSeededDocuments);
+					numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+					// console.log('User ('+Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
 				}
 				callback(null, arguments);
 			});
@@ -2032,7 +2032,7 @@ var updateContentAfterInsert = function(asyncCallBack){
  */
 var insertContentIntoDatabase = function (insertContentIntoDatabaseAsyncCallBack) {
 	async.series({
-		contenttypes: getContenttypeIdsFromContenttypeArray,
+		insertAssetsIntoDatabase: insertAssetsIntoDatabase,
 		createassets: getAssetIdsFromAssetNameArray,
 		createusers: getUsersIdsFromUserNameArray,
 		createtaxonomies: getTaxonomyIdsFromTaxonomiesArrays,
@@ -2094,8 +2094,8 @@ var insertAssetsIntoDatabase = function (asyncCallBack) {
 			}
 
 			if (Object.keys(arguments).length > 0) {
-				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
-				// console.log('Asset numberofdocuments', numOfSeededDocuments);
+				numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+				// console.log('Asset ('+Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
 			}
 			asyncCallBack(null, 'created new assets');
 		});
@@ -2144,8 +2144,8 @@ var getUsergroupsIdsFromUsergroupsIdArray = function (getUsergroupsIdsFromUsergr
 				}
 
 				if (Object.keys(arguments).length > 0) {
-					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
-					// console.log('Usergroup numberofdocuments', numOfSeededDocuments);
+					numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+					// console.log('Usergroup ('+Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
 				}
 				callback(null, 'created new user groups');
 			});
@@ -2227,8 +2227,8 @@ var getUserroleIdsFromUserroleIdArray = function (asyncCallBack) {
 				}
 
 				if (Object.keys(arguments).length > 0) {
-					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
-					// console.log('Userrole numberofdocuments', numOfSeededDocuments);
+					numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+					// console.log('Userrole ('+Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
 				}
 				callback(null, 'created new user roles');
 			});
@@ -2297,8 +2297,8 @@ var getUserprivilegeIdsFromUserPrivilegeIdArray = function (asyncCallBack) {
 			}
 
 			if (Object.keys(arguments).length > 0) {
-				numOfSeededDocuments = numOfSeededDocuments + arguments.length;
-				// console.log('Userprivilege numberofdocuments', numOfSeededDocuments);
+				numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+				// console.log('Userprivilege ('+Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
 			}
 			asyncCallBack(null, Userprivileges_namehash);
 		});
@@ -2343,13 +2343,13 @@ var insertUACIntoDatabase = function (asyncCallBack) {
  */
 var insertDataIntoDatabase = function (seedObjectsArrayStatus, insertDataIntoDatabaseCallback) {
 	async.parallel({
-			insertAssetsIntoDatabase: insertAssetsIntoDatabase,
+			contenttypes: getContenttypeIdsFromContenttypeArray,
 			insertUACIntoDatabase: insertUACIntoDatabase
 		},
 		function (err, insertDataIntoDatabaseResults) {
 			insertContentIntoDatabase(function (err, insertContentIntoDatabaseStatus) {
 				insertDataIntoDatabaseCallback(null, {
-					insertDataIntoDatabaseERROR: err,
+					// insertDataIntoDatabaseERROR: err,
 					insertDataIntoDatabaseResults: insertDataIntoDatabaseResults,
 					insertContentIntoDatabaseStatus: insertContentIntoDatabaseStatus,
 					insertContentIntoDatabaseErrors: insertContentIntoDatabaseErrors,
