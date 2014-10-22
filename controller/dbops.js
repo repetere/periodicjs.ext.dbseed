@@ -14,6 +14,7 @@ var async = require('async'),
 	Category, // = mongoose.model('Category')
 	Tag, // = mongoose.model('Tag')
 	Collection, // = mongoose.model('Collection')
+	Library, // = mongoose.model('Collection')
 	Userprivilege, // = mongoose.model('Userprivilege')
 	Userrole, // = mongoose.model('Userrole')
 	Usergroup, // = mongoose.model('Usergroup');
@@ -85,6 +86,23 @@ var emptyCollections = function (emptyCollectionsAsyncCallback) {
 			});
 		}
 		emptyCollectionsAsyncCallback(null, 'removed all Collections');
+	});
+};
+/**
+ * removes all Libraries from the database
+ * @param  {object} err
+ * @param  {Function} emptyLibrariesAsyncCallback
+ * @return {Function} async callback emptyLibrariesAsyncCallback(err,results);
+ */
+var emptyLibraries = function (emptyLibrariesAsyncCallback) {
+	Library.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyLibraries'
+			});
+		}
+		emptyLibrariesAsyncCallback(null, 'removed all Libraries');
 	});
 };
 /**
@@ -222,6 +240,7 @@ var emptyDB = function (options, emptyDBCallback) {
 			emptyCategories,
 			emptyItems,
 			emptyCollections,
+			emptyLibraries,
 			emptyUserprivileges,
 			emptyUserroles,
 			emptyUsergroups
@@ -260,6 +279,7 @@ var dbOpsModule = function (resources) {
 	Category = mongoose.model('Category');
 	Tag = mongoose.model('Tag');
 	Collection = mongoose.model('Collection');
+	Library = mongoose.model('Library');
 	Userprivilege = mongoose.model('Userprivilege');
 	Userrole = mongoose.model('Userrole');
 	Usergroup = mongoose.model('Usergroup');
