@@ -41,6 +41,11 @@ var UsersObj,
 	Categories = [],
 	Categories_name_array = [],
 	Categories_namehash = {},
+	LibrariesObj,
+	Library, // = mongoose.model('Library')
+	Libraries = [],
+	Libraries_name_array = [],
+	Libraries_namehash = {},
 	TagsObj,
 	Tag, // = mongoose.model('Tag')
 	Tags = [],
@@ -97,6 +102,9 @@ var resetSeedData = function () {
 	Collections = [];
 	Collections_name_array = [];
 	Collections_namehash = {};
+	Libraries = [];
+	Libraries_name_array = [];
+	Libraries_namehash = {};
 	Userprivileges = [];
 	Userprivileges_userprivilegeid_array = [];
 	Userprivileges_namehash = {};
@@ -227,6 +235,41 @@ var seedCollectionData = function (options) {
 		}
 		// if(!seeddocument.content){
 		//   errorObj = new Error('Collection '+seeddocument.title+' is missing content');
+		// }
+		if (!seeddocument.name) {
+			seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
+		}
+		seed_name_array_item = seeddocument.name;
+	}
+	catch (e) {
+		errorObj = e;
+	}
+
+	return {
+		doc: seeddocument,
+		docs_name_array: seed_name_array_item,
+		err: errorObj
+	};
+};
+
+
+/**
+ * create seed Library Object
+ * @param  {object} options seeddocument
+ * @return {object}         {doc-Library,docs_name_array - Library.name,err}
+ */
+var seedLibraryData = function (options) {
+	// logger.silly('seedAssetData',options);
+	var seeddocument = options.seeddocument,
+		seed_name_array_item = null,
+		errorObj = null;
+
+	try {
+		if (!seeddocument.title) {
+			errorObj = new Error('Library ' + seeddocument.title + ' is missing title');
+		}
+		// if(!seeddocument.content){
+		//   errorObj = new Error('Library '+seeddocument.title+' is missing content');
 		// }
 		if (!seeddocument.name) {
 			seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
@@ -700,22 +743,6 @@ var setSeedDataCollection = function (options) {
 	var index = options.index,
 		seedObject = options.seedobject;
 
-	// ItemsObj = seedItemData({
-	// 	seeddocument: seedObject.datadocument
-	// });
-	// if (ItemsObj.err) {
-	// 	seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
-	// 		index: index,
-	// 		seed: seedObject,
-	// 		error: ItemsObj.err
-	// 	}));
-	// }
-	// else {
-	// 	Items.push(ItemsObj.doc);
-	// 	Items_name_array.push(ItemsObj.docs_name_array);
-	// }
-
-
 	CollectionsObj = seedCollectionData({
 		seeddocument: seedObject.datadocument
 	});
@@ -729,6 +756,30 @@ var setSeedDataCollection = function (options) {
 	else {
 		Collections.push(CollectionsObj.doc);
 		Collections_name_array.push(CollectionsObj.docs_name_array);
+	}
+};
+
+/**
+ * set seed data object for looking up and inserting libraries
+ * @param {type} options index,seedobject
+ */
+var setSeedDataLibrary = function (options) {
+	var index = options.index,
+		seedObject = options.seedobject;
+
+	LibrariesObj = seedLibraryData({
+		seeddocument: seedObject.datadocument
+	});
+	if (LibrariesObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: LibrariesObj.err
+		}));
+	}
+	else {
+		Libraries.push(LibrariesObj.doc);
+		Libraries_name_array.push(LibrariesObj.docs_name_array);
 	}
 };
 
@@ -818,6 +869,12 @@ var setSeedObjectArrays = function (options, callback) {
 					seedobject: documents[x]
 				});
 				break;
+			case 'library':
+				setSeedDataLibrary({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
 			default:
 				seedObjectArraysDocumentErrors.push(
 					returnSeedDocumentObjectError({
@@ -837,6 +894,85 @@ var setSeedObjectArrays = function (options, callback) {
 };
 
 /**
+ * insert libraries into database, update Libraries_namehash array, also update author in library
+ * @param  {Function} getLibraryIdsFromLibraryArrayAsyncCallBack
+ * @return {Function} async callback getLibraryIdsFromLibraryArrayAsyncCallBack(err,results);
+ */
+var getLibraryIdsFromLibraryArray = function (getLibraryIdsFromLibraryArrayAsyncCallBack) {
+	// console.log('Libraries', Libraries);
+	var LibraryContentEntities = [];
+	for (var y in Libraries) {
+		if (Libraries[y].content_entities) {
+			LibraryContentEntities = Libraries[y].content_entities;
+			Libraries[y].content_entities = [];
+			for (var z in LibraryContentEntities) {
+				if (LibraryContentEntities[z].entity_collection && Items_namehash[LibraryContentEntities[z].entity_collection]) {
+					LibraryContentEntities[z].entity_collection = Items_namehash[LibraryContentEntities[z].entity_collection];
+				}
+				if (LibraryContentEntities[z].entity_item && Items_namehash[LibraryContentEntities[z].entity_item]) {
+					LibraryContentEntities[z].entity_item = Items_namehash[LibraryContentEntities[z].entity_item];
+				}
+				Libraries[y].content_entities.push(LibraryContentEntities[z]);
+			}
+		}
+	}
+	async.waterfall([
+		function (callback) {
+			Library.create(Libraries, function (err) {
+				if (err) {
+					// callback(err, null);
+					insertContentIntoDatabaseErrors.push({
+						createLibrariesError: err.toString()
+					});
+				}
+
+				delete arguments['0'];
+
+				for (var x in arguments) {
+					// logger.silly('arguments[x]',x,arguments[x]);
+					if (arguments[x] && arguments[x]._id) {
+						Libraries_namehash[arguments[x].name] = arguments[x]._id;
+					}
+				}
+
+				if (Object.keys(arguments).length > 0) {
+					numOfSeededDocuments = numOfSeededDocuments + arguments.length;
+					// console.log('Library numberofdocuments', numOfSeededDocuments, arguments);
+				}
+				callback(null, 'updated Libraries_namehash');
+			});
+		},
+		function (NewLibraries, callback) {
+			Library.find({
+					'name': {
+						$in: Libraries_name_array
+					}
+				},
+				'_id name',
+				function (err, librarydata) {
+					if (err) {
+						// callback(err, null, null);
+						insertContentIntoDatabaseErrors.push({
+							searchforLibrariesError: err.toString()
+						});
+					}
+					else {
+						for (var x in librarydata) {
+							Libraries_namehash[librarydata[x].name] = librarydata[x]._id;
+						}
+						callback(null, {
+							newlibraries: NewLibraries,
+							queriedlibraries: librarydata
+						});
+					}
+				});
+		}
+	], function (err /*, results*/ ) {
+		getLibraryIdsFromLibraryArrayAsyncCallBack(err, Libraries_namehash);
+	});
+};
+
+/**
  * insert collections into database, update Collections_namehash array, also update author in collection
  * @param  {Function} getCollectionIdsFromCollectionArrayAsyncCallBack
  * @return {Function} async callback getCollectionIdsFromCollectionArrayAsyncCallBack(err,results);
@@ -851,6 +987,8 @@ var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollecti
 			for (var z in CollectionItems) {
 				if (Items_namehash[CollectionItems[z].item]) {
 					CollectionItems[z].item = Items_namehash[CollectionItems[z].item];
+					CollectionItems[z].order = CollectionItems[z].order;
+
 					Collections[y].items.push(CollectionItems[z]);
 				}
 			}
@@ -1520,7 +1658,8 @@ var insertContentIntoDatabase = function (insertContentIntoDatabaseAsyncCallBack
 		createusers: getUsersIdsFromUserNameArray,
 		createtaxonomies: getTaxonomyIdsFromTaxonomiesArrays,
 		createitems: getItemIdsFromItemArray,
-		createcollections: getCollectionIdsFromCollectionArray
+		createcollections: getCollectionIdsFromCollectionArray,
+		createlibraries: getLibraryIdsFromLibraryArray
 	}, function (err, results) {
 		insertContentIntoDatabaseAsyncCallBack(err, results);
 	});
@@ -1914,6 +2053,7 @@ var importSeedModule = function (resources) {
 	Category = mongoose.model('Category');
 	Tag = mongoose.model('Tag');
 	Collection = mongoose.model('Collection');
+	Library = mongoose.model('Library');
 	Userprivilege = mongoose.model('Userprivilege');
 	Userrole = mongoose.model('Userrole');
 	Usergroup = mongoose.model('Usergroup');
