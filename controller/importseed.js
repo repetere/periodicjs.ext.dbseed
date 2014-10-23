@@ -160,7 +160,7 @@ var updateAssetAuthorsInDatabase = function (asyncCallBack) {
 			// 	author: AssetToUpdate.author
 			// });
 
-			if(AssetToUpdate.author){
+			if (AssetToUpdate.author) {
 				Asset.update({
 					name: AssetToUpdate.name
 				}, {
@@ -175,10 +175,10 @@ var updateAssetAuthorsInDatabase = function (asyncCallBack) {
 					cb(null);
 				});
 			}
-			else{
+			else {
 				cb(null);
 			}
-			
+
 		}, function (err) {
 			if (err) {
 				insertContentIntoDatabaseErrors.push({
@@ -213,7 +213,7 @@ var updateContenttypeAuthorsInDatabase = function (asyncCallBack) {
 			}
 		}
 		async.each(Contenttypes, function (ContenttypeToUpdate, cb) {
-			if(ContenttypeToUpdate.author){
+			if (ContenttypeToUpdate.author) {
 				Contenttype.update({
 					name: ContenttypeToUpdate.name
 				}, {
@@ -228,10 +228,10 @@ var updateContenttypeAuthorsInDatabase = function (asyncCallBack) {
 					cb(null);
 				});
 			}
-			else{
+			else {
 				cb(null);
 			}
-			
+
 		}, function (err) {
 			if (err) {
 				insertContentIntoDatabaseErrors.push({
@@ -256,7 +256,7 @@ var updateTagParentInDatabase = function (asyncCallBack) {
 		for (var y in Tags) {
 			// console.log('Tags[y]',Tags[y]);
 			// console.log('Tags_original_for_parent_update[y]',Tags_original_for_parent_update[y]);
-			var	TagParents = [];
+			var TagParents = [];
 			if (Tags_original_for_parent_update[y].parent) {
 				TagParents = Tags_original_for_parent_update[y].parent;
 				Tags[y].parent = [];
@@ -266,10 +266,10 @@ var updateTagParentInDatabase = function (asyncCallBack) {
 					}
 				}
 			}
-			
+
 		}
 		async.each(Tags, function (TagToUpdate, cb) {
-			if(TagToUpdate.parent){
+			if (TagToUpdate.parent) {
 				Tag.update({
 					name: TagToUpdate.name
 				}, {
@@ -284,13 +284,13 @@ var updateTagParentInDatabase = function (asyncCallBack) {
 					cb(null);
 				});
 			}
-			else{
+			else {
 				cb(null);
 			}
-			
+
 		}, function (err) {
 			if (err) {
-						console.error(err);
+				console.error(err);
 				insertContentIntoDatabaseErrors.push({
 					updatingTagsError: err.toString()
 				});
@@ -313,7 +313,7 @@ var updateCategoryParentInDatabase = function (asyncCallBack) {
 		for (var y in Categories) {
 			// console.log('Categories[y]',Categories[y]);
 			// console.log('Categories_original_for_parent_update[y]',Categories_original_for_parent_update[y]);
-			var	CategoryParents = [];
+			var CategoryParents = [];
 			if (Categories_original_for_parent_update[y].parent) {
 				CategoryParents = Categories_original_for_parent_update[y].parent;
 				Categories[y].parent = [];
@@ -323,10 +323,10 @@ var updateCategoryParentInDatabase = function (asyncCallBack) {
 					}
 				}
 			}
-			
+
 		}
 		async.each(Categories, function (CategoryToUpdate, cb) {
-			if(CategoryToUpdate.parent){
+			if (CategoryToUpdate.parent) {
 				Category.update({
 					name: CategoryToUpdate.name
 				}, {
@@ -341,13 +341,13 @@ var updateCategoryParentInDatabase = function (asyncCallBack) {
 					cb(null);
 				});
 			}
-			else{
+			else {
 				cb(null);
 			}
-			
+
 		}, function (err) {
 			if (err) {
-						console.error(err);
+				console.error(err);
 				insertContentIntoDatabaseErrors.push({
 					updatingCategoriesError: err.toString()
 				});
@@ -832,7 +832,9 @@ var setSeedDataAsset = function (options) {
 	}
 	else {
 		Assets.push(AssetsObj.doc);
-		Assets_original_for_authors_update.push({author:AssetsObj.doc.author});
+		Assets_original_for_authors_update.push({
+			author: AssetsObj.doc.author
+		});
 		Assets_name_array.push(AssetsObj.docs_name_array);
 	}
 };
@@ -886,7 +888,9 @@ var setSeedDataContentype = function (options) {
 	}
 	else {
 		Contenttypes.push(ContenttypesObj.doc);
-		Contenttypes_original_for_authors_update.push({author:ContenttypesObj.doc.author});
+		Contenttypes_original_for_authors_update.push({
+			author: ContenttypesObj.doc.author
+		});
 		Contenttypes_name_array.push(ContenttypesObj.docs_name_array);
 		if (ContenttypesObj.doc.author) {
 			Users_username_array.push(ContenttypesObj.doc.author);
@@ -914,7 +918,10 @@ var setSeedDataCategory = function (options) {
 	}
 	else {
 		Categories.push(CategoriesObj.doc);
-		Categories_original_for_parent_update.push({parent:CategoriesObj.doc.parent,title:CategoriesObj.doc.title});
+		Categories_original_for_parent_update.push({
+			parent: CategoriesObj.doc.parent,
+			title: CategoriesObj.doc.title
+		});
 		Categories_name_array.push(CategoriesObj.docs_name_array);
 		if (CategoriesObj.doc.author) {
 			Users_username_array.push(CategoriesObj.doc.author);
@@ -942,7 +949,9 @@ var setSeedDataTag = function (options) {
 	}
 	else {
 		Tags.push(TagsObj.doc);
-		Tags_original_for_parent_update.push({parent:TagsObj.doc.parent});
+		Tags_original_for_parent_update.push({
+			parent: TagsObj.doc.parent
+		});
 		Tags_name_array.push(TagsObj.docs_name_array);
 		if (TagsObj.doc.author) {
 			Users_username_array.push(TagsObj.doc.author);
@@ -1363,7 +1372,7 @@ var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 		function (callback) {
 			// Tags_original_for_parent_update = Tags;
 			for (var y in Tags) {
-				var	TagContenttypes = [];
+				var TagContenttypes = [];
 				if (Tags[y].contenttypes) {
 					TagContenttypes = Tags[y].contenttypes;
 					Tags[y].contenttypes = [];
@@ -1373,7 +1382,7 @@ var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 						}
 					}
 				}
-				var	TagParents = [];
+				var TagParents = [];
 				if (Tags[y].parent) {
 					TagParents = Tags[y].parent;
 					Tags[y].parent = [];
@@ -1456,7 +1465,7 @@ var getCategoryIdsFromCategoryArray = function (getCategoryIdsFromCategoryArrayA
 		function (callback) {
 			// Categories_original_for_parent_update = Categories;
 			for (var y in Categories) {
-				var	CategoryContenttypes = [];
+				var CategoryContenttypes = [];
 				if (Categories[y].contenttypes) {
 					CategoryContenttypes = Categories[y].contenttypes;
 					Categories[y].contenttypes = [];
@@ -1466,7 +1475,7 @@ var getCategoryIdsFromCategoryArray = function (getCategoryIdsFromCategoryArrayA
 						}
 					}
 				}
-				var	CategoryParents = [];
+				var CategoryParents = [];
 				if (Categories[y].parent) {
 					CategoryParents = Categories[y].parent;
 					Categories[y].parent = [];
@@ -2002,16 +2011,16 @@ var getAssetIdsFromAssetNameArray = function (asyncCallBack) {
  * @param  {Function} asyncCallBack
  * @return {Function} async callback asyncCallBack(err,results);
  */
-var updateContentAfterInsert = function(asyncCallBack){
+var updateContentAfterInsert = function (asyncCallBack) {
 	async.parallel([
-		updateAssetAuthorsInDatabase,
-		updateContenttypeAuthorsInDatabase,
-		updateTagParentInDatabase,
-		updateCategoryParentInDatabase
-	],
-	function(err,results){
-		asyncCallBack(err,results);
-	});
+			updateAssetAuthorsInDatabase,
+			updateContenttypeAuthorsInDatabase,
+			updateTagParentInDatabase,
+			updateCategoryParentInDatabase
+		],
+		function (err, results) {
+			asyncCallBack(err, results);
+		});
 };
 
 /**
@@ -2055,7 +2064,7 @@ var insertContentIntoDatabase = function (insertContentIntoDatabaseAsyncCallBack
 var insertAssetsIntoDatabase = function (asyncCallBack) {
 	if (Assets.length > 0) {
 		for (var y in Assets) {
-			var	AssetContenttypes = [];
+			var AssetContenttypes = [];
 			if (Assets[y].contenttypes) {
 				AssetContenttypes = Assets[y].contenttypes;
 				Assets[y].contenttypes = [];
@@ -2078,8 +2087,8 @@ var insertAssetsIntoDatabase = function (asyncCallBack) {
 				}
 			}
 		}
-	// console.log('Assets_original_for_authors_update[0] ****AFTER **** insertAssetsIntoDatabase',Assets_original_for_authors_update[0]);
-	// console.log('Assets[0]  ****AFTER **** insertAssetsIntoDatabase',Assets[0]);
+		// console.log('Assets_original_for_authors_update[0] ****AFTER **** insertAssetsIntoDatabase',Assets_original_for_authors_update[0]);
+		// console.log('Assets[0]  ****AFTER **** insertAssetsIntoDatabase',Assets[0]);
 		Asset.create(Assets, function (err) {
 			if (err) {
 				insertContentIntoDatabaseErrors.push({
@@ -2436,7 +2445,7 @@ var importSeed = function (options, importSeedCallback) {
 var importSeedModule = function (resources) {
 	logger = resources.logger;
 	mongoose = resources.mongoose;
-		mongoose.set('debug', false);
+	mongoose.set('debug', false);
 	appSettings = resources.settings;
 	CoreController = new ControllerHelper(resources);
 	CoreUtilities = new Utilities(resources);
