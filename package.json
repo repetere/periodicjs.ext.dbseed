@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.dbseed",
   "description": "An extension for seeding db with data",
-  "version": "1.90.5",
+  "version": "2.0.0",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
@@ -52,11 +52,10 @@
   "keywords": [
     "periodicjs"
   ],
-  "_id": "periodicjs.ext.dbseed@1.90.3",
-  "_shasum": "76fb1371998781b874e35fae3495bcf2623bb7c2",
-  "_from": "periodicjs.ext.dbseed@1.90.3",
-  "_resolved": "https://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-1.90.3.tgz",
-
+  "_id": "periodicjs.ext.dbseed@1.90.5",
+  "_shasum": "4b54d3e023f11f7619b0a81a9e8343da72e9a1fd",
+  "_from": "periodicjs.ext.dbseed@1.90.5",
+  "_resolved": "https://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-1.90.5.tgz",
   "gitHead": "c998dc634f5104167cd1fd23d1829674264dfe39",
   "bugs": {
     "url": "https://github.com/typesettin/periodicjs.ext.dbseed/issues"
@@ -74,8 +73,8 @@
     }
   ],
   "dist": {
-    "shasum": "76fb1371998781b874e35fae3495bcf2623bb7c2",
-    "tarball": "http://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-1.90.3.tgz"
+    "shasum": "4b54d3e023f11f7619b0a81a9e8343da72e9a1fd",
+    "tarball": "http://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-1.90.5.tgz"
   },
   "directories": {}
 }
