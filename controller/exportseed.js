@@ -16,7 +16,7 @@ var async = require('async'),
 	Category, // = mongoose.model('Category')
 	Tag, // = mongoose.model('Tag')
 	Collection, // = mongoose.model('Collection')
-	Library, // = mongoose.model('Library')
+	Compilation, // = mongoose.model('Compilation')
 	Userprivilege, // = mongoose.model('Userprivilege')
 	Userrole, // = mongoose.model('Userrole')
 	Usergroup; // = mongoose.model('Usergroup');
@@ -27,7 +27,7 @@ var exportSeedFilePath,
 	exportSeedDataArray = [],
 	item_id_name_hash = {},
 	collection_id_name_hash = {},
-	library_id_name_hash = {},
+	compilation_id_name_hash = {},
 	d = new Date(),
 	defaultExportDir = 'content/files/dbseeds/',
 	defaultExportFileName = 'dbseed' + '-' + d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate() + '-' + d.getTime() + '.json';
@@ -55,7 +55,7 @@ var writeSeedToDisk = function (writeSeedToDiskCallback) {
  * return seed format for a collection.items object
  * @return {object}     collection.items[{item.name,order}]
  */
-var getLibraryContentEntitiesFromDoc = function (contentEntities) {
+var getCompilationContentEntitiesFromDoc = function (contentEntities) {
 	var contentEntitiesArray = [],
 		contentEntityToAdd = {};
 	if (contentEntities.length > 0) {
@@ -232,13 +232,13 @@ var getPrimaryAssetFromDoc = function (primaryasset) {
 };
 
 /**
- * return seed format for an library object
+ * return seed format for an compilation object
  * @param  {object} doc mongo document
  * @return {object}     seed object
  */
-var getLibrarySeed = function (doc) {
+var getCompilationSeed = function (doc) {
 	var returnseed = {
-		datatype: 'library',
+		datatype: 'compilation',
 		datadocument: {}
 	};
 	returnseed.datadocument.random = doc.random;
@@ -288,7 +288,7 @@ var getLibrarySeed = function (doc) {
 		returnseed.datadocument.assets = getAssetsFromDoc(doc.assets);
 	}
 	if (doc.content_entities && doc.content_entities.length > 0) {
-		returnseed.datadocument.content_entities = getLibraryContentEntitiesFromDoc(doc.content_entities);
+		returnseed.datadocument.content_entities = getCompilationContentEntitiesFromDoc(doc.content_entities);
 	}
 	if (doc.visibility) {
 		returnseed.datadocument.visibility = doc.visibility;
@@ -791,27 +791,27 @@ var getAssetSeed = function (doc) {
 };
 
 /**
- * create library seeds from the database, if there are libraries
+ * create compilation seeds from the database, if there are compilations
  * @param  {object} err
- * @param  {Function} createLibrarySeedsAsyncCallback
- * @return {Function} async callback createLibrarySeedsAsyncCallback(err,results);
+ * @param  {Function} createCompilationSeedsAsyncCallback
+ * @return {Function} async callback createCompilationSeedsAsyncCallback(err,results);
  */
-var createLibrarySeeds = function (createLibrarySeedsAsyncCallback) {
-	Library.find({}).select('-_id -__v').populate('tags categories assets primaryasset authors contenttypes content_entities primaryauthor').exec(function (err, Libraries) {
+var createCompilationSeeds = function (createCompilationSeedsAsyncCallback) {
+	Compilation.find({}).select('-_id -__v').populate('tags categories assets primaryasset authors contenttypes content_entities primaryauthor').exec(function (err, Compilations) {
 		if (err) {
 			exportSeedErrorsArray.push({
 				error: err,
-				errortype: 'createLibrarySeeds'
+				errortype: 'createCompilationSeeds'
 			});
 		}
-		if (Libraries) {
-			for (var i in Libraries) {
-				var librarydoc = Libraries[i];
-				library_id_name_hash[Libraries[i]._id] = Libraries[i].name;
-				exportSeedDataArray.push(getLibrarySeed(librarydoc));
+		if (Compilations) {
+			for (var i in Compilations) {
+				var compilationdoc = Compilations[i];
+				compilation_id_name_hash[Compilations[i]._id] = Compilations[i].name;
+				exportSeedDataArray.push(getCompilationSeed(compilationdoc));
 			}
 		}
-		createLibrarySeedsAsyncCallback(null, 'created library seeds');
+		createCompilationSeedsAsyncCallback(null, 'created compilation seeds');
 	});
 };
 
@@ -1079,7 +1079,7 @@ var createSeeds = function (seedoptions, createSeedsCallback) {
 			createCategorySeeds,
 			createItemSeeds,
 			createCollectionSeeds,
-			createLibrarySeeds
+			createCompilationSeeds
 		],
 		function (err) {
 			createSeedsCallback(err);
@@ -1148,7 +1148,7 @@ var exportSeedModule = function (resources) {
 	Category = mongoose.model('Category');
 	Tag = mongoose.model('Tag');
 	Collection = mongoose.model('Collection');
-	Library = mongoose.model('Library');
+	Compilation = mongoose.model('Compilation');
 	Userprivilege = mongoose.model('Userprivilege');
 	Userrole = mongoose.model('Userrole');
 	Usergroup = mongoose.model('Usergroup');

@@ -44,11 +44,11 @@ var UsersObj,
 	Categories_original_for_parent_update = [],
 	Categories_name_array = [],
 	Categories_namehash = {},
-	LibrariesObj,
-	Library, // = mongoose.model('Library')
-	Libraries = [],
-	Libraries_name_array = [],
-	Libraries_namehash = {},
+	CompilationsObj,
+	Compilation, // = mongoose.model('Compilation')
+	Compilations = [],
+	Compilations_name_array = [],
+	Compilations_namehash = {},
 	TagsObj,
 	Tag, // = mongoose.model('Tag')
 	Tags = [],
@@ -82,6 +82,7 @@ var UsersObj,
 	seedDocumentErrors,
 	validDocuments,
 	invalidDocuments,
+	encryptpassword,
 	numOfSeededDocuments = 0;
 
 var resetSeedData = function () {
@@ -110,9 +111,9 @@ var resetSeedData = function () {
 	Collections = [];
 	Collections_name_array = [];
 	Collections_namehash = {};
-	Libraries = [];
-	Libraries_name_array = [];
-	Libraries_namehash = {};
+	Compilations = [];
+	Compilations_name_array = [];
+	Compilations_namehash = {};
 	Userprivileges = [];
 	Userprivileges_userprivilegeid_array = [];
 	Userprivileges_namehash = {};
@@ -489,11 +490,11 @@ var seedCollectionData = function (options) {
 };
 
 /**
- * create seed Library Object
+ * create seed Compilation Object
  * @param  {object} options seeddocument
- * @return {object}         {doc-Library,docs_name_array - Library.name,err}
+ * @return {object}         {doc-Compilation,docs_name_array - Compilation.name,err}
  */
-var seedLibraryData = function (options) {
+var seedCompilationData = function (options) {
 	// logger.silly('seedAssetData',options);
 	var seeddocument = options.seeddocument,
 		seed_name_array_item = null,
@@ -501,10 +502,10 @@ var seedLibraryData = function (options) {
 
 	try {
 		if (!seeddocument.title) {
-			errorObj = new Error('Library ' + seeddocument.title + ' is missing title');
+			errorObj = new Error('Compilation ' + seeddocument.title + ' is missing title');
 		}
 		// if(!seeddocument.content){
-		//   errorObj = new Error('Library '+seeddocument.title+' is missing content');
+		//   errorObj = new Error('Compilation '+seeddocument.title+' is missing content');
 		// }
 		if (!seeddocument.name) {
 			seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
@@ -542,7 +543,7 @@ var seedUserData = function (options) {
 			errorObj = new Error('user is missing email');
 		}
 		else {
-			if (seeddocument.password) {
+			if (seeddocument.password && encryptpassword) {
 				salt = bcrypt.genSaltSync(10);
 				hash = bcrypt.hashSync(seeddocument.password, salt);
 				seeddocument.password = hash;
@@ -999,26 +1000,26 @@ var setSeedDataCollection = function (options) {
 };
 
 /**
- * set seed data object for looking up and inserting libraries
+ * set seed data object for looking up and inserting compilations
  * @param {type} options index,seedobject
  */
-var setSeedDataLibrary = function (options) {
+var setSeedDataCompilation = function (options) {
 	var index = options.index,
 		seedObject = options.seedobject;
 
-	LibrariesObj = seedLibraryData({
+	CompilationsObj = seedCompilationData({
 		seeddocument: seedObject.datadocument
 	});
-	if (LibrariesObj.err) {
+	if (CompilationsObj.err) {
 		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
 			index: index,
 			seed: seedObject,
-			error: LibrariesObj.err
+			error: CompilationsObj.err
 		}));
 	}
 	else {
-		Libraries.push(LibrariesObj.doc);
-		Libraries_name_array.push(LibrariesObj.docs_name_array);
+		Compilations.push(CompilationsObj.doc);
+		Compilations_name_array.push(CompilationsObj.docs_name_array);
 	}
 };
 
@@ -1108,8 +1109,8 @@ var setSeedObjectArrays = function (options, callback) {
 					seedobject: documents[x]
 				});
 				break;
-			case 'library':
-				setSeedDataLibrary({
+			case 'compilation':
+				setSeedDataCompilation({
 					index: x,
 					seedobject: documents[x]
 				});
@@ -1134,36 +1135,36 @@ var setSeedObjectArrays = function (options, callback) {
 };
 
 /**
- * insert libraries into database, update Libraries_namehash array, also update author in library
- * @param  {Function} getLibraryIdsFromLibraryArrayAsyncCallBack
- * @return {Function} async callback getLibraryIdsFromLibraryArrayAsyncCallBack(err,results);
+ * insert compilations into database, update Compilations_namehash array, also update author in compilation
+ * @param  {Function} getCompilationIdsFromCompilationArrayAsyncCallBack
+ * @return {Function} async callback getCompilationIdsFromCompilationArrayAsyncCallBack(err,results);
  */
-var getLibraryIdsFromLibraryArray = function (getLibraryIdsFromLibraryArrayAsyncCallBack) {
-	// console.log('Libraries', Libraries);
-	var LibraryContentEntities = [];
-	for (var y in Libraries) {
-		if (Libraries[y].content_entities) {
-			LibraryContentEntities = Libraries[y].content_entities;
-			Libraries[y].content_entities = [];
-			for (var z in LibraryContentEntities) {
-				if (LibraryContentEntities[z].entity_collection && Collections_namehash[LibraryContentEntities[z].entity_collection]) {
-					LibraryContentEntities[z].entity_collection = Collections_namehash[LibraryContentEntities[z].entity_collection];
+var getCompilationIdsFromCompilationArray = function (getCompilationIdsFromCompilationArrayAsyncCallBack) {
+	// console.log('Compilations', Compilations);
+	var CompilationContentEntities = [];
+	for (var y in Compilations) {
+		if (Compilations[y].content_entities) {
+			CompilationContentEntities = Compilations[y].content_entities;
+			Compilations[y].content_entities = [];
+			for (var z in CompilationContentEntities) {
+				if (CompilationContentEntities[z].entity_collection && Collections_namehash[CompilationContentEntities[z].entity_collection]) {
+					CompilationContentEntities[z].entity_collection = Collections_namehash[CompilationContentEntities[z].entity_collection];
 				}
-				if (LibraryContentEntities[z].entity_item && Items_namehash[LibraryContentEntities[z].entity_item]) {
-					LibraryContentEntities[z].entity_item = Items_namehash[LibraryContentEntities[z].entity_item];
+				if (CompilationContentEntities[z].entity_item && Items_namehash[CompilationContentEntities[z].entity_item]) {
+					CompilationContentEntities[z].entity_item = Items_namehash[CompilationContentEntities[z].entity_item];
 				}
-				Libraries[y].content_entities.push(LibraryContentEntities[z]);
+				Compilations[y].content_entities.push(CompilationContentEntities[z]);
 			}
 		}
 	}
 	async.waterfall([
 		function (callback) {
-			// console.log('create new library',Libraries);
-			Library.create(Libraries, function (err) {
+			// console.log('create new compilation',Compilations);
+			Compilation.create(Compilations, function (err) {
 				if (err) {
 					// callback(err, null);
 					insertContentIntoDatabaseErrors.push({
-						createLibrariesError: err.toString()
+						createCompilationsError: err.toString()
 					});
 				}
 				delete arguments['0'];
@@ -1172,45 +1173,45 @@ var getLibraryIdsFromLibraryArray = function (getLibraryIdsFromLibraryArrayAsync
 				for (var x in arguments) {
 					// logger.silly('arguments[x]',x,arguments[x]);
 					if (arguments[x] && arguments[x]._id) {
-						Libraries_namehash[arguments[x].name] = arguments[x]._id;
+						Compilations_namehash[arguments[x].name] = arguments[x]._id;
 					}
 				}
-				// console.log('created library in async waterfall',Libraries_namehash);
+				// console.log('created compilation in async waterfall',Compilations_namehash);
 
 				if (Object.keys(arguments).length > 0) {
 					numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
-					// console.log('Library ('+ Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
+					// console.log('Compilation ('+ Object.keys(arguments).length +') numberofdocuments', numOfSeededDocuments);
 				}
-				callback(null, 'updated Libraries_namehash');
+				callback(null, 'updated Compilations_namehash');
 			});
 		},
-		function (NewLibraries, callback) {
-			Library.find({
+		function (NewCompilations, callback) {
+			Compilation.find({
 					'name': {
-						$in: Libraries_name_array
+						$in: Compilations_name_array
 					}
 				},
 				'_id name',
-				function (err, librarydata) {
+				function (err, compilationdata) {
 					if (err) {
 						// callback(err, null, null);
 						insertContentIntoDatabaseErrors.push({
-							searchforLibrariesError: err.toString()
+							searchforCompilationsError: err.toString()
 						});
 					}
 					else {
-						for (var x in librarydata) {
-							Libraries_namehash[librarydata[x].name] = librarydata[x]._id;
+						for (var x in compilationdata) {
+							Compilations_namehash[compilationdata[x].name] = compilationdata[x]._id;
 						}
 						callback(null, {
-							newlibraries: NewLibraries,
-							queriedlibraries: librarydata
+							newcompilations: NewCompilations,
+							queriedcompilations: compilationdata
 						});
 					}
 				});
 		}
 	], function (err /*, results*/ ) {
-		getLibraryIdsFromLibraryArrayAsyncCallBack(err, Libraries_namehash);
+		getCompilationIdsFromCompilationArrayAsyncCallBack(err, Compilations_namehash);
 	});
 };
 
@@ -1785,74 +1786,74 @@ var getTaxonomyIdsFromTaxonomiesArrays = function (getTaxonomyIdsFromTaxonomiesA
 						callback(e, null);
 					}
 				},
-				Libraries: function (callback) {
+				Compilations: function (callback) {
 					try {
-						var LibraryTags = [],
-							LibraryContenttypes = [],
-							LibraryCategories = [],
-							LibraryAssets = [],
-							LibraryAuthors = [];
-						for (var y in Libraries) {
-							// console.log('Libraries[y].tags', Libraries[y].tags);
-							if (Libraries[y].tags) {
-								LibraryTags = Libraries[y].tags;
-								Libraries[y].tags = [];
-								for (var z in LibraryTags) {
-									if (Tags_namehash[LibraryTags[z]]) {
-										Libraries[y].tags.push(Tags_namehash[LibraryTags[z]]);
+						var CompilationTags = [],
+							CompilationContenttypes = [],
+							CompilationCategories = [],
+							CompilationAssets = [],
+							CompilationAuthors = [];
+						for (var y in Compilations) {
+							// console.log('Compilations[y].tags', Compilations[y].tags);
+							if (Compilations[y].tags) {
+								CompilationTags = Compilations[y].tags;
+								Compilations[y].tags = [];
+								for (var z in CompilationTags) {
+									if (Tags_namehash[CompilationTags[z]]) {
+										Compilations[y].tags.push(Tags_namehash[CompilationTags[z]]);
 									}
 								}
 							}
-							if (Libraries[y].categories) {
-								LibraryCategories = Libraries[y].categories;
-								Libraries[y].categories = [];
-								for (var zc in LibraryCategories) {
-									if (Categories_namehash[LibraryCategories[zc]]) {
-										Libraries[y].categories.push(Categories_namehash[LibraryCategories[zc]]);
+							if (Compilations[y].categories) {
+								CompilationCategories = Compilations[y].categories;
+								Compilations[y].categories = [];
+								for (var zc in CompilationCategories) {
+									if (Categories_namehash[CompilationCategories[zc]]) {
+										Compilations[y].categories.push(Categories_namehash[CompilationCategories[zc]]);
 									}
 								}
 							}
-							if (Libraries[y].contenttypes) {
-								LibraryContenttypes = Libraries[y].contenttypes;
-								Libraries[y].contenttypes = [];
-								for (var zct in LibraryContenttypes) {
-									if (Contenttypes_namehash[LibraryContenttypes[zct]]) {
-										Libraries[y].contenttypes.push(Contenttypes_namehash[LibraryContenttypes[zct]]);
+							if (Compilations[y].contenttypes) {
+								CompilationContenttypes = Compilations[y].contenttypes;
+								Compilations[y].contenttypes = [];
+								for (var zct in CompilationContenttypes) {
+									if (Contenttypes_namehash[CompilationContenttypes[zct]]) {
+										Compilations[y].contenttypes.push(Contenttypes_namehash[CompilationContenttypes[zct]]);
 									}
 								}
 							}
-							if (Libraries[y].assets) {
-								LibraryAssets = Libraries[y].assets;
-								Libraries[y].assets = [];
-								for (var za in LibraryAssets) {
-									if (Assets_namehash[LibraryAssets[za]]) {
-										Libraries[y].assets.push(Assets_namehash[LibraryAssets[za]]);
+							if (Compilations[y].assets) {
+								CompilationAssets = Compilations[y].assets;
+								Compilations[y].assets = [];
+								for (var za in CompilationAssets) {
+									if (Assets_namehash[CompilationAssets[za]]) {
+										Compilations[y].assets.push(Assets_namehash[CompilationAssets[za]]);
 									}
 								}
 							}
-							if (Libraries[y].primaryasset) {
-								if (Assets_namehash[Libraries[y].primaryasset]) {
-									Libraries[y].primaryasset = Assets_namehash[Libraries[y].primaryasset];
+							if (Compilations[y].primaryasset) {
+								if (Assets_namehash[Compilations[y].primaryasset]) {
+									Compilations[y].primaryasset = Assets_namehash[Compilations[y].primaryasset];
 								}
 								else {
-									delete Libraries[y].primaryasset;
+									delete Compilations[y].primaryasset;
 								}
 							}
-							if (Libraries[y].authors) {
-								LibraryAuthors = Libraries[y].authors;
-								Libraries[y].authors = [];
-								for (var zu in LibraryAuthors) {
-									if (Users_namehash[LibraryAuthors[zu]]) {
-										Libraries[y].authors.push(Users_namehash[LibraryAuthors[zu]]);
+							if (Compilations[y].authors) {
+								CompilationAuthors = Compilations[y].authors;
+								Compilations[y].authors = [];
+								for (var zu in CompilationAuthors) {
+									if (Users_namehash[CompilationAuthors[zu]]) {
+										Compilations[y].authors.push(Users_namehash[CompilationAuthors[zu]]);
 									}
 								}
 							}
-							if (Libraries[y].primaryauthor) {
-								if (Users_namehash[Libraries[y].primaryauthor]) {
-									Libraries[y].primaryauthor = Users_namehash[Libraries[y].primaryauthor];
+							if (Compilations[y].primaryauthor) {
+								if (Users_namehash[Compilations[y].primaryauthor]) {
+									Compilations[y].primaryauthor = Users_namehash[Compilations[y].primaryauthor];
 								}
 								else {
-									delete Libraries[y].primaryauthor;
+									delete Compilations[y].primaryauthor;
 								}
 							}
 						}
@@ -1862,12 +1863,12 @@ var getTaxonomyIdsFromTaxonomiesArrays = function (getTaxonomyIdsFromTaxonomiesA
 						callback(e, null);
 					}
 				}
-			}, function (err, updatedItemsCollectionsLibraries) {
+			}, function (err, updatedItemsCollectionsCompilations) {
 
 				// getItemIdsFromItemArray(callback);
 				getTaxonomyIdsFromTaxonomiesArraysAsyncCallBack(
 					err, {
-						updatedItemsCollectionsLibraries: updatedItemsCollectionsLibraries,
+						updatedItemsCollectionsCompilations: updatedItemsCollectionsCompilations,
 						categories: createdtagscatstype.categories,
 						tags: createdtagscatstype.tags
 					});
@@ -2038,7 +2039,7 @@ var insertContentIntoDatabase = function (insertContentIntoDatabaseAsyncCallBack
 		createtaxonomies: getTaxonomyIdsFromTaxonomiesArrays,
 		createitems: getItemIdsFromItemArray,
 		createcollections: getCollectionIdsFromCollectionArray,
-		createlibraries: getLibraryIdsFromLibraryArray,
+		createcompilations: getCompilationIdsFromCompilationArray,
 		updateContentAfterInsert: updateContentAfterInsert
 	}, function (err, results) {
 		insertContentIntoDatabaseAsyncCallBack(err, results);
@@ -2390,6 +2391,7 @@ var isValidSeedJSONSync = function (options) {
  */
 var importSeed = function (options, importSeedCallback) {
 	insertsetting = options.insertsetting;
+	encryptpassword = (typeof options.encryptpassword === 'boolean')? options.encryptpassword : true;
 
 	resetSeedData();
 	var seedjsondata = options.jsondata,
@@ -2436,7 +2438,7 @@ var importSeed = function (options, importSeedCallback) {
 var importSeedModule = function (resources) {
 	logger = resources.logger;
 	mongoose = resources.mongoose;
-		mongoose.set('debug', false);
+		// mongoose.set('debug', false);
 	appSettings = resources.settings;
 	CoreController = new ControllerHelper(resources);
 	CoreUtilities = new Utilities(resources);
@@ -2447,7 +2449,7 @@ var importSeedModule = function (resources) {
 	Category = mongoose.model('Category');
 	Tag = mongoose.model('Tag');
 	Collection = mongoose.model('Collection');
-	Library = mongoose.model('Library');
+	Compilation = mongoose.model('Compilation');
 	Userprivilege = mongoose.model('Userprivilege');
 	Userrole = mongoose.model('Userrole');
 	Usergroup = mongoose.model('Usergroup');

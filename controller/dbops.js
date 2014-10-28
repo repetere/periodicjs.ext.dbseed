@@ -14,7 +14,7 @@ var async = require('async'),
 	Category, // = mongoose.model('Category')
 	Tag, // = mongoose.model('Tag')
 	Collection, // = mongoose.model('Collection')
-	Library, // = mongoose.model('Collection')
+	Compilation, // = mongoose.model('Collection')
 	Userprivilege, // = mongoose.model('Userprivilege')
 	Userrole, // = mongoose.model('Userrole')
 	Usergroup, // = mongoose.model('Usergroup');
@@ -89,20 +89,20 @@ var emptyCollections = function (emptyCollectionsAsyncCallback) {
 	});
 };
 /**
- * removes all Libraries from the database
+ * removes all Compilations from the database
  * @param  {object} err
- * @param  {Function} emptyLibrariesAsyncCallback
- * @return {Function} async callback emptyLibrariesAsyncCallback(err,results);
+ * @param  {Function} emptyCompilationsAsyncCallback
+ * @return {Function} async callback emptyCompilationsAsyncCallback(err,results);
  */
-var emptyLibraries = function (emptyLibrariesAsyncCallback) {
-	Library.remove({}).exec(function (err) {
+var emptyCompilations = function (emptyCompilationsAsyncCallback) {
+	Compilation.remove({}).exec(function (err) {
 		if (err) {
 			dbOpsErrorsArray.push({
 				error: err,
-				errortype: 'emptyLibraries'
+				errortype: 'emptyCompilations'
 			});
 		}
-		emptyLibrariesAsyncCallback(null, 'removed all Libraries');
+		emptyCompilationsAsyncCallback(null, 'removed all Compilations');
 	});
 };
 /**
@@ -240,7 +240,7 @@ var emptyDB = function (options, emptyDBCallback) {
 			emptyCategories,
 			emptyItems,
 			emptyCollections,
-			emptyLibraries,
+			emptyCompilations,
 			emptyUserprivileges,
 			emptyUserroles,
 			emptyUsergroups
@@ -279,7 +279,7 @@ var dbOpsModule = function (resources) {
 	Category = mongoose.model('Category');
 	Tag = mongoose.model('Tag');
 	Collection = mongoose.model('Collection');
-	Library = mongoose.model('Library');
+	Compilation = mongoose.model('Compilation');
 	Userprivilege = mongoose.model('Userprivilege');
 	Userrole = mongoose.model('Userrole');
 	Usergroup = mongoose.model('Usergroup');
