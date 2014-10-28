@@ -52,17 +52,10 @@
   "keywords": [
     "periodicjs"
   ],
-<<<<<<< HEAD
   "_id": "periodicjs.ext.dbseed@2.0.0",
   "_shasum": "1d28ec47e7ea49bcff7123517dff96c78438b491",
   "_from": "periodicjs.ext.dbseed@2.0.0",
   "_resolved": "https://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-2.0.0.tgz",
-=======
-  "_id": "periodicjs.ext.dbseed@1.90.5",
-  "_shasum": "4b54d3e023f11f7619b0a81a9e8343da72e9a1fd",
-  "_from": "periodicjs.ext.dbseed@1.90.5",
-  "_resolved": "https://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-1.90.5.tgz",
->>>>>>> 068816536b574201a0fe181cfc093f199139a604
   "gitHead": "c998dc634f5104167cd1fd23d1829674264dfe39",
   "bugs": {
     "url": "https://github.com/typesettin/periodicjs.ext.dbseed/issues"
@@ -80,13 +73,8 @@
     }
   ],
   "dist": {
-<<<<<<< HEAD
     "shasum": "1d28ec47e7ea49bcff7123517dff96c78438b491",
     "tarball": "http://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-2.0.0.tgz"
-=======
-    "shasum": "4b54d3e023f11f7619b0a81a9e8343da72e9a1fd",
-    "tarball": "http://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-1.90.5.tgz"
->>>>>>> 068816536b574201a0fe181cfc093f199139a604
   },
   "directories": {}
 }
