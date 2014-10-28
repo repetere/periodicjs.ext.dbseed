@@ -229,6 +229,7 @@ var import_upload = function (req, res) {
 						console.time('Importing Seed Data');
 						importSeedModule.importSeed({
 							jsondata: seedjson,
+							encryptpassword: false,
 							insertsetting: 'upsert'
 						}, function (err, status) {
 							console.timeEnd('Importing Seed Data');
