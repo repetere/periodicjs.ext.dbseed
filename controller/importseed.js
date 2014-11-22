@@ -1,10 +1,13 @@
 'use strict';
 
 var async = require('async'),
+	path = require('path'),
 	Utilities = require('periodicjs.core.utilities'),
 	ControllerHelper = require('periodicjs.core.controller'),
 	CoreUtilities,
 	CoreController,
+	customSeedManipulations,
+	customImportSeed = false,
 	appSettings,
 	mongoose,
 	logger;
@@ -161,7 +164,7 @@ var updateAssetAuthorsInDatabase = function (asyncCallBack) {
 			// 	author: AssetToUpdate.author
 			// });
 
-			if(AssetToUpdate.author){
+			if (AssetToUpdate.author) {
 				Asset.update({
 					name: AssetToUpdate.name
 				}, {
@@ -176,10 +179,10 @@ var updateAssetAuthorsInDatabase = function (asyncCallBack) {
 					cb(null);
 				});
 			}
-			else{
+			else {
 				cb(null);
 			}
-			
+
 		}, function (err) {
 			if (err) {
 				insertContentIntoDatabaseErrors.push({
@@ -214,7 +217,7 @@ var updateContenttypeAuthorsInDatabase = function (asyncCallBack) {
 			}
 		}
 		async.each(Contenttypes, function (ContenttypeToUpdate, cb) {
-			if(ContenttypeToUpdate.author){
+			if (ContenttypeToUpdate.author) {
 				Contenttype.update({
 					name: ContenttypeToUpdate.name
 				}, {
@@ -229,10 +232,10 @@ var updateContenttypeAuthorsInDatabase = function (asyncCallBack) {
 					cb(null);
 				});
 			}
-			else{
+			else {
 				cb(null);
 			}
-			
+
 		}, function (err) {
 			if (err) {
 				insertContentIntoDatabaseErrors.push({
@@ -257,7 +260,7 @@ var updateTagParentInDatabase = function (asyncCallBack) {
 		for (var y in Tags) {
 			// console.log('Tags[y]',Tags[y]);
 			// console.log('Tags_original_for_parent_update[y]',Tags_original_for_parent_update[y]);
-			var	TagParents = [];
+			var TagParents = [];
 			if (Tags_original_for_parent_update[y].parent) {
 				TagParents = Tags_original_for_parent_update[y].parent;
 				Tags[y].parent = [];
@@ -267,10 +270,10 @@ var updateTagParentInDatabase = function (asyncCallBack) {
 					}
 				}
 			}
-			
+
 		}
 		async.each(Tags, function (TagToUpdate, cb) {
-			if(TagToUpdate.parent){
+			if (TagToUpdate.parent) {
 				Tag.update({
 					name: TagToUpdate.name
 				}, {
@@ -285,13 +288,13 @@ var updateTagParentInDatabase = function (asyncCallBack) {
 					cb(null);
 				});
 			}
-			else{
+			else {
 				cb(null);
 			}
-			
+
 		}, function (err) {
 			if (err) {
-						console.error(err);
+				console.error(err);
 				insertContentIntoDatabaseErrors.push({
 					updatingTagsError: err.toString()
 				});
@@ -314,7 +317,7 @@ var updateCategoryParentInDatabase = function (asyncCallBack) {
 		for (var y in Categories) {
 			// console.log('Categories[y]',Categories[y]);
 			// console.log('Categories_original_for_parent_update[y]',Categories_original_for_parent_update[y]);
-			var	CategoryParents = [];
+			var CategoryParents = [];
 			if (Categories_original_for_parent_update[y].parent) {
 				CategoryParents = Categories_original_for_parent_update[y].parent;
 				Categories[y].parent = [];
@@ -324,10 +327,10 @@ var updateCategoryParentInDatabase = function (asyncCallBack) {
 					}
 				}
 			}
-			
+
 		}
 		async.each(Categories, function (CategoryToUpdate, cb) {
-			if(CategoryToUpdate.parent){
+			if (CategoryToUpdate.parent) {
 				Category.update({
 					name: CategoryToUpdate.name
 				}, {
@@ -342,13 +345,13 @@ var updateCategoryParentInDatabase = function (asyncCallBack) {
 					cb(null);
 				});
 			}
-			else{
+			else {
 				cb(null);
 			}
-			
+
 		}, function (err) {
 			if (err) {
-						console.error(err);
+				console.error(err);
 				insertContentIntoDatabaseErrors.push({
 					updatingCategoriesError: err.toString()
 				});
@@ -735,7 +738,15 @@ var returnSeedDocumentObjectError = function (options) {
  */
 var setSeedDataUsergroup = function (options) {
 	var index = options.index,
+		seedObject;
+
+	if (customImportSeed && customSeedManipulations.importseed.usergroup) {
+		seedObject = customSeedManipulations.importseed.usergroup(options.seedobject);
+	}
+	else {
 		seedObject = options.seedobject;
+	}
+
 	UsergroupsObj = seedUserGroupRolePrivilegeData({
 		seeddocument: seedObject.datadocument,
 		seeddocumenttype: 'group'
@@ -764,7 +775,14 @@ var setSeedDataUsergroup = function (options) {
  */
 var setSeedDataUserole = function (options) {
 	var index = options.index,
+		seedObject;
+
+	if (customImportSeed && customSeedManipulations.importseed.userrole) {
+		seedObject = customSeedManipulations.importseed.userrole(options.seedobject);
+	}
+	else {
 		seedObject = options.seedobject;
+	}
 
 	UserrolesObj = seedUserGroupRolePrivilegeData({
 		seeddocument: seedObject.datadocument,
@@ -794,7 +812,14 @@ var setSeedDataUserole = function (options) {
  */
 var setSeedDataUserprivilege = function (options) {
 	var index = options.index,
+		seedObject;
+
+	if (customImportSeed && customSeedManipulations.importseed.userprivilege) {
+		seedObject = customSeedManipulations.importseed.userprivilege(options.seedobject);
+	}
+	else {
 		seedObject = options.seedobject;
+	}
 
 	UserprivilegesObj = seedUserGroupRolePrivilegeData({
 		seeddocument: seedObject.datadocument,
@@ -819,7 +844,14 @@ var setSeedDataUserprivilege = function (options) {
  */
 var setSeedDataAsset = function (options) {
 	var index = options.index,
+		seedObject;
+
+	if (customImportSeed && customSeedManipulations.importseed.asset) {
+		seedObject = customSeedManipulations.importseed.asset(options.seedobject);
+	}
+	else {
 		seedObject = options.seedobject;
+	}
 
 	AssetsObj = seedAssetData({
 		seeddocument: seedObject.datadocument
@@ -833,7 +865,9 @@ var setSeedDataAsset = function (options) {
 	}
 	else {
 		Assets.push(AssetsObj.doc);
-		Assets_original_for_authors_update.push({author:AssetsObj.doc.author});
+		Assets_original_for_authors_update.push({
+			author: AssetsObj.doc.author
+		});
 		Assets_name_array.push(AssetsObj.docs_name_array);
 	}
 };
@@ -844,7 +878,14 @@ var setSeedDataAsset = function (options) {
  */
 var setSeedDataUser = function (options) {
 	var index = options.index,
+		seedObject;
+
+	if (customImportSeed && customSeedManipulations.importseed.user) {
+		seedObject = customSeedManipulations.importseed.user(options.seedobject);
+	}
+	else {
 		seedObject = options.seedobject;
+	}
 
 	UsersObj = seedUserData({
 		seeddocument: seedObject.datadocument
@@ -873,7 +914,14 @@ var setSeedDataUser = function (options) {
  */
 var setSeedDataContentype = function (options) {
 	var index = options.index,
+		seedObject;
+
+	if (customImportSeed && customSeedManipulations.importseed.contenttype) {
+		seedObject = customSeedManipulations.importseed.contenttype(options.seedobject);
+	}
+	else {
 		seedObject = options.seedobject;
+	}
 
 	ContenttypesObj = seedContenttypeData({
 		seeddocument: seedObject.datadocument
@@ -887,7 +935,9 @@ var setSeedDataContentype = function (options) {
 	}
 	else {
 		Contenttypes.push(ContenttypesObj.doc);
-		Contenttypes_original_for_authors_update.push({author:ContenttypesObj.doc.author});
+		Contenttypes_original_for_authors_update.push({
+			author: ContenttypesObj.doc.author
+		});
 		Contenttypes_name_array.push(ContenttypesObj.docs_name_array);
 		if (ContenttypesObj.doc.author) {
 			Users_username_array.push(ContenttypesObj.doc.author);
@@ -901,7 +951,15 @@ var setSeedDataContentype = function (options) {
  */
 var setSeedDataCategory = function (options) {
 	var index = options.index,
+		seedObject;
+
+	logger.silly('setSeedDataCategory');
+	if (customImportSeed && customSeedManipulations.importseed.category) {
+		seedObject = customSeedManipulations.importseed.category(options.seedobject);
+	}
+	else {
 		seedObject = options.seedobject;
+	}
 
 	CategoriesObj = seedCategoryData({
 		seeddocument: seedObject.datadocument
@@ -915,7 +973,10 @@ var setSeedDataCategory = function (options) {
 	}
 	else {
 		Categories.push(CategoriesObj.doc);
-		Categories_original_for_parent_update.push({parent:CategoriesObj.doc.parent,title:CategoriesObj.doc.title});
+		Categories_original_for_parent_update.push({
+			parent: CategoriesObj.doc.parent,
+			title: CategoriesObj.doc.title
+		});
 		Categories_name_array.push(CategoriesObj.docs_name_array);
 		if (CategoriesObj.doc.author) {
 			Users_username_array.push(CategoriesObj.doc.author);
@@ -929,7 +990,14 @@ var setSeedDataCategory = function (options) {
  */
 var setSeedDataTag = function (options) {
 	var index = options.index,
+		seedObject;
+
+	if (customImportSeed && customSeedManipulations.importseed.tag) {
+		seedObject = customSeedManipulations.importseed.tag(options.seedobject);
+	}
+	else {
 		seedObject = options.seedobject;
+	}
 
 	TagsObj = seedTagData({
 		seeddocument: seedObject.datadocument
@@ -943,7 +1011,9 @@ var setSeedDataTag = function (options) {
 	}
 	else {
 		Tags.push(TagsObj.doc);
-		Tags_original_for_parent_update.push({parent:TagsObj.doc.parent});
+		Tags_original_for_parent_update.push({
+			parent: TagsObj.doc.parent
+		});
 		Tags_name_array.push(TagsObj.docs_name_array);
 		if (TagsObj.doc.author) {
 			Users_username_array.push(TagsObj.doc.author);
@@ -957,7 +1027,14 @@ var setSeedDataTag = function (options) {
  */
 var setSeedDataItem = function (options) {
 	var index = options.index,
+		seedObject;
+
+	if (customImportSeed && customSeedManipulations.importseed.item) {
+		seedObject = customSeedManipulations.importseed.item(options.seedobject);
+	}
+	else {
 		seedObject = options.seedobject;
+	}
 
 	ItemsObj = seedItemData({
 		seeddocument: seedObject.datadocument
@@ -981,7 +1058,14 @@ var setSeedDataItem = function (options) {
  */
 var setSeedDataCollection = function (options) {
 	var index = options.index,
+		seedObject;
+
+	if (customImportSeed && customSeedManipulations.importseed.compilation) {
+		seedObject = customSeedManipulations.importseed.compilation(options.seedobject);
+	}
+	else {
 		seedObject = options.seedobject;
+	}
 
 	CollectionsObj = seedCollectionData({
 		seeddocument: seedObject.datadocument
@@ -1005,7 +1089,14 @@ var setSeedDataCollection = function (options) {
  */
 var setSeedDataCompilation = function (options) {
 	var index = options.index,
+		seedObject;
+
+	if (customImportSeed && customSeedManipulations.importseed.compilation) {
+		seedObject = customSeedManipulations.importseed.compilation(options.seedobject);
+	}
+	else {
 		seedObject = options.seedobject;
+	}
 
 	CompilationsObj = seedCompilationData({
 		seeddocument: seedObject.datadocument
@@ -1364,7 +1455,7 @@ var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 		function (callback) {
 			// Tags_original_for_parent_update = Tags;
 			for (var y in Tags) {
-				var	TagContenttypes = [];
+				var TagContenttypes = [];
 				if (Tags[y].contenttypes) {
 					TagContenttypes = Tags[y].contenttypes;
 					Tags[y].contenttypes = [];
@@ -1374,7 +1465,7 @@ var getTagIdsFromTagArray = function (getTagIdsFromTagArrayAsyncCallBack) {
 						}
 					}
 				}
-				var	TagParents = [];
+				var TagParents = [];
 				if (Tags[y].parent) {
 					TagParents = Tags[y].parent;
 					Tags[y].parent = [];
@@ -1457,7 +1548,7 @@ var getCategoryIdsFromCategoryArray = function (getCategoryIdsFromCategoryArrayA
 		function (callback) {
 			// Categories_original_for_parent_update = Categories;
 			for (var y in Categories) {
-				var	CategoryContenttypes = [];
+				var CategoryContenttypes = [];
 				if (Categories[y].contenttypes) {
 					CategoryContenttypes = Categories[y].contenttypes;
 					Categories[y].contenttypes = [];
@@ -1467,7 +1558,7 @@ var getCategoryIdsFromCategoryArray = function (getCategoryIdsFromCategoryArrayA
 						}
 					}
 				}
-				var	CategoryParents = [];
+				var CategoryParents = [];
 				if (Categories[y].parent) {
 					CategoryParents = Categories[y].parent;
 					Categories[y].parent = [];
@@ -2003,16 +2094,16 @@ var getAssetIdsFromAssetNameArray = function (asyncCallBack) {
  * @param  {Function} asyncCallBack
  * @return {Function} async callback asyncCallBack(err,results);
  */
-var updateContentAfterInsert = function(asyncCallBack){
+var updateContentAfterInsert = function (asyncCallBack) {
 	async.parallel([
-		updateAssetAuthorsInDatabase,
-		updateContenttypeAuthorsInDatabase,
-		updateTagParentInDatabase,
-		updateCategoryParentInDatabase
-	],
-	function(err,results){
-		asyncCallBack(err,results);
-	});
+			updateAssetAuthorsInDatabase,
+			updateContenttypeAuthorsInDatabase,
+			updateTagParentInDatabase,
+			updateCategoryParentInDatabase
+		],
+		function (err, results) {
+			asyncCallBack(err, results);
+		});
 };
 
 /**
@@ -2056,7 +2147,7 @@ var insertContentIntoDatabase = function (insertContentIntoDatabaseAsyncCallBack
 var insertAssetsIntoDatabase = function (asyncCallBack) {
 	if (Assets.length > 0) {
 		for (var y in Assets) {
-			var	AssetContenttypes = [];
+			var AssetContenttypes = [];
 			if (Assets[y].contenttypes) {
 				AssetContenttypes = Assets[y].contenttypes;
 				Assets[y].contenttypes = [];
@@ -2079,8 +2170,8 @@ var insertAssetsIntoDatabase = function (asyncCallBack) {
 				}
 			}
 		}
-	// console.log('Assets_original_for_authors_update[0] ****AFTER **** insertAssetsIntoDatabase',Assets_original_for_authors_update[0]);
-	// console.log('Assets[0]  ****AFTER **** insertAssetsIntoDatabase',Assets[0]);
+		// console.log('Assets_original_for_authors_update[0] ****AFTER **** insertAssetsIntoDatabase',Assets_original_for_authors_update[0]);
+		// console.log('Assets[0]  ****AFTER **** insertAssetsIntoDatabase',Assets[0]);
 		Asset.create(Assets, function (err) {
 			if (err) {
 				insertContentIntoDatabaseErrors.push({
@@ -2391,7 +2482,7 @@ var isValidSeedJSONSync = function (options) {
  */
 var importSeed = function (options, importSeedCallback) {
 	insertsetting = options.insertsetting;
-	encryptpassword = (typeof options.encryptpassword === 'boolean')? options.encryptpassword : true;
+	encryptpassword = (typeof options.encryptpassword === 'boolean') ? options.encryptpassword : true;
 
 	resetSeedData();
 	var seedjsondata = options.jsondata,
@@ -2438,7 +2529,7 @@ var importSeed = function (options, importSeedCallback) {
 var importSeedModule = function (resources) {
 	logger = resources.logger;
 	mongoose = resources.mongoose;
-		// mongoose.set('debug', false);
+	// mongoose.set('debug', false);
 	appSettings = resources.settings;
 	CoreController = new ControllerHelper(resources);
 	CoreUtilities = new Utilities(resources);
@@ -2453,6 +2544,15 @@ var importSeedModule = function (resources) {
 	Userprivilege = mongoose.model('Userprivilege');
 	Userrole = mongoose.model('Userrole');
 	Usergroup = mongoose.model('Usergroup');
+	var customseedmanpath = path.resolve(process.cwd(), 'content/config/extensions/periodicjs.ext.dbseed/customseed.js');
+	try {
+		customSeedManipulations = require(customseedmanpath);
+		customImportSeed = (customSeedManipulations.importseed) ? true : false;
+	}
+	catch (e) {
+		customSeedManipulations = false;
+	}
+	// logger.warn('customseedmanpath', customseedmanpath, 'customImportSeed', customImportSeed, 'customSeedManipulations', customSeedManipulations);
 
 	return {
 		seedDocuments: seedDocuments,

@@ -55,7 +55,7 @@ var styleWindowResizeEventHandler = function () {
 
 var initCodemirrors = function () {
 	for (var cm = 0; cm < codeMirrorJSEditorsElements.length; cm++) {
-		console.log('codeMirrorJSEditorsElements[cm].id', codeMirrorJSEditorsElements[cm].id);
+		// console.log('codeMirrorJSEditorsElements[cm].id', codeMirrorJSEditorsElements[cm].id);
 		codeMirrors[codeMirrorJSEditorsElements[cm].id] = CodeMirror.fromTextArea(
 			codeMirrorJSEditorsElements[cm], {
 				lineNumbers: true,
@@ -130,7 +130,9 @@ window.addEventListener('load', function () {
 		componentTab1 = new ComponentTabs(tabelement);
 	}
 	contententry = new contentEntryModule({
-		// ajaxFormToSubmit: document.getElementById('edit-collection-form'),
+		uploadfileoptions: {
+			posturl: '/localasset/new?format=json'
+		},
 		mediafileinput: document.getElementById('upload-seed_button'),
 		uploadmediaCallback: function (mediadoc) {
 			seedpathInput.value = mediadoc.fileurl;

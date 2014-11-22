@@ -9,6 +9,8 @@ var async = require('async'),
 	appSettings,
 	mongoose,
 	logger,
+	customSeedManipulations,
+	customExportSeed = false,
 	User, // = mongoose.model('User')
 	Item, // = mongoose.model('Item')
 	Asset, //  = mongoose.model('Asset')
@@ -303,7 +305,12 @@ var getCompilationSeed = function (doc) {
 		returnseed.datadocument.originalitem = doc.originalitem;
 	}
 
-	return returnseed;
+	if (customExportSeed && customSeedManipulations.exportseed.compilation) {
+		return customSeedManipulations.exportseed.compilation(returnseed);
+	}
+	else {
+		return returnseed;
+	}
 };
 
 /**
@@ -382,7 +389,12 @@ var getCollectionSeed = function (doc) {
 		returnseed.datadocument.originalitem = doc.originalitem;
 	}
 
-	return returnseed;
+	if (customExportSeed && customSeedManipulations.exportseed.collection) {
+		return customSeedManipulations.exportseed.collection(returnseed);
+	}
+	else {
+		return returnseed;
+	}
 };
 
 /**
@@ -455,7 +467,12 @@ var getItemSeed = function (doc) {
 		returnseed.datadocument.originalitem = doc.originalitem;
 	}
 
-	return returnseed;
+	if (customExportSeed && customSeedManipulations.exportseed.item) {
+		return customSeedManipulations.exportseed.item(returnseed);
+	}
+	else {
+		return returnseed;
+	}
 };
 
 /**
@@ -498,7 +515,12 @@ var getCategorySeed = function (doc) {
 		returnseed.datadocument.extensionattributes = doc.extensionattributes;
 	}
 
-	return returnseed;
+	if (customExportSeed && customSeedManipulations.exportseed.category) {
+		return customSeedManipulations.exportseed.category(returnseed);
+	}
+	else {
+		return returnseed;
+	}
 };
 
 /**
@@ -541,7 +563,12 @@ var getTagSeed = function (doc) {
 		returnseed.datadocument.extensionattributes = doc.extensionattributes;
 	}
 
-	return returnseed;
+	if (customExportSeed && customSeedManipulations.exportseed.tag) {
+		return customSeedManipulations.exportseed.tag(returnseed);
+	}
+	else {
+		return returnseed;
+	}
 };
 
 
@@ -571,7 +598,12 @@ var getUsergroupSeed = function (doc) {
 		returnseed.datadocument.roles = getUserrolesFromDoc(doc.roles);
 	}
 
-	return returnseed;
+	if (customExportSeed && customSeedManipulations.exportseed.usergroup) {
+		return customSeedManipulations.exportseed.usergroup(returnseed);
+	}
+	else {
+		return returnseed;
+	}
 };
 
 /**
@@ -600,7 +632,12 @@ var getUserroleSeed = function (doc) {
 		returnseed.datadocument.privileges = getUserprivilegesFromDoc(doc.privileges);
 	}
 
-	return returnseed;
+	if (customExportSeed && customSeedManipulations.exportseed.userrole) {
+		return customSeedManipulations.exportseed.userrole(returnseed);
+	}
+	else {
+		return returnseed;
+	}
 };
 
 
@@ -627,7 +664,12 @@ var getUserprivilegeSeed = function (doc) {
 		returnseed.datadocument.extensionattributes = doc.extensionattributes;
 	}
 
-	return returnseed;
+	if (customExportSeed && customSeedManipulations.exportseed.userprivilege) {
+		return customSeedManipulations.exportseed.userprivilege(returnseed);
+	}
+	else {
+		return returnseed;
+	}
 };
 
 /**
@@ -652,7 +694,12 @@ var getContenttypeSeed = function (doc) {
 		returnseed.datadocument.extensionattributes = doc.extensionattributes;
 	}
 
-	return returnseed;
+	if (customExportSeed && customSeedManipulations.exportseed.contenttype) {
+		return customSeedManipulations.exportseed.contenttype(returnseed);
+	}
+	else {
+		return returnseed;
+	}
 };
 
 /**
@@ -729,7 +776,12 @@ var getUserSeed = function (doc) {
 		returnseed.datadocument.random = doc.random;
 	}
 
-	return returnseed;
+	if (customExportSeed && customSeedManipulations.exportseed.user) {
+		return customSeedManipulations.exportseed.user(returnseed);
+	}
+	else {
+		return returnseed;
+	}
 };
 
 /**
@@ -787,7 +839,12 @@ var getAssetSeed = function (doc) {
 		returnseed.datadocument.extensionattributes = doc.extensionattributes;
 	}
 
-	return returnseed;
+	if (customExportSeed && customSeedManipulations.exportseed.asset) {
+		return customSeedManipulations.exportseed.asset(returnseed);
+	}
+	else {
+		return returnseed;
+	}
 };
 
 /**
@@ -1152,6 +1209,16 @@ var exportSeedModule = function (resources) {
 	Userprivilege = mongoose.model('Userprivilege');
 	Userrole = mongoose.model('Userrole');
 	Usergroup = mongoose.model('Usergroup');
+	var customseedmanpath = path.resolve(process.cwd(), 'content/config/extensions/periodicjs.ext.dbseed/customseed.js');
+	try {
+		customSeedManipulations = require(customseedmanpath);
+		customExportSeed = (customSeedManipulations.exportseed) ? true : false;
+	}
+	catch (e) {
+		customSeedManipulations = false;
+	}
+	// logger.warn('customseedmanpath', customseedmanpath, 'customExportSeed', customExportSeed, 'customSeedManipulations', customSeedManipulations);
+
 	return {
 		exportSeed: exportSeed,
 		createSeeds: createSeeds,

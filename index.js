@@ -12,7 +12,8 @@ var path = require('path');
 module.exports = function (periodic) {
 	// express,app,logger,config,db,mongoose
 	var seedRouter = periodic.express.Router(),
-		seedController = require('./controller/dbseed')(periodic);
+		seedController = require('./controller/dbseed')(periodic),
+		assetController = require(path.resolve(process.cwd(), 'app/controller/asset'))(periodic);
 
 	for (var x in periodic.settings.extconf.extensions) {
 		if (periodic.settings.extconf.extensions[x].name === 'periodicjs.ext.admin') {
@@ -22,6 +23,6 @@ module.exports = function (periodic) {
 			seedRouter.get('/', seedController.index);
 		}
 	}
-
+	periodic.app.post('/localasset/new', assetController.upload, assetController.createassetfile);
 	periodic.app.use('/p-admin/dbseed', seedRouter);
 };
