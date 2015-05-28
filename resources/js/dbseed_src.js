@@ -1,10 +1,6 @@
 'use strict';
 
-var componentTab1,
-	contentEntryModule = require('./../../../periodicjs.ext.admin/resources/js/contententry'),
-	contententry,
-	tabelement,
-	seedpathInput,
+var seedpathInput,
 	seedpathDisplayInput,
 	previousseedInput,
 	assetidInput,
@@ -13,24 +9,7 @@ var componentTab1,
 	seedcustomstatusoutputel,
 	importSeedSelectionEl,
 	importFormContainer,
-	codeMirrorJSEditorsElements,
-	exampleSeedSelect,
-	codeMirrors = [],
-	CodeMirror = require('codemirror'),
-	ComponentTabs = require('periodicjs.component.tabs');
-
-
-require('../../node_modules/codemirror/addon/edit/matchbrackets');
-require('../../node_modules/codemirror/addon/comment/comment');
-require('../../node_modules/codemirror/addon/comment/continuecomment');
-require('../../node_modules/codemirror/addon/fold/foldcode');
-require('../../node_modules/codemirror/addon/fold/comment-fold');
-require('../../node_modules/codemirror/addon/fold/indent-fold');
-require('../../node_modules/codemirror/addon/fold/brace-fold');
-require('../../node_modules/codemirror/addon/fold/foldgutter');
-require('../../node_modules/codemirror/mode/css/css');
-require('../../node_modules/codemirror/mode/htmlembedded/htmlembedded');
-require('../../node_modules/codemirror/mode/javascript/javascript');
+	exampleSeedSelect;
 
 
 var useExistingSeedListener = function (e) {
@@ -45,39 +24,16 @@ var useExistingSeedListener = function (e) {
  * resize codemirror on window resize
  */
 var styleWindowResizeEventHandler = function () {
-	if (codeMirrorJSEditorsElements) {
-		for (var y in codeMirrors) {
-			codeMirrors[y].refresh();
+	if (window.codeMirrors) {
+		for (var y in window.codeMirrors) {
+			window.codeMirrors[y].refresh();
 			// codeMirrorJSEditors[y].setSize('auto', '80%');
 		}
 	}
 };
 
-var initCodemirrors = function () {
-	for (var cm = 0; cm < codeMirrorJSEditorsElements.length; cm++) {
-		// console.log('codeMirrorJSEditorsElements[cm].id', codeMirrorJSEditorsElements[cm].id);
-		codeMirrors[codeMirrorJSEditorsElements[cm].id] = CodeMirror.fromTextArea(
-			codeMirrorJSEditorsElements[cm], {
-				lineNumbers: true,
-				lineWrapping: true,
-				matchBrackets: true,
-				autoCloseBrackets: true,
-				mode: 'application/json',
-				indentUnit: 4,
-				indentWithTabs: true,
-				'overflow-y': 'hidden',
-				'overflow-x': 'auto',
-				lint: true,
-				gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-				foldGutter: true
-			}
-		);
-	}
-	window.codeMirrors = codeMirrors;
-};
-
 var tabEvents = function () {
-	componentTab1.on('tabsShowIndex', function ( /*index*/ ) {
+	window.StylieTab['dbseed-tabs'].on('tabsShowIndex', function ( /*index*/ ) {
 		// codemirrortab(index);
 		styleWindowResizeEventHandler();
 	});
@@ -85,7 +41,7 @@ var tabEvents = function () {
 
 var exapmleSeedSelectEventHandler = function (e) {
 	var newCMValue = JSON.stringify(window.exampleseed[e.target.value], null, 2);
-	codeMirrors['example-seed-ta'].doc.setValue(newCMValue);
+	window.codeMirrors['example-seed-ta'].doc.setValue(newCMValue);
 };
 
 window.addEventListener('resize', styleWindowResizeEventHandler, false);
@@ -107,8 +63,22 @@ window.showCustomStatusResult = function () {
 };
 
 window.displayCustomSeedStatus = function (ajaxFormResponse) {
-	// console.log(ajaxFormResponse);
-	seedcustomstatusoutputel.innerHTML = JSON.stringify(ajaxFormResponse, null, 2);
+	// console.log(ajaxFormResponse.body.data);
+	// seedcustomstatusoutputel.innerHTML = JSON.stringify(ajaxFormResponse.body.data, null, 2);
+	var predata = document.createElement('pre'),
+		h5element = document.createElement('h5'),
+		hrelement = document.createElement('hr');
+
+	h5element.innerHTML = 'Import Seed Result'
+	predata.innerHTML = JSON.stringify(ajaxFormResponse.body.data, null, 2);
+	predata.setAttribute('class', 'ts-text-xs ts-overflow-auto')
+	predata.setAttribute('style', 'max-height:30em;')
+
+	window.servermodalElement.querySelector('#servermodal-content').innerHTML = '';
+	window.servermodalElement.querySelector('#servermodal-content').appendChild(h5element);
+	window.servermodalElement.querySelector('#servermodal-content').appendChild(hrelement);
+	window.servermodalElement.querySelector('#servermodal-content').appendChild(predata);
+	AdminModal.show('servermodal-modal');
 };
 
 window.addEventListener('load', function () {
@@ -116,36 +86,17 @@ window.addEventListener('load', function () {
 	previousseedInput = document.getElementById('previousseed');
 	seedpathDisplayInput = document.getElementById('seedpathdisplay');
 	assetidInput = document.getElementById('assetid');
-	tabelement = document.getElementById('tabs');
 	exampleSeedSelect = document.getElementById('example-seed-select');
 	importFormContainer = document.getElementById('importFormContainer');
 	existingseedlist = document.getElementById('existingseedlist');
 	importstatusoutputel = document.getElementById('seedimportstatus');
 	importSeedSelectionEl = document.getElementById('importSeedSelection');
 	seedcustomstatusoutputel = document.getElementById('seedcustomstatus');
-	codeMirrorJSEditorsElements = document.querySelectorAll('.codemirroreditor');
-	window.ajaxFormEventListers('._pea-ajax-form');
 	exampleSeedSelect.addEventListener('change', exapmleSeedSelectEventHandler, false);
-	if (tabelement) {
-		componentTab1 = new ComponentTabs(tabelement);
-	}
-	contententry = new contentEntryModule({
-		uploadfileoptions: {
-			posturl: '/localasset/new?format=json'
-		},
-		mediafileinput: document.getElementById('upload-seed_button'),
-		uploadmediaCallback: function (mediadoc) {
-			seedpathInput.value = mediadoc.fileurl;
-			seedpathDisplayInput.value = mediadoc.fileurl;
-			assetidInput.value = mediadoc._id;
-			importSeedSelectionEl.style.display = 'none';
-			importFormContainer.style.display = 'block';
-			// console.log('uploadmediaCallback mediadoc', mediadoc);
-		}
-	});
+
+
 	if (existingseedlist) {
 		existingseedlist.addEventListener('change', useExistingSeedListener, false);
 	}
-	initCodemirrors();
 	tabEvents();
 });

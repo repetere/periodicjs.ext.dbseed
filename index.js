@@ -20,14 +20,16 @@ module.exports = function (periodic) {
 		assetController = periodic.app.controller.native.asset;
 
 	for (var x in periodic.settings.extconf.extensions) {
-		if (periodic.settings.extconf.extensions[x].name === 'periodicjs.ext.admin') {
+		if (periodic.settings.extconf.extensions[x].name === 'periodicjs.ext.asyncadmin') {
 			seedRouter.post('/uploadseed', seedController.import_upload);
 			seedRouter.post('/downloadseed', seedController.export_download);
 			seedRouter.post('/customseed', seedController.import_customseed);
 			seedRouter.get('/', seedController.index);
 		}
 	}
-	periodic.app.post('/localasset/new', assetController.upload, assetController.createassetfile);
-	periodic.app.use('/p-admin/dbseed', seedRouter);
+	periodic.app.post('/localasset/new',
+		assetController.multiupload,
+		assetController.create_assets_from_files);
+	periodic.app.use('/' + periodic.app.locals.adminPath + '/dbseed', seedRouter);
 	return periodic;
 };

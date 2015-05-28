@@ -321,15 +321,18 @@
 	<script type="text/javascript">
 		<%- locals.viewhelper.passObjToClient(exampleseed,"exampleseed") %>
 	</script>
-<form class="_pea-form _pea-ajax-form" method="post" action="/p-admin/mailer/testmail">
-	<div class="_pea-document">
-		<div class="_pea-row">
-		<h3>About DB Seeds & Migrations</h3>
+<form class="ts-form ts-ajax-form" method="post" action="/p-admin/mailer/testmail">
+	<div class="ts-document ts-no-heading-margin">
+		<div class="ts-row">
+			<h6>About DB Seeds & Migrations</h6>
+			<div class="ts-text-sm">
+				
 			<p>Database seeds are an efficient way of populating your database using periodic's database models.</p>
 			<p>The seed format is a JSON document, that is inserted into the database and will automatically connect references to other content documents, tag, and taxonimies if they're referenced by name.</p>
+			</div>
 		</div>
-		<div class="_pea-row">
-			<h3>Example <select id="example-seed-select">
+		<div class="ts-row">
+			<h6>Example <select id="example-seed-select">
 				<option value="item">item</option>
 				<option value="collection">collection</option>
 				<option value="library">library</option>
@@ -340,8 +343,8 @@
 				<option value="userrole">userrole</option>
 				<option value="setting" selected="selected">dbsetting</option>
 				<option value="user">user</option>
-			</select> seed</h3>
-			<textarea id="example-seed-ta" class="_pea-col-span12 codemirroreditor jsonEditor"><%- JSON.stringify(exampleseed.setting,null,1) %></textarea>
+			</select> seed</h6>
+			<textarea id="example-seed-ta" class="ts-col-span12 codemirroreditor jsonEditor"><%- JSON.stringify(exampleseed.setting,null,1) %></textarea>
 		</div>
 	</div>
 </form>

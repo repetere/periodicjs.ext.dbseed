@@ -1,10 +1,20 @@
 {
-	"periodicCompatibility":"4.0.0",
+	"periodicCompatibility":"5.0.0",
 	"periodicDependencies": [],
 	"periodicjs.ext.admin": {
 		"menu": {
 			"Extensions": {
-				"seed admin": "<a href=\"/p-admin/dbseed\">DB Seed Import/Export</a>"
+				"dbseed": {
+					"userprivilege":"110",
+					"tree-item": "file",
+			    "tree-item-label": "DB Seed Import/Export",
+			    "tree-item-id": "dbseed.settings",
+			    "tree-item-link": "/%locals.adminPath%/dbseed",
+			    "tree-item-attributes": {
+			      "class": "async-admin-ajax-link",
+			      "title": "DB Seed Import/Export"
+			    }
+			  }
 			}
 		}
 	}

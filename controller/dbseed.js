@@ -1,8 +1,6 @@
 'use strict';
 
-var Utilities = require('periodicjs.core.utilities'),
-	ControllerHelper = require('periodicjs.core.controller'),
-	fs = require('fs-extra'),
+var fs = require('fs-extra'),
 	path = require('path'),
 	async = require('async'),
 	Asset,
@@ -330,8 +328,8 @@ var controller = function (resources) {
 	logger = resources.logger;
 	mongoose = resources.mongoose;
 	appSettings = resources.settings;
-	CoreController = new ControllerHelper(resources);
-	CoreUtilities = new Utilities(resources);
+	CoreController = resources.core.controller;
+	CoreUtilities = resources.core.utilities;
 	exportSeedModule = require('./exportseed')(resources);
 	importSeedModule = require('./importseed')(resources);
 	dbopsModule = require('./dbops')(resources);

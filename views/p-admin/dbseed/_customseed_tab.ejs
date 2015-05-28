@@ -41,34 +41,37 @@
 	  }
 	}]
 }%>
-<article class="_pea-form">
-	<div class="_pea-document">
-		<div class="_pea-row">
-			<div class="_pea-row" id="customSeedSelection">
+<article class="ts-form">
+	<div class="ts-document">
+		<div class="ts-row ts-no-heading-margin">
+			<div class="ts-row" id="customSeedSelection">
 <!-- 				<div>
 					<p>Custom your database.</p>
 				</div> -->
-				<div class="_pea-col-span12">
-					<form class="_pea-form  _pea-ajax-form" method="post" action="/p-admin/dbseed/customseed"  data-successfunction="displayCustomSeedStatus" data-beforesubmitfunction="showCustomStatusResult">
-						<h3>Import a Custom Seed</h3>
-						<div class="_pea-row _pea-container-forminput">
-							<textarea  id="customseed-codemirror" name="customseedjson"  class="textarea-tall noFormSubmit codemirroreditor jsonEditor _pea-col-span12" style="height:60em;"><%- JSON.stringify(sampleseed,null,4) %></textarea>
+				<div class="ts-col-span12">
+					<form id="dbseed-customseed-form" name="dbseed-customseed-form" class="ts-form async-admin-ajax-forms" method="post" action="/p-admin/dbseed/customseed?format=json"  data-successsubmitfunction="displayCustomSeedStatus" >
+						<div>
+							<!-- <input type="submit" name="save_button" style="font-size: 125%;" value="Import Custom Seeds" class="ts-pull-right ts-button ts-color-success"/> -->
+							<h6>Import a Custom Seed</h6>
+						</div>
+						<div class="ts-row ts-container-forminput">
+							<textarea  id="customseed-codemirror" name="customseedjson"  class="textarea-tall noFormSubmit codemirroreditor jsonEditor ts-col-span12" style="height:60em;"><%- JSON.stringify(sampleseed,null,4) %></textarea>
 						</div>
 						<input type="hidden" name="_csrf" value=<%= locals.token %> >
-						<div class="_pea-row _pea-container-forminput _pea-text-center">
-							<input type="submit" name="save_button" style="font-size: 125%;" value="Import Custom Seeds" class="_pea-button _pea-color-success"/>
+						<div class="ts-row ts-container-forminput ts-text-center">
+							<input type="submit" name="save_button"  value="Import Custom Seeds" class="ts-button ts-color-success"/>
 						</div>
 					</form>
 				</div>
 			</div>
-			<div class="_pea-row">
-				<div id="customstatuscontainer" class="_pea-col-span12 " style="display:none;">
-					<h3>Import status</h3>
-					<textarea id="seedcustomstatus" class="textarea-tall noFormSubmit _pea-col-span12">
+<!-- 			<div class="ts-row">
+				<div id="customstatuscontainer" class="ts-col-span12 " style="display:none;">
+					<h6>Import status</h6>
+					<pre id="seedcustomstatus" class="pre-tall noFormSubmit ts-col-span12">
 						Customing Data
-					</textarea>
+					</pre>
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </article>
