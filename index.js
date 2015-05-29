@@ -27,9 +27,12 @@ module.exports = function (periodic) {
 			seedRouter.get('/', seedController.index);
 		}
 	}
-	periodic.app.post('/localasset/new',
-		assetController.multiupload,
-		assetController.create_assets_from_files);
+	seedRouter.post('/newuploadseed',
+		seedController.set_seed_upload_dir,
+		assetController.localupload,
+		assetController.create_assets_from_files,
+		seedController.uploaded_seed_file);
+
 	periodic.app.use('/' + periodic.app.locals.adminPath + '/dbseed', seedRouter);
 	return periodic;
 };

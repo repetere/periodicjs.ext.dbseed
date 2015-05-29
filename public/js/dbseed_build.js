@@ -12,13 +12,27 @@ var seedpathInput,
 	importFormContainer,
 	exampleSeedSelect;
 
+window.useUploadedSeed = function (data) {
+	// console.log('data', data);
+	var optionElement = document.createElement('option');
+	optionElement.value = data.body.data.files[0].filename;
+	optionElement.innerHTML = optionElement.value;
+	existingseedlist.appendChild(optionElement);
+	existingseedlist.value = optionElement.value;
+	setExistingSeed(optionElement.value);
 
-var useExistingSeedListener = function (e) {
-	seedpathInput.value = e.target.value;
-	seedpathDisplayInput.value = e.target.value;
+};
+
+var setExistingSeed = function (value) {
+	seedpathInput.value = value;
+	seedpathDisplayInput.value = value;
 	previousseedInput.value = 'usepreviousseed';
 	importSeedSelectionEl.style.display = 'none';
 	importFormContainer.style.display = 'block';
+};
+
+var useExistingSeedListener = function (e) {
+	setExistingSeed(e.target.value);
 };
 
 /**
@@ -52,10 +66,11 @@ window.showImportStatusResult = function () {
 	importstatusoutputel.innerHTML = 'Importing seed data';
 };
 
-window.displayImportSeedStatus = function (ajaxFormResponse) {
-	// console.log(ajaxFormResponse);
-	importstatusoutputel.innerHTML = JSON.stringify(ajaxFormResponse, null, 2);
-};
+// window.displayImportSeedStatus = function (ajaxFormResponse) {
+// 	// console.log(ajaxFormResponse);
+// 	importstatusoutputel.innerHTML = JSON.stringify(ajaxFormResponse, null, 2);
+// };
+window.displayImportSeedStatus = window.displayCustomSeedStatus;
 
 window.showCustomStatusResult = function () {
 	document.getElementById('customseed-codemirror').innerHTML = codeMirrors['customseed-codemirror'].getValue();

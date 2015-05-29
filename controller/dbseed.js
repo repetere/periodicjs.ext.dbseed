@@ -16,6 +16,18 @@ var fs = require('fs-extra'),
 	d = new Date(),
 	defaultExportFileName = 'dbemptybackup' + '-' + d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate() + '-' + d.getTime() + '.json';
 
+var uploaded_seed_file = function (req, res) {
+	res.send({
+		result: 'success',
+		data: req.controllerData
+	});
+};
+
+var set_seed_upload_dir = function (req, res, next) {
+	req.localuploadpath = uploadseeddir;
+	next();
+};
+
 /**
  * exports seeds via admin interface
  * @param  {object} req
@@ -350,7 +362,9 @@ var controller = function (resources) {
 		importSeed: importSeedModule.importSeed,
 		exportSeed: exportSeedModule.exportSeed,
 		emptyDB: dbopsModule.emptyDB,
-		isValidSeedJSONSync: importSeedModule.isValidSeedJSONSync
+		isValidSeedJSONSync: importSeedModule.isValidSeedJSONSync,
+		uploaded_seed_file: uploaded_seed_file,
+		set_seed_upload_dir: set_seed_upload_dir
 	};
 };
 

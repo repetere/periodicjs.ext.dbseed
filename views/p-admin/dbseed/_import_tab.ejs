@@ -8,10 +8,10 @@
 				</div>
 				<div class="ts-col-span5">
 					<h6>Upload a seed file</h6>
-					<div class="ts-row ts-container-forminput ts-text-center ts-form" style="margin-bottom:2em;">
-						<input type="hidden" name="_csrf" value=<%= locals.token %> >
-						<input type="file" name="upload-seed_button" id="upload-seed_button" value="Upload" class="ts-button ts-col-span12 ts-color-default"/>
-					</div>					
+					<form id="upload-newseed-form" name="upload-newseed-form" class="ts-form async-admin-ajax-forms" method="post" action="/<%- locals.adminPath %>/dbseed/newuploadseed"  data-successsubmitfunction="useUploadedSeed" enctype='multipart/form-data' >
+							<input type="hidden" name="_csrf" value=<%= locals.token %> >
+							<input type="file" name="upload-seed_button" id="upload-seed_button" value="Upload" class="ts-button autoFormSubmit ts-col-span12 ts-color-default"/>
+					</form>
 				</div>
 				<div class="ts-col-span1 ts-text-center">
 					<h6 style="margin-top:1.5em">OR</h6>
@@ -38,7 +38,7 @@
 			</div>
 			<div class="ts-row" id="importFormContainer" style="display:none;">
 				<div class="ts-col-span12">
-					<form class="ts-form ts-ajax-form noFormSubmit" method="post" action="/p-admin/dbseed/uploadseed" data-successfunction="displayImportSeedStatus" data-beforesubmitfunction="showImportStatusResult">
+					<form name="use-seed-from-dropdownform" id="use-seed-from-dropdownform" class="ts-form async-admin-ajax-forms" method="post" action="/p-admin/dbseed/uploadseed" data-successsubmitfunction="displayImportSeedStatus" data-beforesubmitfunction="showImportStatusResult">
 						<h6>Selected Import Seed</h6>
 						<div class="ts-row ts-container-forminput">
 							<div class="ts-col-span8">
