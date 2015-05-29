@@ -12,16 +12,6 @@ var seedpathInput,
 	importFormContainer,
 	exampleSeedSelect;
 
-window.useUploadedSeed = function (data) {
-	// console.log('data', data);
-	var optionElement = document.createElement('option');
-	optionElement.value = data.body.data.files[0].filename;
-	optionElement.innerHTML = optionElement.value;
-	existingseedlist.appendChild(optionElement);
-	existingseedlist.value = optionElement.value;
-	setExistingSeed(optionElement.value);
-
-};
 
 var setExistingSeed = function (value) {
 	seedpathInput.value = value;
@@ -57,6 +47,17 @@ var tabEvents = function () {
 var exapmleSeedSelectEventHandler = function (e) {
 	var newCMValue = JSON.stringify(window.exampleseed[e.target.value], null, 2);
 	window.codeMirrors['example-seed-ta'].doc.setValue(newCMValue);
+};
+
+window.useUploadedSeed = function (data) {
+	// console.log('data', data);
+	var optionElement = document.createElement('option');
+	optionElement.value = data.body.data.files[0].filename;
+	optionElement.innerHTML = optionElement.value;
+	existingseedlist.appendChild(optionElement);
+	existingseedlist.value = optionElement.value;
+	setExistingSeed(optionElement.value);
+
 };
 
 window.addEventListener('resize', styleWindowResizeEventHandler, false);
