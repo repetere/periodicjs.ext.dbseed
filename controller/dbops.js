@@ -1,7 +1,5 @@
 'use strict';
 var async = require('async'),
-	Utilities = require('periodicjs.core.utilities'),
-	ControllerHelper = require('periodicjs.core.controller'),
 	CoreUtilities,
 	CoreController,
 	appSettings,
@@ -270,8 +268,8 @@ var dbOpsModule = function (resources) {
 	logger = resources.logger;
 	mongoose = resources.mongoose;
 	appSettings = resources.settings;
-	CoreController = new ControllerHelper(resources);
-	CoreUtilities = new Utilities(resources);
+	CoreController = resources.core.controller;
+	CoreUtilities = resources.core.utilities;
 	User = mongoose.model('User');
 	Item = mongoose.model('Item');
 	Asset = mongoose.model('Asset');

@@ -2,8 +2,6 @@
 
 var async = require('async'),
 	path = require('path'),
-	Utilities = require('periodicjs.core.utilities'),
-	ControllerHelper = require('periodicjs.core.controller'),
 	CoreUtilities,
 	CoreController,
 	customSeedManipulations,
@@ -2531,8 +2529,8 @@ var importSeedModule = function (resources) {
 	mongoose = resources.mongoose;
 	// mongoose.set('debug', false);
 	appSettings = resources.settings;
-	CoreController = new ControllerHelper(resources);
-	CoreUtilities = new Utilities(resources);
+	CoreController = resources.core.controller;
+	CoreUtilities = resources.core.utilities;
 	User = mongoose.model('User');
 	Item = mongoose.model('Item');
 	Asset = mongoose.model('Asset');
