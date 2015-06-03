@@ -11,6 +11,7 @@ var async = require('async'),
 	customExportSeed = false,
 	User, // = mongoose.model('User')
 	Item, // = mongoose.model('Item')
+	Data, // = mongoose.model('Item')
 	Asset, //  = mongoose.model('Asset')
 	Contenttype, // = mongoose.model('Contenttype')
 	Category, // = mongoose.model('Category')
@@ -26,6 +27,7 @@ var exportSeedFilePath,
 	exportSeedData = {},
 	exportSeedDataArray = [],
 	item_id_name_hash = {},
+	data_id_name_hash = {},
 	collection_id_name_hash = {},
 	compilation_id_name_hash = {},
 	d = new Date(),
@@ -474,6 +476,83 @@ var getItemSeed = function (doc) {
 };
 
 /**
+ * return seed format for an asset object
+ * @param  {object} doc mongo document
+ * @return {object}     seed object
+ */
+var getDataSeed = function (doc) {
+	var returnseed = {
+		datatype: 'data',
+		datadocument: {}
+	};
+	returnseed.datadocument.random = doc.random;
+	returnseed.datadocument.title = doc.title;
+	returnseed.datadocument.name = doc.name;
+	returnseed.datadocument.content = doc.content;
+	// returnseed.datadocument.collectiondataonly = doc.collectiondataonly;
+	returnseed.datadocument.updatedat = doc.updatedat;
+	returnseed.datadocument.createdat = doc.createdat;
+	returnseed.datadocument.publishat = doc.publishat;
+	returnseed.datadocument.entitytype = doc.entitytype;
+	returnseed.datadocument.status = doc.status;
+
+	if (typeof doc.contenttypeattributes !== 'undefined') {
+		returnseed.datadocument.contenttypeattributes = doc.contenttypeattributes;
+	}
+	// if (typeof doc.dataauthorname !== 'undefined') {
+	// 	returnseed.datadocument.dataauthorname = doc.dataauthorname;
+	// }
+	if (doc.primaryauthor) {
+		returnseed.datadocument.primaryauthor = getPrimaryAuthorFromDoc(doc.primaryauthor);
+	}
+	// if (doc.primaryasset) {
+	// 	returnseed.datadocument.primaryasset = getPrimaryAssetFromDoc(doc.primaryasset);
+	// }
+	if (doc.contenttypeattributes) {
+		returnseed.datadocument.contenttypeattributes = doc.contenttypeattributes;
+	}
+	if (doc.link) {
+		returnseed.datadocument.link = doc.link;
+	}
+	if (doc.changes && doc.changes.length > 0) {
+		returnseed.datadocument.changes = doc.changes;
+	}
+	if (doc.tags && doc.tags.length > 0) {
+		returnseed.datadocument.tags = getTagsFromDoc(doc.tags);
+	}
+	if (doc.categories && doc.categories.length > 0) {
+		returnseed.datadocument.categories = getCategoriesFromDoc(doc.categories);
+	}
+	if (doc.contenttypes && doc.contenttypes.length > 0) {
+		returnseed.datadocument.contenttypes = getContenttypesFromDoc(doc.contenttypes);
+	}
+	// if (doc.authors && doc.authors.length > 0) {
+	// 	returnseed.datadocument.authors = getAuthorsFromDoc(doc.authors);
+	// }
+	// if (doc.assets && doc.assets.length > 0) {
+	// 	returnseed.datadocument.assets = getAssetsFromDoc(doc.assets);
+	// }
+	// if (doc.visibility) {
+	// 	returnseed.datadocument.visibility = doc.visibility;
+	// }
+	// if (doc.visibilitypassword) {
+	// 	returnseed.datadocument.visibilitypassword = doc.visibilitypassword;
+	// }
+	// if (doc.extensionattributes) {
+	// 	returnseed.datadocument.extensionattributes = doc.extensionattributes;
+	// }
+	// if (doc.originaldata) {
+	// 	returnseed.datadocument.originaldata = doc.originaldata;
+	// }
+
+	if (customExportSeed && customSeedManipulations.exportseed.data) {
+		return customSeedManipulations.exportseed.data(returnseed);
+	}
+	else {
+		return returnseed;
+	}
+};
+/**
  * return seed format for an category object
  * @param  {object} doc mongo document
  * @return {object}     seed object
@@ -921,6 +1000,38 @@ var createItemSeeds = function (createItemSeedsAsyncCallback) {
 };
 
 /**
+ * create data seeds from the database, if there are assets
+ * @param  {object} err
+ * @param  {Function} createItemSeedsAsyncCallback
+ * @return {Function} async callback createItemSeedsAsyncCallback(err,results);
+ */
+var createDataSeeds = function (createDataSeedsAsyncCallback) {
+	try {
+		Data.find({}).select('-__v').populate('tags categories contenttypes primaryauthor').exec(function (err, Datas) {
+			// logger.warn('Data.find', err, Datas);
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createDataSeeds'
+				});
+			}
+			if (Datas) {
+				for (var i in Datas) {
+					var datadoc = Datas[i];
+					data_id_name_hash[Datas[i]._id] = Datas[i].name;
+					exportSeedDataArray.push(getDataSeed(datadoc));
+				}
+			}
+			createDataSeedsAsyncCallback(null, 'created data seeds');
+		});
+	}
+	catch (e) {
+		createDataSeedsAsyncCallback(e);
+	}
+
+};
+
+/**
  * create category seeds from the database, if there are categories
  * @param  {object} err
  * @param  {Function} createCategorySeedsAsyncCallback
@@ -1132,6 +1243,7 @@ var createSeeds = function (seedoptions, createSeedsCallback) {
 			createContenttypeSeeds,
 			createTagSeeds,
 			createCategorySeeds,
+			createDataSeeds,
 			createItemSeeds,
 			createCollectionSeeds,
 			createCompilationSeeds
@@ -1198,6 +1310,7 @@ var exportSeedModule = function (resources) {
 	CoreUtilities = resources.core.utilities;
 	User = mongoose.model('User');
 	Item = mongoose.model('Item');
+	Data = mongoose.model('Data');
 	Asset = mongoose.model('Asset');
 	Contenttype = mongoose.model('Contenttype');
 	Category = mongoose.model('Category');

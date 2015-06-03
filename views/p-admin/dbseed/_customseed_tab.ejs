@@ -52,7 +52,10 @@
 					<form id="dbseed-customseed-form" name="dbseed-customseed-form" class="ts-form async-admin-ajax-forms" method="post" action="/p-admin/dbseed/customseed?format=json"  data-successsubmitfunction="displayCustomSeedStatus" >
 						<div>
 							<!-- <input type="submit" name="save_button" style="font-size: 125%;" value="Import Custom Seeds" class="ts-pull-right ts-button ts-color-success"/> -->
-							<h6>Import a Custom Seed</h6>
+							<h6>Import Custom Seeds JSON</h6>
+						</div>
+						<div>
+							<p>Your custom seed must be an array of JSON seeds e.g. {"data":[{--seeds--}]}</p>
 						</div>
 						<div class="ts-row ts-container-forminput">
 							<textarea  id="customseed-codemirror" name="customseedjson"  class="textarea-tall noFormSubmit codemirroreditor jsonEditor ts-col-span12" style="height:60em;"><%- JSON.stringify(sampleseed,null,4) %></textarea>
