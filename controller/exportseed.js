@@ -1023,7 +1023,7 @@ var createItemSeeds = function (createItemSeedsAsyncCallback) {
  */
 var createDataSeeds = function (createDataSeedsAsyncCallback) {
 	try {
-		if(configureSeedoptions.skipDataSeeds){
+		if(configureSeedoptions.skipTagSeeds){
 			createDataSeedsAsyncCallback(null, 'skipping data seeds');
 		}
 		else{
