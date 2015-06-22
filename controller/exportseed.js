@@ -11,6 +11,7 @@ var async = require('async'),
 	customExportSeed = false,
 	User, // = mongoose.model('User')
 	Item, // = mongoose.model('Item')
+	Data, // = mongoose.model('Item')
 	Asset, //  = mongoose.model('Asset')
 	Contenttype, // = mongoose.model('Contenttype')
 	Category, // = mongoose.model('Category')
@@ -26,8 +27,10 @@ var exportSeedFilePath,
 	exportSeedData = {},
 	exportSeedDataArray = [],
 	item_id_name_hash = {},
+	data_id_name_hash = {},
 	collection_id_name_hash = {},
 	compilation_id_name_hash = {},
+	configureSeedoptions,
 	d = new Date(),
 	defaultExportDir = 'content/files/dbseeds/',
 	defaultExportFileName = 'dbseed' + '-' + d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate() + '-' + d.getTime() + '.json';
@@ -474,6 +477,83 @@ var getItemSeed = function (doc) {
 };
 
 /**
+ * return seed format for an asset object
+ * @param  {object} doc mongo document
+ * @return {object}     seed object
+ */
+var getDataSeed = function (doc) {
+	var returnseed = {
+		datatype: 'data',
+		datadocument: {}
+	};
+	returnseed.datadocument.random = doc.random;
+	returnseed.datadocument.title = doc.title;
+	returnseed.datadocument.name = doc.name;
+	returnseed.datadocument.content = doc.content;
+	// returnseed.datadocument.collectiondataonly = doc.collectiondataonly;
+	returnseed.datadocument.updatedat = doc.updatedat;
+	returnseed.datadocument.createdat = doc.createdat;
+	returnseed.datadocument.publishat = doc.publishat;
+	returnseed.datadocument.entitytype = doc.entitytype;
+	returnseed.datadocument.status = doc.status;
+
+	if (typeof doc.contenttypeattributes !== 'undefined') {
+		returnseed.datadocument.contenttypeattributes = doc.contenttypeattributes;
+	}
+	// if (typeof doc.dataauthorname !== 'undefined') {
+	// 	returnseed.datadocument.dataauthorname = doc.dataauthorname;
+	// }
+	if (doc.primaryauthor) {
+		returnseed.datadocument.primaryauthor = getPrimaryAuthorFromDoc(doc.primaryauthor);
+	}
+	// if (doc.primaryasset) {
+	// 	returnseed.datadocument.primaryasset = getPrimaryAssetFromDoc(doc.primaryasset);
+	// }
+	if (doc.contenttypeattributes) {
+		returnseed.datadocument.contenttypeattributes = doc.contenttypeattributes;
+	}
+	if (doc.link) {
+		returnseed.datadocument.link = doc.link;
+	}
+	if (doc.changes && doc.changes.length > 0) {
+		returnseed.datadocument.changes = doc.changes;
+	}
+	if (doc.tags && doc.tags.length > 0) {
+		returnseed.datadocument.tags = getTagsFromDoc(doc.tags);
+	}
+	if (doc.categories && doc.categories.length > 0) {
+		returnseed.datadocument.categories = getCategoriesFromDoc(doc.categories);
+	}
+	if (doc.contenttypes && doc.contenttypes.length > 0) {
+		returnseed.datadocument.contenttypes = getContenttypesFromDoc(doc.contenttypes);
+	}
+	// if (doc.authors && doc.authors.length > 0) {
+	// 	returnseed.datadocument.authors = getAuthorsFromDoc(doc.authors);
+	// }
+	// if (doc.assets && doc.assets.length > 0) {
+	// 	returnseed.datadocument.assets = getAssetsFromDoc(doc.assets);
+	// }
+	// if (doc.visibility) {
+	// 	returnseed.datadocument.visibility = doc.visibility;
+	// }
+	// if (doc.visibilitypassword) {
+	// 	returnseed.datadocument.visibilitypassword = doc.visibilitypassword;
+	// }
+	// if (doc.extensionattributes) {
+	// 	returnseed.datadocument.extensionattributes = doc.extensionattributes;
+	// }
+	// if (doc.originaldata) {
+	// 	returnseed.datadocument.originaldata = doc.originaldata;
+	// }
+
+	if (customExportSeed && customSeedManipulations.exportseed.data) {
+		return customSeedManipulations.exportseed.data(returnseed);
+	}
+	else {
+		return returnseed;
+	}
+};
+/**
  * return seed format for an category object
  * @param  {object} doc mongo document
  * @return {object}     seed object
@@ -852,22 +932,27 @@ var getAssetSeed = function (doc) {
  * @return {Function} async callback createCompilationSeedsAsyncCallback(err,results);
  */
 var createCompilationSeeds = function (createCompilationSeedsAsyncCallback) {
-	Compilation.find({}).select('-_id -__v').populate('tags categories assets primaryasset authors contenttypes content_entities primaryauthor').exec(function (err, Compilations) {
-		if (err) {
-			exportSeedErrorsArray.push({
-				error: err,
-				errortype: 'createCompilationSeeds'
-			});
-		}
-		if (Compilations) {
-			for (var i in Compilations) {
-				var compilationdoc = Compilations[i];
-				compilation_id_name_hash[Compilations[i]._id] = Compilations[i].name;
-				exportSeedDataArray.push(getCompilationSeed(compilationdoc));
+	if(configureSeedoptions.skipCompilationSeeds){
+		createCompilationSeedsAsyncCallback(null, 'skipping compilation seeds');
+	}
+	else{
+		Compilation.find({}).select('-_id -__v').populate('tags categories assets primaryasset authors contenttypes content_entities primaryauthor').exec(function (err, Compilations) {
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createCompilationSeeds'
+				});
 			}
-		}
-		createCompilationSeedsAsyncCallback(null, 'created compilation seeds');
-	});
+			if (Compilations) {
+				for (var i in Compilations) {
+					var compilationdoc = Compilations[i];
+					compilation_id_name_hash[Compilations[i]._id] = Compilations[i].name;
+					exportSeedDataArray.push(getCompilationSeed(compilationdoc));
+				}
+			}
+			createCompilationSeedsAsyncCallback(null, 'created compilation seeds');
+		});
+	}
 };
 
 /**
@@ -877,22 +962,27 @@ var createCompilationSeeds = function (createCompilationSeedsAsyncCallback) {
  * @return {Function} async callback createCollectionSeedsAsyncCallback(err,results);
  */
 var createCollectionSeeds = function (createCollectionSeedsAsyncCallback) {
-	Collection.find({}).select('-__v').populate('tags categories assets primaryasset authors contenttypes items primaryauthor').exec(function (err, Collections) {
-		if (err) {
-			exportSeedErrorsArray.push({
-				error: err,
-				errortype: 'createCollectionSeeds'
-			});
-		}
-		if (Collections) {
-			for (var i in Collections) {
-				var collectiondoc = Collections[i];
-				collection_id_name_hash[Collections[i]._id] = Collections[i].name;
-				exportSeedDataArray.push(getCollectionSeed(collectiondoc));
+	if(configureSeedoptions.skipCollectionSeeds){
+		createCollectionSeedsAsyncCallback(null, 'skipping collection seeds');
+	}
+	else{
+		Collection.find({}).select('-__v').populate('tags categories assets primaryasset authors contenttypes items primaryauthor').exec(function (err, Collections) {
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createCollectionSeeds'
+				});
 			}
-		}
-		createCollectionSeedsAsyncCallback(null, 'created collection seeds');
-	});
+			if (Collections) {
+				for (var i in Collections) {
+					var collectiondoc = Collections[i];
+					collection_id_name_hash[Collections[i]._id] = Collections[i].name;
+					exportSeedDataArray.push(getCollectionSeed(collectiondoc));
+				}
+			}
+			createCollectionSeedsAsyncCallback(null, 'created collection seeds');
+		});
+	}
 };
 
 /**
@@ -902,22 +992,63 @@ var createCollectionSeeds = function (createCollectionSeedsAsyncCallback) {
  * @return {Function} async callback createItemSeedsAsyncCallback(err,results);
  */
 var createItemSeeds = function (createItemSeedsAsyncCallback) {
-	Item.find({}).select('-__v').populate('tags categories assets primaryasset authors contenttypes primaryauthor').exec(function (err, Items) {
-		if (err) {
-			exportSeedErrorsArray.push({
-				error: err,
-				errortype: 'createItemSeeds'
+	if(configureSeedoptions.skipItemSeeds){
+		createItemSeedsAsyncCallback(null, 'skipping item seeds');
+	}
+	else{
+		Item.find({}).select('-__v').populate('tags categories assets primaryasset authors contenttypes primaryauthor').exec(function (err, Items) {
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createItemSeeds'
+				});
+			}
+			if (Items) {
+				for (var i in Items) {
+					var itemdoc = Items[i];
+					item_id_name_hash[Items[i]._id] = Items[i].name;
+					exportSeedDataArray.push(getItemSeed(itemdoc));
+				}
+			}
+			createItemSeedsAsyncCallback(null, 'created item seeds');
+		});
+	}
+};
+
+/**
+ * create data seeds from the database, if there are assets
+ * @param  {object} err
+ * @param  {Function} createItemSeedsAsyncCallback
+ * @return {Function} async callback createItemSeedsAsyncCallback(err,results);
+ */
+var createDataSeeds = function (createDataSeedsAsyncCallback) {
+	try {
+		if(configureSeedoptions.skipDataSeeds){
+			createDataSeedsAsyncCallback(null, 'skipping data seeds');
+		}
+		else{
+			Data.find({}).select('-__v').populate('tags categories contenttypes primaryauthor').exec(function (err, Datas) {
+				// logger.warn('Data.find', err, Datas);
+				if (err) {
+					exportSeedErrorsArray.push({
+						error: err,
+						errortype: 'createDataSeeds'
+					});
+				}
+				if (Datas) {
+					for (var i in Datas) {
+						var datadoc = Datas[i];
+						data_id_name_hash[Datas[i]._id] = Datas[i].name;
+						exportSeedDataArray.push(getDataSeed(datadoc));
+					}
+				}
+				createDataSeedsAsyncCallback(null, 'created data seeds');
 			});
 		}
-		if (Items) {
-			for (var i in Items) {
-				var itemdoc = Items[i];
-				item_id_name_hash[Items[i]._id] = Items[i].name;
-				exportSeedDataArray.push(getItemSeed(itemdoc));
-			}
-		}
-		createItemSeedsAsyncCallback(null, 'created item seeds');
-	});
+	}
+	catch (e) {
+		createDataSeedsAsyncCallback(e);
+	}
 };
 
 /**
@@ -927,21 +1058,26 @@ var createItemSeeds = function (createItemSeedsAsyncCallback) {
  * @return {Function} async callback createCategorySeedsAsyncCallback(err,results);
  */
 var createCategorySeeds = function (createCategorySeedsAsyncCallback) {
-	Category.find({}).select('-_id -__v').populate('author primary asset parent contenttypes').exec(function (err, Categorys) {
-		if (err) {
-			exportSeedErrorsArray.push({
-				error: err,
-				errortype: 'createCategorySeeds'
-			});
-		}
-		if (Categorys) {
-			for (var i in Categorys) {
-				var categorydoc = Categorys[i];
-				exportSeedDataArray.push(getCategorySeed(categorydoc));
+	if(configureSeedoptions.skipCategorySeeds){
+		createCategorySeedsAsyncCallback(null, 'skipping category seeds');
+	}
+	else{
+		Category.find({}).select('-_id -__v').populate('author primary asset parent contenttypes').exec(function (err, Categorys) {
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createCategorySeeds'
+				});
 			}
-		}
-		createCategorySeedsAsyncCallback(null, 'created category seeds');
-	});
+			if (Categorys) {
+				for (var i in Categorys) {
+					var categorydoc = Categorys[i];
+					exportSeedDataArray.push(getCategorySeed(categorydoc));
+				}
+			}
+			createCategorySeedsAsyncCallback(null, 'created category seeds');
+		});
+	}
 };
 
 /**
@@ -951,21 +1087,26 @@ var createCategorySeeds = function (createCategorySeedsAsyncCallback) {
  * @return {Function} async callback createTagSeedsAsyncCallback(err,results);
  */
 var createTagSeeds = function (createTagSeedsAsyncCallback) {
-	Tag.find({}).select('-_id -__v').populate('author primary asset parent contenttypes').exec(function (err, Tags) {
-		if (err) {
-			exportSeedErrorsArray.push({
-				error: err,
-				errortype: 'createTagSeeds'
-			});
-		}
-		if (Tags) {
-			for (var i in Tags) {
-				var tagdoc = Tags[i];
-				exportSeedDataArray.push(getTagSeed(tagdoc));
+	if(configureSeedoptions.skipTagSeeds){
+		createTagSeedsAsyncCallback(null, 'skipping tag seeds');
+	}
+	else{
+		Tag.find({}).select('-_id -__v').populate('author primary asset parent contenttypes').exec(function (err, Tags) {
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createTagSeeds'
+				});
 			}
-		}
-		createTagSeedsAsyncCallback(null, 'created tag seeds');
-	});
+			if (Tags) {
+				for (var i in Tags) {
+					var tagdoc = Tags[i];
+					exportSeedDataArray.push(getTagSeed(tagdoc));
+				}
+			}
+			createTagSeedsAsyncCallback(null, 'created tag seeds');
+		});
+	}
 };
 
 /**
@@ -975,21 +1116,26 @@ var createTagSeeds = function (createTagSeedsAsyncCallback) {
  * @return {Function} async callback createUsergroupSeedsAsyncCallback(err,results);
  */
 var createUsergroupSeeds = function (createUsergroupSeedsAsyncCallback) {
-	Usergroup.find({}).select('-_id -__v').populate('author roles').exec(function (err, Usergroups) {
-		if (err) {
-			exportSeedErrorsArray.push({
-				error: err,
-				errortype: 'createUsergroupSeeds'
-			});
-		}
-		if (Usergroups) {
-			for (var i in Usergroups) {
-				var usergroupdoc = Usergroups[i];
-				exportSeedDataArray.push(getUsergroupSeed(usergroupdoc));
+	if(configureSeedoptions.skipUsergroupSeeds){
+		createUsergroupSeedsAsyncCallback(null, 'skipping usergroup seeds');
+	}
+	else{
+		Usergroup.find({}).select('-_id -__v').populate('author roles').exec(function (err, Usergroups) {
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createUsergroupSeeds'
+				});
 			}
-		}
-		createUsergroupSeedsAsyncCallback(null, 'created usergroup seeds');
-	});
+			if (Usergroups) {
+				for (var i in Usergroups) {
+					var usergroupdoc = Usergroups[i];
+					exportSeedDataArray.push(getUsergroupSeed(usergroupdoc));
+				}
+			}
+			createUsergroupSeedsAsyncCallback(null, 'created usergroup seeds');
+		});
+	}
 };
 
 /**
@@ -999,21 +1145,26 @@ var createUsergroupSeeds = function (createUsergroupSeedsAsyncCallback) {
  * @return {Function} async callback createUserroleSeedsAsyncCallback(err,results);
  */
 var createUserroleSeeds = function (createUserroleSeedsAsyncCallback) {
-	Userrole.find({}).select('-_id -__v').populate('author privileges').exec(function (err, Userroles) {
-		if (err) {
-			exportSeedErrorsArray.push({
-				error: err,
-				errortype: 'createUserroleSeeds'
-			});
-		}
-		if (Userroles) {
-			for (var i in Userroles) {
-				var userroledoc = Userroles[i];
-				exportSeedDataArray.push(getUserroleSeed(userroledoc));
+	if(configureSeedoptions.skipUserroleSeeds){
+		createUserroleSeedsAsyncCallback(null, 'skipping userrole seeds');
+	}
+	else{
+		Userrole.find({}).select('-_id -__v').populate('author privileges').exec(function (err, Userroles) {
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createUserroleSeeds'
+				});
 			}
-		}
-		createUserroleSeedsAsyncCallback(null, 'created userrole seeds');
-	});
+			if (Userroles) {
+				for (var i in Userroles) {
+					var userroledoc = Userroles[i];
+					exportSeedDataArray.push(getUserroleSeed(userroledoc));
+				}
+			}
+			createUserroleSeedsAsyncCallback(null, 'created userrole seeds');
+		});
+	}
 };
 
 /**
@@ -1023,21 +1174,26 @@ var createUserroleSeeds = function (createUserroleSeedsAsyncCallback) {
  * @return {Function} async callback createUserprivilegeSeedsAsyncCallback(err,results);
  */
 var createUserprivilegeSeeds = function (createUserprivilegeSeedsAsyncCallback) {
-	Userprivilege.find({}).select('-_id -__v').populate('author').exec(function (err, Userprivileges) {
-		if (err) {
-			exportSeedErrorsArray.push({
-				error: err,
-				errortype: 'createUserprivilegeSeeds'
-			});
-		}
-		if (Userprivileges) {
-			for (var i in Userprivileges) {
-				var userprivilegedoc = Userprivileges[i];
-				exportSeedDataArray.push(getUserprivilegeSeed(userprivilegedoc));
+	if(configureSeedoptions.skipUserPrivilegeSeeds){
+		createUserprivilegeSeedsAsyncCallback(null, 'skipping userprivilege seeds');
+	}
+	else{
+		Userprivilege.find({}).select('-_id -__v').populate('author').exec(function (err, Userprivileges) {
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createUserprivilegeSeeds'
+				});
 			}
-		}
-		createUserprivilegeSeedsAsyncCallback(null, 'created userprivilege seeds');
-	});
+			if (Userprivileges) {
+				for (var i in Userprivileges) {
+					var userprivilegedoc = Userprivileges[i];
+					exportSeedDataArray.push(getUserprivilegeSeed(userprivilegedoc));
+				}
+			}
+			createUserprivilegeSeedsAsyncCallback(null, 'created userprivilege seeds');
+		});
+	}
 };
 
 /**
@@ -1047,21 +1203,26 @@ var createUserprivilegeSeeds = function (createUserprivilegeSeedsAsyncCallback) 
  * @return {Function} async callback createContenttypeSeedsAsyncCallback(err,results);
  */
 var createContenttypeSeeds = function (createContenttypeSeedsAsyncCallback) {
-	Contenttype.find({}).select('-_id -__v').populate('author').exec(function (err, Contenttypes) {
-		if (err) {
-			exportSeedErrorsArray.push({
-				error: err,
-				errortype: 'createContenttypeSeeds'
-			});
-		}
-		if (Contenttypes) {
-			for (var i in Contenttypes) {
-				var contenttypedoc = Contenttypes[i];
-				exportSeedDataArray.push(getContenttypeSeed(contenttypedoc));
+	if(configureSeedoptions.skipContenttypeSeeds){
+		createContenttypeSeedsAsyncCallback(null, 'skipping contenttype seeds');
+	}
+	else{
+		Contenttype.find({}).select('-_id -__v').populate('author').exec(function (err, Contenttypes) {
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createContenttypeSeeds'
+				});
 			}
-		}
-		createContenttypeSeedsAsyncCallback(null, 'created contenttype seeds');
-	});
+			if (Contenttypes) {
+				for (var i in Contenttypes) {
+					var contenttypedoc = Contenttypes[i];
+					exportSeedDataArray.push(getContenttypeSeed(contenttypedoc));
+				}
+			}
+			createContenttypeSeedsAsyncCallback(null, 'created contenttype seeds');
+		});
+	}
 };
 
 /**
@@ -1071,21 +1232,26 @@ var createContenttypeSeeds = function (createContenttypeSeedsAsyncCallback) {
  * @return {Function} async callback createAssetSeedsAsyncCallback(err,results);
  */
 var createAssetSeeds = function (createAssetSeedsAsyncCallback) {
-	Asset.find({}).select('-_id -__v').populate('author contenttypes').exec(function (err, Assets) {
-		if (err) {
-			exportSeedErrorsArray.push({
-				error: err,
-				errortype: 'createAssetSeeds'
-			});
-		}
-		if (Assets) {
-			for (var a in Assets) {
-				var assetdoc = Assets[a];
-				exportSeedDataArray.push(getAssetSeed(assetdoc));
+	if(configureSeedoptions.skipAssetSeeds){
+		createAssetSeedsAsyncCallback(null, 'skipping asset seeds');
+	}
+	else{
+		Asset.find({}).select('-_id -__v').populate('author contenttypes').exec(function (err, Assets) {
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createAssetSeeds'
+				});
 			}
-		}
-		createAssetSeedsAsyncCallback(null, 'created asset seeds');
-	});
+			if (Assets) {
+				for (var a in Assets) {
+					var assetdoc = Assets[a];
+					exportSeedDataArray.push(getAssetSeed(assetdoc));
+				}
+			}
+			createAssetSeedsAsyncCallback(null, 'created asset seeds');
+		});
+	}
 };
 
 /**
@@ -1095,21 +1261,26 @@ var createAssetSeeds = function (createAssetSeedsAsyncCallback) {
  * @return {Function} async callback createUserSeedsAsyncCallback(err,results);
  */
 var createUserSeeds = function (createUserSeedsAsyncCallback) {
-	User.find({}).select('-_id -__v').populate('assets primaryasset coverimages coverimage userroles').exec(function (err, Users) {
-		if (err) {
-			exportSeedErrorsArray.push({
-				error: err,
-				errortype: 'createUserSeeds'
-			});
-		}
-		if (Users) {
-			for (var a in Users) {
-				var userdoc = Users[a];
-				exportSeedDataArray.push(getUserSeed(userdoc));
+	if(configureSeedoptions.skipUserPrivilegeSeeds){
+		createUserSeedsAsyncCallback(null, 'skipping user seeds');
+	}
+	else{
+		User.find({}).select('-_id -__v').populate('assets primaryasset coverimages coverimage userroles').exec(function (err, Users) {
+			if (err) {
+				exportSeedErrorsArray.push({
+					error: err,
+					errortype: 'createUserSeeds'
+				});
 			}
-		}
-		createUserSeedsAsyncCallback(null, 'created user seeds');
-	});
+			if (Users) {
+				for (var a in Users) {
+					var userdoc = Users[a];
+					exportSeedDataArray.push(getUserSeed(userdoc));
+				}
+			}
+			createUserSeedsAsyncCallback(null, 'created user seeds');
+		});
+	}
 };
 
 /**
@@ -1119,6 +1290,8 @@ var createUserSeeds = function (createUserSeedsAsyncCallback) {
  * @return {Function} async callback createSeedsCallback(err,results);
  */
 var createSeeds = function (seedoptions, createSeedsCallback) {
+	console.log('seedoptions',seedoptions);
+	configureSeedoptions = seedoptions;
 	exportSeedData = {
 		data: seedoptions
 	};
@@ -1132,6 +1305,7 @@ var createSeeds = function (seedoptions, createSeedsCallback) {
 			createContenttypeSeeds,
 			createTagSeeds,
 			createCategorySeeds,
+			createDataSeeds,
 			createItemSeeds,
 			createCollectionSeeds,
 			createCompilationSeeds
@@ -1198,6 +1372,7 @@ var exportSeedModule = function (resources) {
 	CoreUtilities = resources.core.utilities;
 	User = mongoose.model('User');
 	Item = mongoose.model('Item');
+	Data = mongoose.model('Data');
 	Asset = mongoose.model('Asset');
 	Contenttype = mongoose.model('Contenttype');
 	Category = mongoose.model('Category');
@@ -1207,10 +1382,11 @@ var exportSeedModule = function (resources) {
 	Userprivilege = mongoose.model('Userprivilege');
 	Userrole = mongoose.model('Userrole');
 	Usergroup = mongoose.model('Usergroup');
+	var appenvironment = appSettings.application.environment;
 	var customseedmanpath = path.resolve(process.cwd(), 'content/config/extensions/periodicjs.ext.dbseed/customseed.js');
 	try {
 		customSeedManipulations = require(customseedmanpath);
-		customExportSeed = (customSeedManipulations.exportseed) ? true : false;
+		customExportSeed = (customSeedManipulations.exportseed[appenvironment]) ? true : false;
 	}
 	catch (e) {
 		customSeedManipulations = false;

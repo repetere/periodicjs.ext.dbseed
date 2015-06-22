@@ -35,11 +35,11 @@ var set_seed_upload_dir = function (req, res, next) {
  * @return {object} responds with dbseed download
  */
 var export_download = function (req, res) {
-	// var downloadSeedObject = CoreUtilities.removeEmptyObjectValues(req.body);
+	var downloadSeedOptions = CoreUtilities.removeEmptyObjectValues(req.body);
 
 	async.series({
 		exportseed: function (cb) {
-			exportSeedModule.exportSeed({}, function (err, status) {
+			exportSeedModule.exportSeed(downloadSeedOptions, function (err, status) {
 				cb(err, status);
 			});
 		}

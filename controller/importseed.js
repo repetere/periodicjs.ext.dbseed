@@ -22,6 +22,11 @@ var UsersObj,
 	Users = [],
 	Users_namehash = {},
 	Users_username_array = [],
+	DatasObj,
+	Data, // = mongoose.model('Data')
+	Datas = [],
+	Datas_namehash = {},
+	Datas_name_array = [],
 	ItemsObj,
 	Item, // = mongoose.model('Item')
 	Items = [],
@@ -422,6 +427,40 @@ var seedUserGroupRolePrivilegeData = function (options) {
 		err: errorObj
 	};
 };
+/**
+ * create seed Item Object
+ * @param  {object} options seeddocument
+ * @return {object}         {doc-Item,docs_name_array - Item.name,err}
+ */
+var seedDataData = function (options) {
+	console.log('seedDataData', options);
+	var seeddocument = options.seeddocument,
+		seed_name_array_item = null,
+		errorObj = null;
+
+	try {
+		if (!seeddocument.title) {
+			errorObj = new Error('Data ' + seeddocument.title + ' is missing title');
+		}
+		// if(!seeddocument.content){
+		//   errorObj = new Error('Data '+seeddocument.title+' is missing content');
+		// }
+		if (!seeddocument.name) {
+			seeddocument.name = CoreUtilities.makeNiceName(seeddocument.title);
+		}
+		seed_name_array_item = seeddocument.name;
+	}
+	catch (e) {
+		errorObj = e;
+	}
+
+	return {
+		doc: seeddocument,
+		docs_name_array: seed_name_array_item,
+		err: errorObj
+	};
+};
+
 /**
  * create seed Item Object
  * @param  {object} options seeddocument
@@ -1020,6 +1059,37 @@ var setSeedDataTag = function (options) {
 };
 
 /**
+ * set seed data object for looking up and inserting datas
+ * @param {type} options index,seedobject
+ */
+var setSeedDataData = function (options) {
+	var index = options.index,
+		seedObject;
+
+	if (customImportSeed && customSeedManipulations.importseed.data) {
+		seedObject = customSeedManipulations.importseed.data(options.seedobject);
+	}
+	else {
+		seedObject = options.seedobject;
+	}
+
+	DatasObj = seedDataData({
+		seeddocument: seedObject.datadocument
+	});
+	if (DatasObj.err) {
+		seedObjectArraysDocumentErrors.push(returnSeedDocumentObjectError({
+			index: index,
+			seed: seedObject,
+			error: DatasObj.err
+		}));
+	}
+	else {
+		Datas.push(DatasObj.doc);
+		Datas_name_array.push(DatasObj.docs_name_array);
+	}
+};
+
+/**
  * set seed data object for looking up and inserting items
  * @param {type} options index,seedobject
  */
@@ -1182,6 +1252,12 @@ var setSeedObjectArrays = function (options, callback) {
 				break;
 			case 'tag':
 				setSeedDataTag({
+					index: x,
+					seedobject: documents[x]
+				});
+				break;
+			case 'data':
+				setSeedDataData({
 					index: x,
 					seedobject: documents[x]
 				});
@@ -1379,6 +1455,68 @@ var getCollectionIdsFromCollectionArray = function (getCollectionIdsFromCollecti
 		}
 	], function (err /*, results*/ ) {
 		getCollectionIdsFromCollectionArrayAsyncCallBack(err, Collections_namehash);
+	});
+};
+
+/**
+ * insert datas into database, update Datas_namehash array, also update author in data
+ * @param  {Function} getDataIdsFromDataArrayAsyncCallBack
+ * @return {Function} async callback getDataIdsFromDataArrayAsyncCallBack(err,results);
+ */
+var getDataIdsFromDataArray = function (getDataIdsFromDataArrayAsyncCallBack) {
+	console.log('Datas', Datas);
+	async.waterfall([
+		function (callback) {
+			Data.create(Datas, function (err) {
+				if (err) {
+					// callback(err, null);
+					insertContentIntoDatabaseErrors.push({
+						createDatasError: err.toString()
+					});
+				}
+
+				delete arguments['0'];
+				for (var x in arguments) {
+					// logger.silly('arguments[x]',x,arguments[x]);
+					if (arguments[x] && arguments[x]._id) {
+						Datas_namehash[arguments[x].name] = arguments[x]._id;
+					}
+				}
+				// console.log('Data arguments.length', arguments.length, arguments);
+				if (Object.keys(arguments).length > 0) {
+					numOfSeededDocuments = numOfSeededDocuments + Object.keys(arguments).length;
+					// console.log('Data ('+Object.keys(arguments).length +') numOfSeededDocuments',numOfSeededDocuments)
+				}
+				callback(null, 'updated Datas_namehash');
+			});
+		},
+		function (NewDatas, callback) {
+			Data.find({
+					'name': {
+						$in: Datas_name_array
+					}
+				},
+				'_id name',
+				function (err, datadata) {
+					if (err) {
+						// callback(err, null, null);
+						insertContentIntoDatabaseErrors.push({
+							searchforDatasError: err.toString()
+						});
+					}
+					else {
+						for (var x in datadata) {
+							Datas_namehash[datadata[x].name] = datadata[x]._id;
+						}
+						callback(null, {
+							newdatas: NewDatas,
+							querieddatas: datadata
+						});
+					}
+				});
+		}
+	], function (err /*, results*/ ) {
+		getDataIdsFromDataArrayAsyncCallBack(err, Datas_namehash);
 	});
 };
 
@@ -1722,6 +1860,54 @@ var getTaxonomyIdsFromTaxonomiesArrays = function (getTaxonomyIdsFromTaxonomiesA
 			}
 			// console.log('getTaxonomyIdsFromTaxonomiesArrays results', results);
 			async.parallel({
+				Datas: function (callback) {
+					try {
+						var DataTags = [],
+							DataContenttypes = [],
+							DataCategories = [];
+						for (var y in Datas) {
+							if (Datas[y].tags) {
+								DataTags = Datas[y].tags;
+								Datas[y].tags = [];
+								for (var z in DataTags) {
+									if (Tags_namehash[DataTags[z]]) {
+										Datas[y].tags.push(Tags_namehash[DataTags[z]]);
+									}
+								}
+							}
+							if (Datas[y].categories) {
+								DataCategories = Datas[y].categories;
+								Datas[y].categories = [];
+								for (var zc in DataCategories) {
+									if (Categories_namehash[DataCategories[zc]]) {
+										Datas[y].categories.push(Categories_namehash[DataCategories[zc]]);
+									}
+								}
+							}
+							if (Datas[y].contenttypes) {
+								DataContenttypes = Datas[y].contenttypes;
+								Datas[y].contenttypes = [];
+								for (var zct in DataContenttypes) {
+									if (Contenttypes_namehash[DataContenttypes[zct]]) {
+										Datas[y].contenttypes.push(Contenttypes_namehash[DataContenttypes[zct]]);
+									}
+								}
+							}
+							if (Datas[y].primaryauthor) {
+								if (Users_namehash[Datas[y].primaryauthor]) {
+									Datas[y].primaryauthor = Users_namehash[Datas[y].primaryauthor];
+								}
+								else {
+									delete Datas[y].primaryauthor;
+								}
+							}
+						}
+						callback(null, 'set post meta');
+					}
+					catch (e) {
+						callback(e, null);
+					}
+				},
 				Items: function (callback) {
 					try {
 						var ItemTags = [],
@@ -2126,6 +2312,7 @@ var insertContentIntoDatabase = function (insertContentIntoDatabaseAsyncCallBack
 		createassets: getAssetIdsFromAssetNameArray,
 		createusers: getUsersIdsFromUserNameArray,
 		createtaxonomies: getTaxonomyIdsFromTaxonomiesArrays,
+		createdatas: getDataIdsFromDataArray,
 		createitems: getItemIdsFromItemArray,
 		createcollections: getCollectionIdsFromCollectionArray,
 		createcompilations: getCompilationIdsFromCompilationArray,
@@ -2532,6 +2719,7 @@ var importSeedModule = function (resources) {
 	CoreController = resources.core.controller;
 	CoreUtilities = resources.core.utilities;
 	User = mongoose.model('User');
+	Data = mongoose.model('Data');
 	Item = mongoose.model('Item');
 	Asset = mongoose.model('Asset');
 	Contenttype = mongoose.model('Contenttype');

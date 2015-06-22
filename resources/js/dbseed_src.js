@@ -31,13 +31,14 @@ var styleWindowResizeEventHandler = function () {
 	if (window.codeMirrors) {
 		for (var y in window.codeMirrors) {
 			window.codeMirrors[y].refresh();
-			// codeMirrorJSEditors[y].setSize('auto', '80%');
+			window.codeMirrors[y].setSize('auto', '80%');
 		}
 	}
 };
 
 var tabEvents = function () {
-	window.StylieTab['dbseed-tabs'].on('tabsShowIndex', function ( /*index*/ ) {
+	window.StylieTab['dbseed-tabs'].on('tabsShowIndex', function (index) {
+		// console.log('showing tab', index);
 		// codemirrortab(index);
 		styleWindowResizeEventHandler();
 	});
