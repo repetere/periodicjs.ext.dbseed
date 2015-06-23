@@ -1,5 +1,4 @@
 'use strict';
-var path = require('path');
 /**
  * An extension to import json seeds into periodic mongodb.
  * @{@link https://github.com/typesettin/periodicjs.ext.dbseed}

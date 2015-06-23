@@ -1261,6 +1261,7 @@ var createAssetSeeds = function (createAssetSeedsAsyncCallback) {
  * @return {Function} async callback createUserSeedsAsyncCallback(err,results);
  */
 var createUserSeeds = function (createUserSeedsAsyncCallback) {
+	console.log('configureSeedoptions.skipUserPrivilegeSeeds',configureSeedoptions.skipUserPrivilegeSeeds);
 	if(configureSeedoptions.skipUserPrivilegeSeeds){
 		createUserSeedsAsyncCallback(null, 'skipping user seeds');
 	}
@@ -1290,7 +1291,7 @@ var createUserSeeds = function (createUserSeedsAsyncCallback) {
  * @return {Function} async callback createSeedsCallback(err,results);
  */
 var createSeeds = function (seedoptions, createSeedsCallback) {
-	console.log('seedoptions',seedoptions);
+	logger.silly('seedoptions',seedoptions);
 	configureSeedoptions = seedoptions;
 	exportSeedData = {
 		data: seedoptions
