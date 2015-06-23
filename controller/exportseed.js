@@ -1261,8 +1261,8 @@ var createAssetSeeds = function (createAssetSeedsAsyncCallback) {
  * @return {Function} async callback createUserSeedsAsyncCallback(err,results);
  */
 var createUserSeeds = function (createUserSeedsAsyncCallback) {
-	console.log('configureSeedoptions.skipUserPrivilegeSeeds',configureSeedoptions.skipUserPrivilegeSeeds);
-	if(configureSeedoptions.skipUserPrivilegeSeeds){
+	console.log('configureSeedoptions.skipUserSeeds',configureSeedoptions.skipUserSeeds);
+	if(configureSeedoptions.skipUserSeeds){
 		createUserSeedsAsyncCallback(null, 'skipping user seeds');
 	}
 	else{
