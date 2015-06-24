@@ -5,6 +5,7 @@ var async = require('async'),
 	appSettings,
 	mongoose,
 	logger,
+	Data,
 	User, // = mongoose.model('User')
 	Item, // = mongoose.model('Item')
 	Asset, //  = mongoose.model('Asset')
