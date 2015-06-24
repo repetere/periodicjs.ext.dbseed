@@ -932,10 +932,10 @@ var getAssetSeed = function (doc) {
  * @return {Function} async callback createCompilationSeedsAsyncCallback(err,results);
  */
 var createCompilationSeeds = function (createCompilationSeedsAsyncCallback) {
-	if(configureSeedoptions.skipCompilationSeeds){
+	if (configureSeedoptions.skipCompilationSeeds) {
 		createCompilationSeedsAsyncCallback(null, 'skipping compilation seeds');
 	}
-	else{
+	else {
 		Compilation.find({}).select('-_id -__v').populate('tags categories assets primaryasset authors contenttypes content_entities primaryauthor').exec(function (err, Compilations) {
 			if (err) {
 				exportSeedErrorsArray.push({
@@ -962,10 +962,10 @@ var createCompilationSeeds = function (createCompilationSeedsAsyncCallback) {
  * @return {Function} async callback createCollectionSeedsAsyncCallback(err,results);
  */
 var createCollectionSeeds = function (createCollectionSeedsAsyncCallback) {
-	if(configureSeedoptions.skipCollectionSeeds){
+	if (configureSeedoptions.skipCollectionSeeds) {
 		createCollectionSeedsAsyncCallback(null, 'skipping collection seeds');
 	}
-	else{
+	else {
 		Collection.find({}).select('-__v').populate('tags categories assets primaryasset authors contenttypes items primaryauthor').exec(function (err, Collections) {
 			if (err) {
 				exportSeedErrorsArray.push({
@@ -992,10 +992,10 @@ var createCollectionSeeds = function (createCollectionSeedsAsyncCallback) {
  * @return {Function} async callback createItemSeedsAsyncCallback(err,results);
  */
 var createItemSeeds = function (createItemSeedsAsyncCallback) {
-	if(configureSeedoptions.skipItemSeeds){
+	if (configureSeedoptions.skipItemSeeds) {
 		createItemSeedsAsyncCallback(null, 'skipping item seeds');
 	}
-	else{
+	else {
 		Item.find({}).select('-__v').populate('tags categories assets primaryasset authors contenttypes primaryauthor').exec(function (err, Items) {
 			if (err) {
 				exportSeedErrorsArray.push({
@@ -1023,10 +1023,10 @@ var createItemSeeds = function (createItemSeedsAsyncCallback) {
  */
 var createDataSeeds = function (createDataSeedsAsyncCallback) {
 	try {
-		if(configureSeedoptions.skipTagSeeds){
+		if (configureSeedoptions.skipTagSeeds) {
 			createDataSeedsAsyncCallback(null, 'skipping data seeds');
 		}
-		else{
+		else {
 			Data.find({}).select('-__v').populate('tags categories contenttypes primaryauthor').exec(function (err, Datas) {
 				// logger.warn('Data.find', err, Datas);
 				if (err) {
@@ -1058,10 +1058,10 @@ var createDataSeeds = function (createDataSeedsAsyncCallback) {
  * @return {Function} async callback createCategorySeedsAsyncCallback(err,results);
  */
 var createCategorySeeds = function (createCategorySeedsAsyncCallback) {
-	if(configureSeedoptions.skipCategorySeeds){
+	if (configureSeedoptions.skipCategorySeeds) {
 		createCategorySeedsAsyncCallback(null, 'skipping category seeds');
 	}
-	else{
+	else {
 		Category.find({}).select('-_id -__v').populate('author primary asset parent contenttypes').exec(function (err, Categorys) {
 			if (err) {
 				exportSeedErrorsArray.push({
@@ -1087,10 +1087,10 @@ var createCategorySeeds = function (createCategorySeedsAsyncCallback) {
  * @return {Function} async callback createTagSeedsAsyncCallback(err,results);
  */
 var createTagSeeds = function (createTagSeedsAsyncCallback) {
-	if(configureSeedoptions.skipTagSeeds){
+	if (configureSeedoptions.skipTagSeeds) {
 		createTagSeedsAsyncCallback(null, 'skipping tag seeds');
 	}
-	else{
+	else {
 		Tag.find({}).select('-_id -__v').populate('author primary asset parent contenttypes').exec(function (err, Tags) {
 			if (err) {
 				exportSeedErrorsArray.push({
@@ -1116,10 +1116,10 @@ var createTagSeeds = function (createTagSeedsAsyncCallback) {
  * @return {Function} async callback createUsergroupSeedsAsyncCallback(err,results);
  */
 var createUsergroupSeeds = function (createUsergroupSeedsAsyncCallback) {
-	if(configureSeedoptions.skipUsergroupSeeds){
+	if (configureSeedoptions.skipUsergroupSeeds) {
 		createUsergroupSeedsAsyncCallback(null, 'skipping usergroup seeds');
 	}
-	else{
+	else {
 		Usergroup.find({}).select('-_id -__v').populate('author roles').exec(function (err, Usergroups) {
 			if (err) {
 				exportSeedErrorsArray.push({
@@ -1145,10 +1145,10 @@ var createUsergroupSeeds = function (createUsergroupSeedsAsyncCallback) {
  * @return {Function} async callback createUserroleSeedsAsyncCallback(err,results);
  */
 var createUserroleSeeds = function (createUserroleSeedsAsyncCallback) {
-	if(configureSeedoptions.skipUserroleSeeds){
+	if (configureSeedoptions.skipUserroleSeeds) {
 		createUserroleSeedsAsyncCallback(null, 'skipping userrole seeds');
 	}
-	else{
+	else {
 		Userrole.find({}).select('-_id -__v').populate('author privileges').exec(function (err, Userroles) {
 			if (err) {
 				exportSeedErrorsArray.push({
@@ -1174,10 +1174,10 @@ var createUserroleSeeds = function (createUserroleSeedsAsyncCallback) {
  * @return {Function} async callback createUserprivilegeSeedsAsyncCallback(err,results);
  */
 var createUserprivilegeSeeds = function (createUserprivilegeSeedsAsyncCallback) {
-	if(configureSeedoptions.skipUserPrivilegeSeeds){
+	if (configureSeedoptions.skipUserPrivilegeSeeds) {
 		createUserprivilegeSeedsAsyncCallback(null, 'skipping userprivilege seeds');
 	}
-	else{
+	else {
 		Userprivilege.find({}).select('-_id -__v').populate('author').exec(function (err, Userprivileges) {
 			if (err) {
 				exportSeedErrorsArray.push({
@@ -1203,10 +1203,10 @@ var createUserprivilegeSeeds = function (createUserprivilegeSeedsAsyncCallback) 
  * @return {Function} async callback createContenttypeSeedsAsyncCallback(err,results);
  */
 var createContenttypeSeeds = function (createContenttypeSeedsAsyncCallback) {
-	if(configureSeedoptions.skipContenttypeSeeds){
+	if (configureSeedoptions.skipContenttypeSeeds) {
 		createContenttypeSeedsAsyncCallback(null, 'skipping contenttype seeds');
 	}
-	else{
+	else {
 		Contenttype.find({}).select('-_id -__v').populate('author').exec(function (err, Contenttypes) {
 			if (err) {
 				exportSeedErrorsArray.push({
@@ -1232,10 +1232,10 @@ var createContenttypeSeeds = function (createContenttypeSeedsAsyncCallback) {
  * @return {Function} async callback createAssetSeedsAsyncCallback(err,results);
  */
 var createAssetSeeds = function (createAssetSeedsAsyncCallback) {
-	if(configureSeedoptions.skipAssetSeeds){
+	if (configureSeedoptions.skipAssetSeeds) {
 		createAssetSeedsAsyncCallback(null, 'skipping asset seeds');
 	}
-	else{
+	else {
 		Asset.find({}).select('-_id -__v').populate('author contenttypes').exec(function (err, Assets) {
 			if (err) {
 				exportSeedErrorsArray.push({
@@ -1261,11 +1261,11 @@ var createAssetSeeds = function (createAssetSeedsAsyncCallback) {
  * @return {Function} async callback createUserSeedsAsyncCallback(err,results);
  */
 var createUserSeeds = function (createUserSeedsAsyncCallback) {
-	console.log('configureSeedoptions.skipUserSeeds',configureSeedoptions.skipUserSeeds);
-	if(configureSeedoptions.skipUserSeeds){
+	console.log('configureSeedoptions.skipUserSeeds', configureSeedoptions.skipUserSeeds);
+	if (configureSeedoptions.skipUserSeeds) {
 		createUserSeedsAsyncCallback(null, 'skipping user seeds');
 	}
-	else{
+	else {
 		User.find({}).select('-_id -__v').populate('assets primaryasset coverimages coverimage userroles').exec(function (err, Users) {
 			if (err) {
 				exportSeedErrorsArray.push({
@@ -1291,7 +1291,7 @@ var createUserSeeds = function (createUserSeedsAsyncCallback) {
  * @return {Function} async callback createSeedsCallback(err,results);
  */
 var createSeeds = function (seedoptions, createSeedsCallback) {
-	logger.silly('seedoptions',seedoptions);
+	logger.silly('seedoptions', seedoptions);
 	configureSeedoptions = seedoptions;
 	exportSeedData = {
 		data: seedoptions

@@ -38,7 +38,7 @@ var styleWindowResizeEventHandler = function () {
 };
 
 var tabEvents = function () {
-	window.StylieTab['dbseed-tabs'].on('tabsShowIndex', function (index) {
+	window.StylieTab['dbseed-tabs'].on('tabsShowIndex', function ( /*index*/ ) {
 		// console.log('showing tab', index);
 		// codemirrortab(index);
 		styleWindowResizeEventHandler();
@@ -58,7 +58,6 @@ window.useUploadedSeed = function (data) {
 	existingseedlist.appendChild(optionElement);
 	existingseedlist.value = optionElement.value;
 	setExistingSeed(optionElement.value);
-
 };
 
 window.addEventListener('resize', styleWindowResizeEventHandler, false);
@@ -75,7 +74,7 @@ window.showImportStatusResult = function () {
 window.displayImportSeedStatus = window.displayCustomSeedStatus;
 
 window.showCustomStatusResult = function () {
-	document.getElementById('customseed-codemirror').innerHTML = codeMirrors['customseed-codemirror'].getValue();
+	document.getElementById('customseed-codemirror').innerHTML = window.codeMirrors['customseed-codemirror'].getValue();
 	document.getElementById('customstatuscontainer').style.display = 'block';
 	seedcustomstatusoutputel.innerHTML = 'Customing seed data';
 };
@@ -87,16 +86,16 @@ window.displayCustomSeedStatus = function (ajaxFormResponse) {
 		h5element = document.createElement('h5'),
 		hrelement = document.createElement('hr');
 
-	h5element.innerHTML = 'Import Seed Result'
+	h5element.innerHTML = 'Import Seed Result';
 	predata.innerHTML = JSON.stringify(ajaxFormResponse.body.data, null, 2);
-	predata.setAttribute('class', 'ts-text-xs ts-overflow-auto')
-	predata.setAttribute('style', 'max-height:30em;')
+	predata.setAttribute('class', 'ts-text-xs ts-overflow-auto');
+	predata.setAttribute('style', 'max-height:30em;');
 
 	window.servermodalElement.querySelector('#servermodal-content').innerHTML = '';
 	window.servermodalElement.querySelector('#servermodal-content').appendChild(h5element);
 	window.servermodalElement.querySelector('#servermodal-content').appendChild(hrelement);
 	window.servermodalElement.querySelector('#servermodal-content').appendChild(predata);
-	AdminModal.show('servermodal-modal');
+	window.AdminModal.show('servermodal-modal');
 };
 
 window.addEventListener('load', function () {

@@ -104,6 +104,23 @@ var emptyCompilations = function (emptyCompilationsAsyncCallback) {
 	});
 };
 /**
+ * removes all Datas from the database
+ * @param  {object} err
+ * @param  {Function} emptyDatasAsyncCallback
+ * @return {Function} async callback emptyDatasAsyncCallback(err,results);
+ */
+var emptyDatas = function (emptyDatasAsyncCallback) {
+	Data.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyDatas'
+			});
+		}
+		emptyDatasAsyncCallback(null, 'removed all Datas');
+	});
+};
+/**
  * removes all Items from the database
  * @param  {object} err
  * @param  {Function} emptyItemsAsyncCallback
@@ -236,6 +253,7 @@ var emptyDB = function (options, emptyDBCallback) {
 			emptyContenttypes,
 			emptyTags,
 			emptyCategories,
+			emptyDatas,
 			emptyItems,
 			emptyCollections,
 			emptyCompilations,
@@ -271,6 +289,7 @@ var dbOpsModule = function (resources) {
 	CoreController = resources.core.controller;
 	CoreUtilities = resources.core.utilities;
 	User = mongoose.model('User');
+	Data = mongoose.model('Data');
 	Item = mongoose.model('Item');
 	Asset = mongoose.model('Asset');
 	Contenttype = mongoose.model('Contenttype');
