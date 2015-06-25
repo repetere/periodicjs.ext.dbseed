@@ -1,7 +1,7 @@
 {
 	"periodicCompatibility":"5.0.0",
 	"periodicDependencies": [],
-	"periodicjs.ext.admin": {
+	"periodicjs.ext.asyncadmin": {
 		"menu": {
 			"Extensions": {
 				"dbseed": {
