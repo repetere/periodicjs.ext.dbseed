@@ -932,7 +932,7 @@ var getAssetSeed = function (doc) {
  * @return {Function} async callback createCompilationSeedsAsyncCallback(err,results);
  */
 var createCompilationSeeds = function (createCompilationSeedsAsyncCallback) {
-	if (configureSeedoptions.skipCompilationSeeds) {
+	if (configureSeedoptions.skipCompilationSeeds || configureSeedoptions.skipCompilationSeeds ==='on') {
 		createCompilationSeedsAsyncCallback(null, 'skipping compilation seeds');
 	}
 	else {
@@ -962,7 +962,7 @@ var createCompilationSeeds = function (createCompilationSeedsAsyncCallback) {
  * @return {Function} async callback createCollectionSeedsAsyncCallback(err,results);
  */
 var createCollectionSeeds = function (createCollectionSeedsAsyncCallback) {
-	if (configureSeedoptions.skipCollectionSeeds) {
+	if (configureSeedoptions.skipCollectionSeeds || configureSeedoptions.skipCollectionSeeds ==='on') {
 		createCollectionSeedsAsyncCallback(null, 'skipping collection seeds');
 	}
 	else {
@@ -992,7 +992,7 @@ var createCollectionSeeds = function (createCollectionSeedsAsyncCallback) {
  * @return {Function} async callback createItemSeedsAsyncCallback(err,results);
  */
 var createItemSeeds = function (createItemSeedsAsyncCallback) {
-	if (configureSeedoptions.skipItemSeeds) {
+	if (configureSeedoptions.skipItemSeeds || configureSeedoptions.skipItemSeeds ==='on') {
 		createItemSeedsAsyncCallback(null, 'skipping item seeds');
 	}
 	else {
@@ -1023,7 +1023,7 @@ var createItemSeeds = function (createItemSeedsAsyncCallback) {
  */
 var createDataSeeds = function (createDataSeedsAsyncCallback) {
 	try {
-		if (configureSeedoptions.skipTagSeeds) {
+		if (configureSeedoptions.skipDataSeeds || configureSeedoptions.skipDataSeeds ==='on') {
 			createDataSeedsAsyncCallback(null, 'skipping data seeds');
 		}
 		else {
@@ -1058,7 +1058,7 @@ var createDataSeeds = function (createDataSeedsAsyncCallback) {
  * @return {Function} async callback createCategorySeedsAsyncCallback(err,results);
  */
 var createCategorySeeds = function (createCategorySeedsAsyncCallback) {
-	if (configureSeedoptions.skipCategorySeeds) {
+	if (configureSeedoptions.skipCategorySeeds || configureSeedoptions.skipCategorySeeds ==='on') {
 		createCategorySeedsAsyncCallback(null, 'skipping category seeds');
 	}
 	else {
@@ -1087,7 +1087,7 @@ var createCategorySeeds = function (createCategorySeedsAsyncCallback) {
  * @return {Function} async callback createTagSeedsAsyncCallback(err,results);
  */
 var createTagSeeds = function (createTagSeedsAsyncCallback) {
-	if (configureSeedoptions.skipTagSeeds) {
+	if (configureSeedoptions.skipTagSeeds || configureSeedoptions.skipTagSeeds ==='on') {
 		createTagSeedsAsyncCallback(null, 'skipping tag seeds');
 	}
 	else {
@@ -1116,7 +1116,7 @@ var createTagSeeds = function (createTagSeedsAsyncCallback) {
  * @return {Function} async callback createUsergroupSeedsAsyncCallback(err,results);
  */
 var createUsergroupSeeds = function (createUsergroupSeedsAsyncCallback) {
-	if (configureSeedoptions.skipUsergroupSeeds) {
+	if (configureSeedoptions.skipUsergroupSeeds || configureSeedoptions.skipUsergroupSeeds ==='on') {
 		createUsergroupSeedsAsyncCallback(null, 'skipping usergroup seeds');
 	}
 	else {
@@ -1145,7 +1145,7 @@ var createUsergroupSeeds = function (createUsergroupSeedsAsyncCallback) {
  * @return {Function} async callback createUserroleSeedsAsyncCallback(err,results);
  */
 var createUserroleSeeds = function (createUserroleSeedsAsyncCallback) {
-	if (configureSeedoptions.skipUserroleSeeds) {
+	if (configureSeedoptions.skipUserroleSeeds || configureSeedoptions.skipUserroleSeeds ==='on') {
 		createUserroleSeedsAsyncCallback(null, 'skipping userrole seeds');
 	}
 	else {
@@ -1174,7 +1174,7 @@ var createUserroleSeeds = function (createUserroleSeedsAsyncCallback) {
  * @return {Function} async callback createUserprivilegeSeedsAsyncCallback(err,results);
  */
 var createUserprivilegeSeeds = function (createUserprivilegeSeedsAsyncCallback) {
-	if (configureSeedoptions.skipUserPrivilegeSeeds) {
+	if (configureSeedoptions.skipUserPrivilegeSeeds || configureSeedoptions.skipUserPrivilegeSeeds ==='on') {
 		createUserprivilegeSeedsAsyncCallback(null, 'skipping userprivilege seeds');
 	}
 	else {
@@ -1203,7 +1203,7 @@ var createUserprivilegeSeeds = function (createUserprivilegeSeedsAsyncCallback) 
  * @return {Function} async callback createContenttypeSeedsAsyncCallback(err,results);
  */
 var createContenttypeSeeds = function (createContenttypeSeedsAsyncCallback) {
-	if (configureSeedoptions.skipContenttypeSeeds) {
+	if (configureSeedoptions.skipContenttypeSeeds || configureSeedoptions.skipContenttypeSeeds ==='on') {
 		createContenttypeSeedsAsyncCallback(null, 'skipping contenttype seeds');
 	}
 	else {
@@ -1232,7 +1232,7 @@ var createContenttypeSeeds = function (createContenttypeSeedsAsyncCallback) {
  * @return {Function} async callback createAssetSeedsAsyncCallback(err,results);
  */
 var createAssetSeeds = function (createAssetSeedsAsyncCallback) {
-	if (configureSeedoptions.skipAssetSeeds) {
+	if (configureSeedoptions.skipAssetSeeds || configureSeedoptions.skipAssetSeeds ==='on') {
 		createAssetSeedsAsyncCallback(null, 'skipping asset seeds');
 	}
 	else {
@@ -1261,8 +1261,7 @@ var createAssetSeeds = function (createAssetSeedsAsyncCallback) {
  * @return {Function} async callback createUserSeedsAsyncCallback(err,results);
  */
 var createUserSeeds = function (createUserSeedsAsyncCallback) {
-	console.log('configureSeedoptions.skipUserSeeds', configureSeedoptions.skipUserSeeds);
-	if (configureSeedoptions.skipUserSeeds) {
+	if (configureSeedoptions.skipUserSeeds || configureSeedoptions.skipUserSeeds ==='on') {
 		createUserSeedsAsyncCallback(null, 'skipping user seeds');
 	}
 	else {
@@ -1311,7 +1310,8 @@ var createSeeds = function (seedoptions, createSeedsCallback) {
 			createCollectionSeeds,
 			createCompilationSeeds
 		],
-		function (err) {
+		function (err,seedresults) {
+			logger.silly('asyncadmin - seedresults',seedresults);
 			createSeedsCallback(err);
 		});
 };
@@ -1335,6 +1335,13 @@ var exportSeed = function (options, exportSeedCallback) {
 
 	var setupSeedExport = function (setupSeedExportCallback) {
 		var dataforseeds = options;
+		exportSeedErrorsArray = [];
+		exportSeedData = {};
+		exportSeedDataArray = [];
+		item_id_name_hash = {};
+		data_id_name_hash = {};
+		collection_id_name_hash = {};
+		compilation_id_name_hash = {};
 		setupSeedExportCallback(null, dataforseeds);
 	};
 	async.waterfall([

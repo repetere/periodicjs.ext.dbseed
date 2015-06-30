@@ -22,6 +22,7 @@ var setExistingSeed = function (value) {
 };
 
 var useExistingSeedListener = function (e) {
+	console.log('useExistingSeedListener', event);
 	setExistingSeed(e.target.value);
 };
 
@@ -98,7 +99,8 @@ window.displayCustomSeedStatus = function (ajaxFormResponse) {
 	window.AdminModal.show('servermodal-modal');
 };
 
-window.addEventListener('load', function () {
+
+var elementSelectors = function () {
 	seedpathInput = document.getElementById('seedpath');
 	previousseedInput = document.getElementById('previousseed');
 	seedpathDisplayInput = document.getElementById('seedpathdisplay');
@@ -109,13 +111,26 @@ window.addEventListener('load', function () {
 	importstatusoutputel = document.getElementById('seedimportstatus');
 	importSeedSelectionEl = document.getElementById('importSeedSelection');
 	seedcustomstatusoutputel = document.getElementById('seedcustomstatus');
+};
+
+var eventHandlers = function () {
 	exampleSeedSelect.addEventListener('change', exapmleSeedSelectEventHandler, false);
-
-
 	if (existingseedlist) {
 		existingseedlist.addEventListener('change', useExistingSeedListener, false);
 	}
+};
+
+var init = function () {
+	elementSelectors();
+	eventHandlers();
 	tabEvents();
-});
+};
+
+if (typeof window.domLoadEventFired !== 'undefined') {
+	init();
+}
+else {
+	window.addEventListener('load', init, false);
+}
 
 },{}]},{},[1]);
