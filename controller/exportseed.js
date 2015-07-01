@@ -43,7 +43,7 @@ var exportSeedFilePath,
 var writeSeedToDisk = function (writeSeedToDiskCallback) {
 	logger.warn('writeSeedToDisk exportSeedFilePath', exportSeedFilePath);
 	exportSeedData.data = exportSeedDataArray;
-	fs.outputJson(exportSeedFilePath, exportSeedData, function (err) {
+	fs.outputJson(exportSeedFilePath, exportSeedData, {spaces: 2},function (err) {
 		if (err) {
 			exportSeedErrorsArray.push({
 				error: err,
