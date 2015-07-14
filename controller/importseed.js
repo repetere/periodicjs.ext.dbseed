@@ -2730,9 +2730,10 @@ var importSeedModule = function (resources) {
 	Userprivilege = mongoose.model('Userprivilege');
 	Userrole = mongoose.model('Userrole');
 	Usergroup = mongoose.model('Usergroup');
+	var appenvironment = appSettings.application.environment;
 	var customseedmanpath = path.resolve(process.cwd(), 'content/config/extensions/periodicjs.ext.dbseed/customseed.js');
 	try {
-		customSeedManipulations = require(customseedmanpath);
+		customSeedManipulations = require(customseedmanpath)[appenvironment];
 		customImportSeed = (customSeedManipulations.importseed) ? true : false;
 	}
 	catch (e) {

@@ -945,9 +945,12 @@ var createCompilationSeeds = function (createCompilationSeedsAsyncCallback) {
 			}
 			if (Compilations) {
 				for (var i in Compilations) {
-					var compilationdoc = Compilations[i];
+					var compilationdoc = Compilations[i],
+					CompilationsSeed = getCompilationSeed(compilationdoc);
 					compilation_id_name_hash[Compilations[i]._id] = Compilations[i].name;
-					exportSeedDataArray.push(getCompilationSeed(compilationdoc));
+					if(CompilationsSeed){
+						exportSeedDataArray.push(CompilationsSeed);
+					}
 				}
 			}
 			createCompilationSeedsAsyncCallback(null, 'created compilation seeds');
@@ -975,9 +978,12 @@ var createCollectionSeeds = function (createCollectionSeedsAsyncCallback) {
 			}
 			if (Collections) {
 				for (var i in Collections) {
-					var collectiondoc = Collections[i];
+					var collectiondoc = Collections[i],
+					CollectionsSeed = getCollectionSeed(collectiondoc);
 					collection_id_name_hash[Collections[i]._id] = Collections[i].name;
-					exportSeedDataArray.push(getCollectionSeed(collectiondoc));
+					if(CollectionsSeed){
+						exportSeedDataArray.push(getCollectionSeed(collectiondoc));
+					}
 				}
 			}
 			createCollectionSeedsAsyncCallback(null, 'created collection seeds');
@@ -1005,9 +1011,12 @@ var createItemSeeds = function (createItemSeedsAsyncCallback) {
 			}
 			if (Items) {
 				for (var i in Items) {
-					var itemdoc = Items[i];
+					var itemdoc = Items[i],
+					ItemsSeed = getItemSeed(itemdoc);
 					item_id_name_hash[Items[i]._id] = Items[i].name;
-					exportSeedDataArray.push(getItemSeed(itemdoc));
+					if(ItemsSeed){
+						exportSeedDataArray.push(ItemsSeed);
+					}
 				}
 			}
 			createItemSeedsAsyncCallback(null, 'created item seeds');
@@ -1037,9 +1046,12 @@ var createDataSeeds = function (createDataSeedsAsyncCallback) {
 				}
 				if (Datas) {
 					for (var i in Datas) {
-						var datadoc = Datas[i];
+						var datadoc = Datas[i],
+						DatasSeed = getDataSeed(datadoc);
 						data_id_name_hash[Datas[i]._id] = Datas[i].name;
-						exportSeedDataArray.push(getDataSeed(datadoc));
+						if(DatasSeed){
+							exportSeedDataArray.push(DatasSeed);
+						}
 					}
 				}
 				createDataSeedsAsyncCallback(null, 'created data seeds');
@@ -1071,8 +1083,11 @@ var createCategorySeeds = function (createCategorySeedsAsyncCallback) {
 			}
 			if (Categorys) {
 				for (var i in Categorys) {
-					var categorydoc = Categorys[i];
-					exportSeedDataArray.push(getCategorySeed(categorydoc));
+					var categorydoc = Categorys[i],
+					CategorysSeed = getCategorySeed(categorydoc);
+					if(CategorysSeed){
+						exportSeedDataArray.push(getCategorySeed(categorydoc));
+					}
 				}
 			}
 			createCategorySeedsAsyncCallback(null, 'created category seeds');
@@ -1100,8 +1115,11 @@ var createTagSeeds = function (createTagSeedsAsyncCallback) {
 			}
 			if (Tags) {
 				for (var i in Tags) {
-					var tagdoc = Tags[i];
-					exportSeedDataArray.push(getTagSeed(tagdoc));
+					var tagdoc = Tags[i],
+					TagsSeed = getTagSeed(tagdoc);
+					if(TagsSeed){
+						exportSeedDataArray.push(TagsSeed);
+					}
 				}
 			}
 			createTagSeedsAsyncCallback(null, 'created tag seeds');
@@ -1129,8 +1147,11 @@ var createUsergroupSeeds = function (createUsergroupSeedsAsyncCallback) {
 			}
 			if (Usergroups) {
 				for (var i in Usergroups) {
-					var usergroupdoc = Usergroups[i];
-					exportSeedDataArray.push(getUsergroupSeed(usergroupdoc));
+					var usergroupdoc = Usergroups[i],
+					UsergroupsSeed = getUsergroupSeed(usergroupdoc);
+					if(UsergroupsSeed){
+						exportSeedDataArray.push(getUsergroupSeed(usergroupdoc));
+					}
 				}
 			}
 			createUsergroupSeedsAsyncCallback(null, 'created usergroup seeds');
@@ -1158,8 +1179,11 @@ var createUserroleSeeds = function (createUserroleSeedsAsyncCallback) {
 			}
 			if (Userroles) {
 				for (var i in Userroles) {
-					var userroledoc = Userroles[i];
-					exportSeedDataArray.push(getUserroleSeed(userroledoc));
+					var userroledoc = Userroles[i],
+					UserrolesSeed = getUserroleSeed(userroledoc);
+					if(UserrolesSeed){
+						exportSeedDataArray.push(UserrolesSeed);
+					}
 				}
 			}
 			createUserroleSeedsAsyncCallback(null, 'created userrole seeds');
@@ -1187,8 +1211,11 @@ var createUserprivilegeSeeds = function (createUserprivilegeSeedsAsyncCallback) 
 			}
 			if (Userprivileges) {
 				for (var i in Userprivileges) {
-					var userprivilegedoc = Userprivileges[i];
-					exportSeedDataArray.push(getUserprivilegeSeed(userprivilegedoc));
+					var userprivilegedoc = Userprivileges[i],
+						UserprivilegesSeed = getUserprivilegeSeed(userprivilegedoc);
+					if(UserprivilegesSeed){
+						exportSeedDataArray.push(UserprivilegesSeed);
+					}
 				}
 			}
 			createUserprivilegeSeedsAsyncCallback(null, 'created userprivilege seeds');
@@ -1216,8 +1243,11 @@ var createContenttypeSeeds = function (createContenttypeSeedsAsyncCallback) {
 			}
 			if (Contenttypes) {
 				for (var i in Contenttypes) {
-					var contenttypedoc = Contenttypes[i];
-					exportSeedDataArray.push(getContenttypeSeed(contenttypedoc));
+					var contenttypedoc = Contenttypes[i],
+					ContenttypesSeed = getContenttypeSeed(contenttypedoc);
+					if(ContenttypesSeed){
+						exportSeedDataArray.push(ContenttypesSeed);
+					}
 				}
 			}
 			createContenttypeSeedsAsyncCallback(null, 'created contenttype seeds');
@@ -1245,8 +1275,11 @@ var createAssetSeeds = function (createAssetSeedsAsyncCallback) {
 			}
 			if (Assets) {
 				for (var a in Assets) {
-					var assetdoc = Assets[a];
-					exportSeedDataArray.push(getAssetSeed(assetdoc));
+					var assetdoc = Assets[a],
+					AssetsSeed = getAssetSeed(assetdoc);
+					if(AssetsSeed){
+						exportSeedDataArray.push(AssetsSeed);
+					}
 				}
 			}
 			createAssetSeedsAsyncCallback(null, 'created asset seeds');
@@ -1274,8 +1307,11 @@ var createUserSeeds = function (createUserSeedsAsyncCallback) {
 			}
 			if (Users) {
 				for (var a in Users) {
-					var userdoc = Users[a];
-					exportSeedDataArray.push(getUserSeed(userdoc));
+					var userdoc = Users[a],
+					UsersSeed = getUserSeed(userdoc);
+					if(UsersSeed){
+						exportSeedDataArray.push(getUserSeed(userdoc));
+					}
 				}
 			}
 			createUserSeedsAsyncCallback(null, 'created user seeds');
@@ -1393,8 +1429,8 @@ var exportSeedModule = function (resources) {
 	var appenvironment = appSettings.application.environment;
 	var customseedmanpath = path.resolve(process.cwd(), 'content/config/extensions/periodicjs.ext.dbseed/customseed.js');
 	try {
-		customSeedManipulations = require(customseedmanpath);
-		customExportSeed = (customSeedManipulations.exportseed[appenvironment]) ? true : false;
+		customSeedManipulations = require(customseedmanpath)[appenvironment];
+		customExportSeed = (customSeedManipulations.exportseed) ? true : false;
 	}
 	catch (e) {
 		customSeedManipulations = false;
