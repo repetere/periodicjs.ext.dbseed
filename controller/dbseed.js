@@ -12,6 +12,7 @@ var fs = require('fs-extra'),
 	appSettings,
 	mongoose,
 	logger,
+	extJson,
 	uploadseeddir = path.resolve(process.cwd(), 'content/files/dbseeds'),
 	d = new Date(),
 	defaultExportFileName = 'dbemptybackup' + '-' + d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate() + '-' + d.getTime() + '.json';
@@ -309,7 +310,7 @@ var index = function (req, res) {
 			responseData: {
 				pagedata: {
 					title: 'DBSeed Import/Export',
-					headerjs: ['/extensions/periodicjs.ext.dbseed/js/dbseed.min.js'],
+					headerjs: ['/extensions/periodicjs.ext.dbseed/js/dbseed.min.js?v=' + extJson.version],
 					extensions: CoreUtilities.getAdminMenu()
 				},
 				periodic: {
@@ -346,6 +347,7 @@ var controller = function (resources) {
 	importSeedModule = require('./importseed')(resources);
 	dbopsModule = require('./dbops')(resources);
 	Asset = mongoose.model('Asset');
+	extJson = resources.app.locals.dbseedExtJson;
 	//async ensure export directory
 	fs.ensureDir(uploadseeddir, function (err) {
 		if (err) {

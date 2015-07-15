@@ -1,4 +1,9 @@
 'use strict';
+
+var errorie = require('errorie'),
+	fs = require('fs-extra'),
+	path = require('path'),
+	extJson;
 /**
  * An extension to import json seeds into periodic mongodb.
  * @{@link https://github.com/typesettin/periodicjs.ext.dbseed}
@@ -10,6 +15,17 @@
  */
 module.exports = function (periodic) {
 	// express,app,logger,config,db,mongoose
+	try {
+		extJson = fs.readJsonSync(path.join(__dirname, '/package.json'));
+		periodic.app.locals.dbseedExtJson = extJson;
+	}
+	catch (e) {
+		throw new errorie({
+			name: 'DBSeed',
+			message: 'Config error - ' + e.message
+		});
+	}
+
 	periodic.app.controller.extension.dbseed = {
 		seed: require('./controller/dbseed')(periodic)
 	};

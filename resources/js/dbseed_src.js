@@ -21,7 +21,7 @@ var setExistingSeed = function (value) {
 };
 
 var useExistingSeedListener = function (e) {
-	console.log('useExistingSeedListener', event);
+	// console.log('useExistingSeedListener', event);
 	setExistingSeed(e.target.value);
 };
 
@@ -51,9 +51,8 @@ var exapmleSeedSelectEventHandler = function (e) {
 };
 
 window.useUploadedSeed = function (data) {
-	// console.log('data', data);
 	var optionElement = document.createElement('option');
-	optionElement.value = data.body.data.files[0].filename;
+	optionElement.value = data.body.data.files[0].name;
 	optionElement.innerHTML = optionElement.value;
 	existingseedlist.appendChild(optionElement);
 	existingseedlist.value = optionElement.value;
