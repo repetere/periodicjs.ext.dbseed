@@ -310,6 +310,7 @@ var index = function (req, res) {
 			responseData: {
 				pagedata: {
 					title: 'DBSeed Import/Export',
+					toplink: '&raquo; DB Seed Import/Export',
 					headerjs: ['/extensions/periodicjs.ext.dbseed/js/dbseed.min.js?v=' + extJson.version],
 					extensions: CoreUtilities.getAdminMenu()
 				},

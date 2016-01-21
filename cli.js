@@ -10,8 +10,6 @@ var path = require('path'),
 	logger,
 	datafile,
 	appSettings,
-	extJson,
-errorie = require('errorie'),
 	d = new Date(),
 	defaultExportFileName = 'dbemptybackup' + '-' + d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate() + '-' + d.getTime() + '.json';
 
@@ -31,17 +29,6 @@ var extscript = function (resources) {
 	logger = resources.logger;
 	mongoose = resources.mongoose;
 	appSettings = resources.settings;
-	try {
-		extJson = fs.readJsonSync(path.join(__dirname, '/package.json'));
-		// console.log('resources',resources);
-		resources.app.locals = {dbseedExtJson : extJson};
-	}
-	catch (e) {
-		throw new errorie({
-			name: 'DBSeed',
-			message: 'Config error - ' + e.message
-		});
-	}
 	seedController = require('./controller/dbseed')(resources);
 	// node index.js --cli --extension dbseed --task sampledata
 	var cli = function (argv) {

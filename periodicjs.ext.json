@@ -12,7 +12,8 @@
 			    "tree-item-link": "/%locals.adminPath%/dbseed",
 			    "tree-item-attributes": {
 			      "class": "async-admin-ajax-link",
-			      "title": "DB Seed Import/Export"
+			      "title": "DB Import/Export",
+        		"style":"background-image: url(/images/adminui/svg/data102.svg);"
 			    }
 			  }
 			}
