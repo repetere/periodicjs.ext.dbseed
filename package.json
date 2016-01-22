@@ -103,5 +103,5 @@
     "postuninstall": "node uninstall.js",
     "test": "mocha -R spec --recursive"
   },
-  "version": "5.9.4"
+  "version": "6.0.0"
 }
