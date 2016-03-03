@@ -1,42 +1,6 @@
 {
-  "_args": [
-    [
-      "periodicjs.ext.dbseed@5.9.21",
-      "/Users/yawetse/Developer/github/promise/promise-internal-server/node_modules/periodicjs"
-    ]
-  ],
-  "_from": "periodicjs.ext.dbseed@5.9.21",
-  "_id": "periodicjs.ext.dbseed@5.9.21",
-  "_inCache": true,
-  "_installable": true,
-  "_location": "/periodicjs.ext.dbseed",
-  "_nodeVersion": "0.12.6",
-  "_npmUser": {
-    "email": "yaw.etse@gmail.com",
-    "name": "yawetse"
-  },
-  "_npmVersion": "2.11.2",
-  "_phantomChildren": {
-    "graceful-fs": "3.0.8",
-    "jsonfile": "2.2.3",
-    "rimraf": "2.5.0"
-  },
-  "_requested": {
-    "name": "periodicjs.ext.dbseed",
-    "raw": "periodicjs.ext.dbseed@5.9.21",
-    "rawSpec": "5.9.21",
-    "scope": null,
-    "spec": "5.9.21",
-    "type": "version"
-  },
-  "_requiredBy": [
-    "#USER"
-  ],
-  "_resolved": "https://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-5.9.21.tgz",
-  "_shasum": "04977b0864dfd35a5e7b5b65be8b5c1f06fa17cc",
-  "_shrinkwrap": null,
-  "_spec": "periodicjs.ext.dbseed@5.9.21",
-  "_where": "/Users/yawetse/Developer/github/promise/promise-internal-server/node_modules/periodicjs",
+  "name": "periodicjs.ext.dbseed",
+  "version": "6.0.1",
   "author": {
     "email": "yaw.etse@gmail.com",
     "name": "Yaw Joseph Etse",
@@ -76,7 +40,7 @@
     "tarball": "http://registry.npmjs.org/periodicjs.ext.dbseed/-/periodicjs.ext.dbseed-5.9.21.tgz"
   },
   "engines": {
-    "node": ">=0.12.x"
+    "node": ">=4.2.x"
   },
   "gitHead": "9f96e406d936fc48ad29f5caf3ccf1e51128f6ff",
   "homepage": "https://github.com/typesettin/periodicjs.ext.dbseed",
@@ -85,15 +49,17 @@
   ],
   "license": "MIT",
   "main": "index.js",
-  "maintainers": [
+  "contributors": [
     {
-      "name": "yawetse",
-      "email": "yaw.etse@gmail.com"
+      "email": "janbialostok@gmail.com",
+      "name": "janbialostok"
+    },
+    {
+      "email": "yaw.etse@gmail.com",
+      "name": "yawetse"
     }
   ],
-  "name": "periodicjs.ext.dbseed",
   "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git://github.com/typesettin/periodicjs.ext.dbseed.git"
@@ -102,6 +68,5 @@
     "postinstall": "node install.js",
     "postuninstall": "node uninstall.js",
     "test": "mocha -R spec --recursive"
-  },
-  "version": "6.0.0"
+  }
 }
