@@ -1,374 +1,146 @@
 'use strict';
+const Promisie = require('promisie');
+const fs = Promisie.promisifyAll(require('fs-extra'));
+const path = require('path');
+const moment = require('moment');
+const defaultUploadDir = path.join(process.cwd(), 'content/files/dbseeds');
+const defaultExportFileName = `dbemptybackup-${ moment().format('YYYY-MM-DD-hh:mm:ss') }.json`;
+const archiver = require('archiver');
 
-var fs = require('fs-extra'),
-	path = require('path'),
-	async = require('async'),
-	Asset,
-	exportSeedModule,
-	importSeedModule,
-	dbopsModule,
-	CoreUtilities,
-	CoreController,
-	appSettings,
-	mongoose,
-	logger,
-	extJson,
-	uploadseeddir = path.resolve(process.cwd(), 'content/files/dbseeds'),
-	d = new Date(),
-	defaultExportFileName = 'dbemptybackup' + '-' + d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate() + '-' + d.getTime() + '.json';
+var logger;
+var mongoose;
+var appSettings;
+var CoreController;
+var CoreUtilities;
+var export_db;
+var importSeedModule;
+var dbopsModule;
+var Asset;
+var extJson;
 
-var uploaded_seed_file = function (req, res) {
-	res.send({
-		result: 'success',
-		data: req.controllerData
-	});
+var sendExportDownload = function (options) {
+	let { res, filePath } = options;
+	let exportFileName = path.basename(filePath);
+	res.setHeader('Content-disposition', 'attachment; filename=' + exportFileName);
+	res.setHeader('Content-type', (path.extname(exportFileName) === '.zip') ? 'application/zip' : 'application/json' );
+	Promisie.promisify(res.download, res)(filePath, exportFileName)
+		.then(() => fs.removeAsync(filePath))
+		.then(() => logger.info('Successfully exported seed file'))
+		.catch(logger.error);
 };
 
-var set_seed_upload_dir = function (req, res, next) {
-	req.localuploadpath = uploadseeddir;
-	next();
-};
-
-/**
- * exports seeds via admin interface
- * @param  {object} req
- * @param  {object} res
- * @return {object} responds with dbseed download
- */
-var export_download = function (req, res) {
-	var downloadSeedOptions = CoreUtilities.removeEmptyObjectValues(req.body);
-
-	async.series({
-		exportseed: function (cb) {
-			exportSeedModule.exportSeed(downloadSeedOptions, function (err, status) {
-				cb(err, status);
-			});
+var handleArchivePartitionedFile = function (writeStream, files, cb) {
+	let handler = function (callback) {
+		try {
+			let archive = archiver('zip');
+			writeStream.on('close', callback)
+				.on('error', callback);
+			archive.on('error', callback);
+			archive.pipe(writeStream);
+			for (let i = 0; i < files.length; i++) {
+				archive = archive.append(fs.createReadStream(files[i].exportSeedFilePath), { name: path.basename(files[i].exportSeedFilePath) });
+			}
+			archive.finalize();
 		}
-	}, function (err, result) {
-		if (err) {
+		catch (e) {
+			callback(e);
+		}
+	};
+	if (typeof cb === 'function') { handler(cb); }
+	else { Promisie.promisify(handler)(); }
+};
+
+var export_download = function (req, res) {
+	let downloadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
+	export_db.exportSeed(downloadOptions)
+		.then(result => {
+			if (downloadOptions.partition) {
+				let zipPath = `${ path.join(path.dirname(downloadOptions.outputPath), path.basename(downloadOptions.outputPath, '.json')) }.zip`;
+				let seedOutput = fs.createWriteStream(zipPath);
+				handleArchivePartitionedFile(seedOutput, result, (err) => {
+					if (err) {
+						CoreController.handleDocumentQueryErrorResponse({
+							err: err,
+							res: res,
+							req: req
+						});
+					}
+					else { sendExportDownload({ res, filePath: zipPath }); }
+				});
+			}
+			else { sendExportDownload({ res, filePath: result.exportSeedFilePath }); }
+		}, e => {
 			CoreController.handleDocumentQueryErrorResponse({
-				err: err,
+				err: e,
 				res: res,
 				req: req
 			});
-		}
-		else {
-			var downloadfile = result.exportseed.exportSeedFilePath,
-				exportFileName = path.basename(downloadfile);
-
-			res.setHeader('Content-disposition', 'attachment; filename=' + exportFileName);
-			res.setHeader('Content-type', 'application/json');
-			// res.setHeader('Content-length', downloadfileObj.length);
-
-			// var filestream = fs.createReadStream(downloadfile);
-			// filestream.pipe(res);
-			// var file = __dirname + '/upload-folder/dramaticpenguin.MOV';
-			res.download(downloadfile, exportFileName, function (err) {
-				if (err) {
-					logger.error(err);
-				}
-				else {
-					fs.remove(downloadfile, function (err) {
-						if (err) {
-							logger.error(err);
-						}
-					});
-				}
-			}); // Set disposition and send it.
-		}
-	});
-};
-
-/**
- * upload custom seed controller for seeds posted via admin interface
- * @param  {object} req
- * @param  {object} res
- * @return {object} responds with dbseed page
- */
-var import_customseed = function (req, res) {
-	var uploadSeedObject = CoreUtilities.removeEmptyObjectValues(req.body),
-		seedParseError,
-		customSeed;
-	try {
-		customSeed = JSON.parse(uploadSeedObject.customseedjson);
-	}
-	catch (e) {
-		seedParseError = e;
-	}
-
-	console.time('Importing Custom Seed Data');
-	importSeedModule.importSeed({
-			jsondata: customSeed,
-			insertsetting: 'upsert'
-		},
-		function (err, status) {
-			console.timeEnd('Importing Custom Seed Data');
-			if (seedParseError) {
-				CoreController.handleDocumentQueryErrorResponse({
-					err: seedParseError,
-					res: res,
-					req: req
-				});
-			}
-			else if (err) {
-				CoreController.handleDocumentQueryErrorResponse({
-					err: err,
-					res: res,
-					req: req
-				});
-			}
-			else {
-				CoreController.handleDocumentQueryRender({
-					res: res,
-					req: req,
-					renderView: 'home/index',
-					responseData: {
-						pagedata: {
-							title: 'New Item',
-						},
-						data: status,
-						user: req.user
-					}
-				});
-			}
 		});
 };
 
-/**
- * upload post controller for seeds uplaoded via admin interface
- * @param  {object} req
- * @param  {object} res
- * @return {object} responds with dbseed page
- */
-var import_upload = function (req, res) {
-	var uploadSeedObject = CoreUtilities.removeEmptyObjectValues(req.body),
-		originalseeduploadpath,
-		seedname,
-		useExistingSeed = (uploadSeedObject.previousseed && uploadSeedObject.previousseed === 'usepreviousseed') ? true : false,
-		newseedpath;
+// var import_upload = function (req, res) {
+// 	let uploadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
+// 	let originalpath;
+// 	let seedname;
+// 	let (uploadSeedObject.previousseed && uploadSeedObject.previousseed === 'usepreviousseed') ? true : false;
+// 	let newseedpath;
 
-	async.series({
-			setupseeddata: function (cb) {
-				try {
-					if (useExistingSeed) {
-						seedname = path.basename(uploadSeedObject.seedpath);
-						newseedpath = path.resolve(process.cwd(), 'content/files/dbseeds', seedname);
-					}
-					else {
-						originalseeduploadpath = path.join(process.cwd(), 'public', uploadSeedObject.seedpath);
-						seedname = path.basename(uploadSeedObject.seedpath);
-						newseedpath = path.resolve(process.cwd(), 'content/files/dbseeds', seedname);
-					}
-					cb(null, 'setup seed data');
-				}
-				catch (e) {
-					cb(e);
-				}
-			},
-			checkdirexists: function (cb) {
-				if (useExistingSeed) {
-					cb(null, 'skip directory check, useExistingSeed');
-				}
-				else {
-					fs.ensureDir(uploadseeddir, cb);
-				}
-			},
-			moveseed: function (cb) {
-				if (useExistingSeed) {
-					cb(null, 'skip move directory, useExistingSeed');
-				}
-				else {
-					fs.rename(originalseeduploadpath, newseedpath, cb);
-				}
-			},
-			deleteOldUpload: function (cb) {
-				if (useExistingSeed) {
-					cb(null, 'skip delete old seed, useExistingSeed');
-				}
-				else {
-					fs.remove(originalseeduploadpath, cb);
-				}
-			},
-			removeAssetFromDB: function (cb) {
-				if (uploadSeedObject.assetid) {
-					CoreController.deleteModel({
-						model: Asset,
-						deleteid: uploadSeedObject.assetid,
-						req: req,
-						res: res,
-						callback: cb
-					});
-				}
-				else {
-					cb(null, 'existing seed');
-				}
-			},
-			wipedb: function (cb) {
-				if (uploadSeedObject.wipecheckbox) {
-					async.series([
-						function (wipedbcallback) {
-							console.time('Exporting Seed Data');
-							exportSeedModule.exportSeed({
-								filepath: 'content/files/dbseeds/' + defaultExportFileName,
-							}, function (err, status) {
-								console.timeEnd('Exporting Seed Data');
-								wipedbcallback(err, status);
-							});
-						},
-						function (emptydbcallback) {
-							console.time('Empty Database Data');
-							dbopsModule.emptyDB({},
-								function (err, status) {
-									console.timeEnd('Empty Database Data');
-									emptydbcallback(err, status);
-								});
-						}
-					], function (err, status) {
-						cb(err, status);
-					});
-				}
-				else {
-					cb(null, 'do not empty db');
-				}
-			},
-			seeddb: function (cb) {
-				fs.readJson(newseedpath, function (err, seedjson) {
-					if (err) {
-						cb(err);
-					}
-					else {
-						console.time('Importing Seed Data');
-						importSeedModule.importSeed({
-							jsondata: seedjson,
-							encryptpassword: false,
-							insertsetting: 'upsert'
-						}, function (err, status) {
-							console.timeEnd('Importing Seed Data');
-							cb(err, status);
-						});
-					}
-				});
-			}
-		},
-		function (err, status) {
-			if (err) {
-				CoreController.handleDocumentQueryErrorResponse({
-					err: err,
-					res: res,
-					req: req
-				});
-			}
-			else {
-				CoreController.handleDocumentQueryRender({
-					res: res,
-					req: req,
-					renderView: 'home/index',
-					responseData: {
-						pagedata: {
-							title: 'New Item',
-						},
-						data: status,
-						user: req.user
-					}
-				});
-			}
-		});
-};
+// };
 
-/**
- * uploads seeds via admin interface
- * @param  {object} req
- * @param  {object} res
- * @return {object} responds with dbseed page
- */
 var index = function (req, res) {
-	async.waterfall([
-		function (cb) {
-			CoreController.getPluginViewDefaultTemplate({
-					viewname: 'p-admin/dbseed/index',
-					themefileext: appSettings.templatefileextension,
-					extname: 'periodicjs.ext.dbseed'
-				},
-				function (err, templatepath) {
-					cb(err, templatepath);
-				});
-		},
-		function (templatepath, cb) {
-			fs.readdir(path.join(process.cwd(), 'content/files/dbseeds'), function (err, files) {
-				cb(err, {
-					templatepath: templatepath,
-					existingseeds: files
-				});
-			});
-		}
-	], function (err, result) {
-		CoreController.handleDocumentQueryRender({
-			res: res,
-			req: req,
-			err: err,
-			renderView: result.templatepath,
-			responseData: {
-				pagedata: {
-					title: 'DBSeed Import/Export',
-					toplink: '&raquo; DB Seed Import/Export',
-					headerjs: ['/extensions/periodicjs.ext.dbseed/js/dbseed.min.js?v=' + extJson.version],
-					extensions: CoreUtilities.getAdminMenu()
-				},
-				periodic: {
-					version: appSettings.version
-				},
-				existingseeds: result.existingseeds,
-				user: req.user
-			}
-		});
+	let getPluginViewDefaultTemplate = Promisie.promisify(CoreController.getPluginViewDefaultTemplate, CoreController).bind(CoreController, {
+		viewname: 'p-admin/dbseed/index',
+		themefileext: appSettings.templatefileextension,
+		extname: 'periodicjs.ext.dbseed'
 	});
-
+	let readdirAsync = fs.readdirAsync.bind(fs, defaultUploadDir);
+	Promise.all([getPluginViewDefaultTemplate(), readdirAsync()])
+		.then(results => {
+			CoreController.handleDocumentQueryRender({
+				res: res,
+				req: req,
+				renderView: results[0],
+				responseData: {
+					pagedata: {
+						title: 'DBSeed Import/Export',
+						toplink: '&raquo; DB Seed Import/Export',
+						headerjs: ['/extensions/periodicjs.ext.dbseed/js/dbseed.min.js?v=' + extJson.version],
+						extensions: CoreUtilities.getAdminMenu()
+					},
+					periodic: {
+						version: appSettings.version
+					},
+					existingseeds: results[1],
+					user: req.user
+				}
+			});
+		}, e => {
+			CoreController.handleDocumentQueryErrorResponse({
+				err: e,
+				res: res,
+				req: req
+			});
+		});
 };
 
-/**
- * dbseed controller
- * @module dbseedController
- * @{@link https://github.com/typesettin/periodicjs.ext.dbseed}
- * @author Yaw Joseph Etse
- * @copyright Copyright (c) 2014 Typesettin. All rights reserved.
- * @license MIT
- * @requires module:async
- * @requires module:periodicjs.core.utilities
- * @requires module:periodicjs.core.controller
- * @param  {object} resources variable injection from current periodic instance with references to the active logger and mongo session
- * @return {object}           dbseed
- */
 var controller = function (resources) {
 	logger = resources.logger;
 	mongoose = resources.mongoose;
 	appSettings = resources.settings;
 	CoreController = resources.core.controller;
 	CoreUtilities = resources.core.utilities;
-	exportSeedModule = require('./exportseed')(resources);
+	export_db = require(path.join(__dirname, '../lib/db_clone'))(resources);
 	importSeedModule = require('./importseed')(resources);
 	dbopsModule = require('./dbops')(resources);
 	Asset = mongoose.model('Asset');
 	extJson = resources.app.locals.dbseedExtJson;
-	//async ensure export directory
-	fs.ensureDir(uploadseeddir, function (err) {
-		if (err) {
-			logger.error(err);
-		}
-	});
-
-	return {
-		index: index,
-		import_upload: import_upload,
-		export_download: export_download,
-		import_customseed: import_customseed,
-		seedDocuments: importSeedModule.seedDocuments,
-		importSeed: importSeedModule.importSeed,
-		exportSeed: exportSeedModule.exportSeed,
-		emptyDB: dbopsModule.emptyDB,
-		isValidSeedJSONSync: importSeedModule.isValidSeedJSONSync,
-		uploaded_seed_file: uploaded_seed_file,
-		set_seed_upload_dir: set_seed_upload_dir
-	};
+	try {
+		fs.ensureDirSync(defaultUploadDir);
+	}
+	catch (e) {
+		logger.error(e);
+	}
+	return { index, export_download };
 };
 
 module.exports = controller;
