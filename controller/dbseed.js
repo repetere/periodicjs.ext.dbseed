@@ -3,7 +3,7 @@ const Promisie = require('promisie');
 const fs = Promisie.promisifyAll(require('fs-extra'));
 const path = require('path');
 const moment = require('moment');
-const defaultUploadDir = path.join(process.cwd(), 'content/files/dbseeds');
+const defaultUploadDir = path.join(__dirname, '../../../content/files/dbseeds');
 const defaultExportFileName = `dbemptybackup-${ moment().format('YYYY-MM-DD-hh:mm:ss') }.json`;
 const archiver = require('archiver');
 
@@ -17,6 +17,18 @@ var import_db;
 var dbopsModule;
 var Asset;
 var extJson;
+
+var uploaded_seed_file = function (req, res) {
+	res.send({
+		result: 'success',
+		data: req.controllerData
+	});
+};
+
+var set_seed_upload_dir = function (req, res, next) {
+	req.localuploadpath = defaultUploadDir;
+	next();
+};
 
 var sendExportDownload = function (options) {
 	let { res, filePath } = options;
@@ -78,41 +90,118 @@ var export_download = function (req, res) {
 		});
 };
 
-// var import_upload_utils = function () {
-// 	return {
-// 		setupseeddata: function (options = {}) {
-// 			try {				
-// 				let seedname = path.basename(options.seedpath);
-// 				let newseedpath = path.join(__dirname, '../content/files/dbseeds', seedname);
-// 				let originalseeduploadpath;
-// 				if (!options.useExistingSeed) {
-// 					originalseeduploadpath = path.join(__dirname, '../public', seedname);
-// 				}
-// 				return Promise.resolve(Object.assign({ seedname, newseedpath, originalseeduploadpath }, options));
-// 			}
-// 			catch (e) {
-// 				return Promise.reject(e);
-// 			}
-// 		},
-// 		checkdirexists: function (options = {}) {
-// 			if (options.useExistingSeed) { return Promise.resolve(options); }
-// 			else { return fs.ensureDirAsync(options.uploadseeddir); } 
-// 		},
-// 		moveseed: function (options = {}) {
-// 			if (options.useExistingSeed) { return Promise.resolve(options); }
-// 			else { return fs.renameAsync(options.originalseeduploadpath, options.newseedpath); }
-// 		}
-// 	};
-// };
+var import_upload_utils = function (req, res) {
+	return {
+		setupseeddata: function (options = {}) {
+			try {
+				let seedname = path.basename(options.seedpath);
+				let newseedpath = path.join(__dirname, '../content/files/dbseeds', seedname);
+				let originalseeduploadpath;
+				if (!options.useExistingSeed) {
+					originalseeduploadpath = path.join(__dirname, '../public', seedname);
+				}
+				return Promise.resolve(Object.assign({ seedname, newseedpath, originalseeduploadpath }, options));
+			}
+			catch (e) {
+				return Promise.reject(e);
+			}
+		},
+		checkdirexists: function (options = {}) {
+			if (options.useExistingSeed) { return Promise.resolve(options); }
+			else {
+				return fs.ensureDirAsync(options.uploadseeddir)
+					.then(() => options, e => Promise.reject(e));
+			}
+		},
+		moveseed: function (options = {}) {
+			if (options.useExistingSeed) { return Promise.resolve(options); }
+			else {
+				return fs.renameAsync(options.originalseeduploadpath, options.newseedpath)
+					.then(() => options, e => Promise.reject(e));
+			}
+		},
+		deleteOldUpload: function (options = {}) {
+			if (options.useExistingSeed) { return Promise.resolve(options); }
+			else {
+				return fs.removeAsync(options.originalseeduploadpath)
+					.then(() => options, e => Promise.reject(e));
+			}
+		},
+		removeAssetFromDB: function (options = {}) {
+			if (options.assetid) {
+				return Promisie.promisify(CoreController.deleteModel, CoreController)({
+					model: Asset,
+					deleteid: options.assetid,
+					req,
+					res
+				})
+					.then(() => options, e => Promise.reject(e));
+			}
+			else { return Promise.resolve(options); }
+		},
+		wipedb: function (options = {}) {
+			if (options.wipecheckbox) {
+				return export_db.exportSeed({
+					outputPath: path.join(__dirname, '../content/files/dbseeds', defaultExportFileName)
+				})
+					.then(result => Promisie.promisify(dbopsModule.emptyDB)({}))
+					.then(() => options)
+					.catch(e => Promise.reject(e));
+			}
+			else { return Promise.resolve(options); }
+		},
+		seeddb: function (options = {}) {
+			return import_db.importSeed({
+				file: options.newseedpath
+			});
+		}
+	};
+};
 
-// var import_upload = function (req, res) {
-// 	let uploadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
-// 	let originalpath;
-// 	let seedname;
-// 	let useExistingSeed = (uploadOptions.previousseed && uploadOptions.previousseed === 'usepreviousseed') ? true : false;
-// 	let newseedpath;
+var import_customseed = function (req, res) {
+	let uploadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
+	import_db.importSeed({ file: uploadOptions.customseedjson })
+		.then(data => {
+			CoreController.handleDocumentQueryRender({
+				req,
+				res,
+				renderView: 'home/index',
+				responseData: {
+					pagedata: { title: 'New Item' },
+					data: { result: 'success', data },
+					user: req.user
+				}
+			});
+		}, err => {
+			CoreController.handleDocumentQueryErrorResponse({ err, req, res });
+		});
+};
 
-// };
+var import_upload = function (req, res) {
+	let uploadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
+	let useExistingSeed = (uploadOptions.previousseed && uploadOptions.previousseed === 'usepreviousseed') ? true : false;
+	let import_utils = import_upload_utils(req, res);
+	import_utils.setupseeddata(Object.assign({ useExistingSeed }, uploadOptions))
+		.then(import_utils.checkdirexists)
+		.then(import_utils.moveseed)
+		.then(import_utils.deleteOldUpload)
+		.then(import_utils.removeAssetFromDB)
+		.then(import_utils.wipedb)
+		.then(import_utils.seeddb)
+		.then(() => {
+			CoreController.handleDocumentQueryRender({
+				res,
+				req,
+				renderView: 'home/index',
+				responseData: {
+					pagedata: { title: 'New Item' },
+					data: { result: 'success' },
+					user: req.user
+				}
+			});
+		})
+		.catch(err => CoreController.handleDocumentQueryErrorResponse({ err, req, res }));
+};
 
 var index = function (req, res) {
 	let getPluginViewDefaultTemplate = Promisie.promisify(CoreController.getPluginViewDefaultTemplate, CoreController).bind(CoreController, {
@@ -167,7 +256,7 @@ var controller = function (resources) {
 	catch (e) {
 		logger.error(e);
 	}
-	return { index, export_download };
+	return { index, export_download, import_upload, import_customseed, uploaded_seed_file, set_seed_upload_dir };
 };
 
 module.exports = controller;
