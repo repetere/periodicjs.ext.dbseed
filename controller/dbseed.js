@@ -13,7 +13,7 @@ var appSettings;
 var CoreController;
 var CoreUtilities;
 var export_db;
-var importSeedModule;
+var import_db;
 var dbopsModule;
 var Asset;
 var extJson;
@@ -78,11 +78,38 @@ var export_download = function (req, res) {
 		});
 };
 
+// var import_upload_utils = function () {
+// 	return {
+// 		setupseeddata: function (options = {}) {
+// 			try {				
+// 				let seedname = path.basename(options.seedpath);
+// 				let newseedpath = path.join(__dirname, '../content/files/dbseeds', seedname);
+// 				let originalseeduploadpath;
+// 				if (!options.useExistingSeed) {
+// 					originalseeduploadpath = path.join(__dirname, '../public', seedname);
+// 				}
+// 				return Promise.resolve(Object.assign({ seedname, newseedpath, originalseeduploadpath }, options));
+// 			}
+// 			catch (e) {
+// 				return Promise.reject(e);
+// 			}
+// 		},
+// 		checkdirexists: function (options = {}) {
+// 			if (options.useExistingSeed) { return Promise.resolve(options); }
+// 			else { return fs.ensureDirAsync(options.uploadseeddir); } 
+// 		},
+// 		moveseed: function (options = {}) {
+// 			if (options.useExistingSeed) { return Promise.resolve(options); }
+// 			else { return fs.renameAsync(options.originalseeduploadpath, options.newseedpath); }
+// 		}
+// 	};
+// };
+
 // var import_upload = function (req, res) {
 // 	let uploadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
 // 	let originalpath;
 // 	let seedname;
-// 	let (uploadSeedObject.previousseed && uploadSeedObject.previousseed === 'usepreviousseed') ? true : false;
+// 	let useExistingSeed = (uploadOptions.previousseed && uploadOptions.previousseed === 'usepreviousseed') ? true : false;
 // 	let newseedpath;
 
 // };
@@ -130,7 +157,7 @@ var controller = function (resources) {
 	CoreController = resources.core.controller;
 	CoreUtilities = resources.core.utilities;
 	export_db = require(path.join(__dirname, '../lib/db_clone'))(resources);
-	importSeedModule = require('./importseed')(resources);
+	import_db = require(path.join(__dirname, '../lib/db_seed'))(resources);
 	dbopsModule = require('./dbops')(resources);
 	Asset = mongoose.model('Asset');
 	extJson = resources.app.locals.dbseedExtJson;
