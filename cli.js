@@ -33,59 +33,27 @@ var extscript = function (resources) {
 	// node index.js --cli --extension dbseed --task sampledata
 	var cli = function (argv) {
 		if (argv.task === 'sampledata') {
+			console.log('Starting sample data seed task...');
 			datafile = path.resolve(__dirname, './config/sampledata/sampledata.json');
-
-			fs.readJson(datafile, function (err, seedjson) {
-				if (err) {
-					logger.error(err.stack.toString());
-					logger.error(err.toString());
+			seedController.importSeed({ file: datafile, use_series: true })
+				.then(result => {
+					logger.info('seeds', result);
 					process.exit(0);
-				}
-				else {
-					console.time('Seeding Data Started');
-					seedController.importSeed({
-						jsondata: seedjson,
-						insertsetting: 'upsert'
-					}, function (err, seeds) {
-						console.timeEnd('Seeding Data Started');
-						if (err) {
-							logger.error(err.toString());
-						}
-						else {
-							logger.info('seeds', seeds);
-						}
-						process.exit(0);
-					});
-				}
-			});
+				}, e => {
+					logger.error('seed error', e.stack);
+					process.exit(1);
+				});
 		}
 		else if (argv.task === 'import' || argv.task === 'seed') {
 			datafile = path.resolve(argv.file);
-
-			fs.readJson(datafile, function (err, seedjson) {
-				if (err) {
-					logger.error(err.stack.toString());
-					logger.error(err.toString());
+			seedController.importSeed({ file: datafile, use_series: argv.series })
+				.then(result => {
+					logger.info('seeds', seeds);
 					process.exit(0);
-				}
-				else {
-					console.time('Importing Seed Data');
-					seedController.importSeed({
-						jsondata: seedjson,
-						insertsetting: 'upsert'
-					}, function (err, status) {
-						console.timeEnd('Importing Seed Data');
-						if (err) {
-							console.log(err);
-							logger.error(err.toString());
-						}
-						else {
-							console.info('Import status', util.inspect(status));
-						}
-						process.exit(0);
-					});
-				}
-			});
+				}, e => {
+					logger.error('seed error', e.stack);
+					process.exit(1);
+				});
 		}
 		else if (argv.task === 'export' || argv.task === 'download') {
 			console.time('Exporting Seed Data');

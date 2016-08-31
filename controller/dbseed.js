@@ -249,14 +249,14 @@ var controller = function (resources) {
 	import_db = require(path.join(__dirname, '../lib/db_seed'))(resources);
 	dbopsModule = require('./dbops')(resources);
 	Asset = mongoose.model('Asset');
-	extJson = resources.app.locals.dbseedExtJson;
+	extJson = (resources.app.locals && resources.app.locals.dbseedExtJson) ? resources.app.locals.dbseedExtJson : { version: '1.0' };
 	try {
 		fs.ensureDirSync(defaultUploadDir);
 	}
 	catch (e) {
 		logger.error(e);
 	}
-	return { index, export_download, import_upload, import_customseed, uploaded_seed_file, set_seed_upload_dir };
+	return Object.assign({ index, export_download, import_upload, import_customseed, uploaded_seed_file, set_seed_upload_dir }, export_db, import_db);
 };
 
 module.exports = controller;
