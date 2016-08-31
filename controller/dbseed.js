@@ -30,6 +30,9 @@ var set_seed_upload_dir = function (req, res, next) {
 	next();
 };
 
+/**
+ *
+ */
 var sendExportDownload = function (options) {
 	let { res, filePath } = options;
 	let exportFileName = path.basename(filePath);
@@ -41,6 +44,9 @@ var sendExportDownload = function (options) {
 		.catch(logger.error);
 };
 
+/**
+ *
+ */
 var handleArchivePartitionedFile = function (writeStream, files, cb) {
 	let handler = function (callback) {
 		try {
@@ -62,6 +68,9 @@ var handleArchivePartitionedFile = function (writeStream, files, cb) {
 	else { Promisie.promisify(handler)(); }
 };
 
+/**
+ *
+ */
 var export_download = function (req, res) {
 	let downloadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
 	export_db.exportSeed(downloadOptions)
@@ -90,8 +99,14 @@ var export_download = function (req, res) {
 		});
 };
 
+/**
+ *
+ */
 var import_upload_utils = function (req, res) {
 	return {
+		/**
+		 *
+		 */
 		setupseeddata: function (options = {}) {
 			try {
 				let seedname = path.basename(options.seedpath);
@@ -106,6 +121,9 @@ var import_upload_utils = function (req, res) {
 				return Promise.reject(e);
 			}
 		},
+		/**
+		 *
+		 */
 		checkdirexists: function (options = {}) {
 			if (options.useExistingSeed) { return Promise.resolve(options); }
 			else {
@@ -113,6 +131,9 @@ var import_upload_utils = function (req, res) {
 					.then(() => options, e => Promise.reject(e));
 			}
 		},
+		/**
+		 *
+		 */
 		moveseed: function (options = {}) {
 			if (options.useExistingSeed) { return Promise.resolve(options); }
 			else {
@@ -120,6 +141,9 @@ var import_upload_utils = function (req, res) {
 					.then(() => options, e => Promise.reject(e));
 			}
 		},
+		/**
+		 *
+		 */
 		deleteOldUpload: function (options = {}) {
 			if (options.useExistingSeed) { return Promise.resolve(options); }
 			else {
@@ -127,6 +151,9 @@ var import_upload_utils = function (req, res) {
 					.then(() => options, e => Promise.reject(e));
 			}
 		},
+		/**
+		 *
+		 */
 		removeAssetFromDB: function (options = {}) {
 			if (options.assetid) {
 				return Promisie.promisify(CoreController.deleteModel, CoreController)({
@@ -139,6 +166,9 @@ var import_upload_utils = function (req, res) {
 			}
 			else { return Promise.resolve(options); }
 		},
+		/**
+		 *
+		 */
 		wipedb: function (options = {}) {
 			if (options.wipecheckbox) {
 				return export_db.exportSeed({
@@ -150,6 +180,9 @@ var import_upload_utils = function (req, res) {
 			}
 			else { return Promise.resolve(options); }
 		},
+		/**
+		 *
+		 */
 		seeddb: function (options = {}) {
 			return import_db.importSeed({
 				file: options.newseedpath
@@ -158,6 +191,9 @@ var import_upload_utils = function (req, res) {
 	};
 };
 
+/**
+ *
+ */
 var import_customseed = function (req, res) {
 	let uploadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
 	import_db.importSeed({ file: uploadOptions.customseedjson })
@@ -177,6 +213,9 @@ var import_customseed = function (req, res) {
 		});
 };
 
+/**
+ * 
+ */
 var import_upload = function (req, res) {
 	let uploadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
 	let useExistingSeed = (uploadOptions.previousseed && uploadOptions.previousseed === 'usepreviousseed') ? true : false;
@@ -203,6 +242,12 @@ var import_upload = function (req, res) {
 		.catch(err => CoreController.handleDocumentQueryErrorResponse({ err, req, res }));
 };
 
+/**
+ * Loads the index view for dbseed extension
+ * @param {Object} req Express request object
+ * @param {Object} req.user Periodic user
+ * @param {Object} res Express response object
+ */
 var index = function (req, res) {
 	let getPluginViewDefaultTemplate = Promisie.promisify(CoreController.getPluginViewDefaultTemplate, CoreController).bind(CoreController, {
 		viewname: 'p-admin/dbseed/index',
