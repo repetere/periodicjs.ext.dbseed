@@ -31,7 +31,10 @@ var set_seed_upload_dir = function (req, res, next) {
 };
 
 /**
- *
+ * Sets headers and sends download to the client
+ * @param {Object} options Options for sending the download
+ * @param {Object} options.res Express response object used for sending download
+ * @param {string} options.filePath Path to the file that is being downloaded
  */
 var sendExportDownload = function (options) {
 	let { res, filePath } = options;
@@ -45,7 +48,11 @@ var sendExportDownload = function (options) {
 };
 
 /**
- *
+ * Handles the creation of the zip file when seed files are paritioned as part of an export
+ * @param {Object} writeStream A writable stream which the zip data will be piped to
+ * @param {Array} files An array of file paths for the seed files
+ * @param {Function} [cb] Optional callback will return a Promise if not passed
+ * @return {Object} Returns a Promise if cb argument is not passed
  */
 var handleArchivePartitionedFile = function (writeStream, files, cb) {
 	let handler = function (callback) {
@@ -69,7 +76,11 @@ var handleArchivePartitionedFile = function (writeStream, files, cb) {
 };
 
 /**
- *
+ * Middleware used to call export seed function
+ * @param {Object} req Express request object
+ * @param {Object} req.body Contains configuration options for the seed export
+ * @param {Boolean} req.body.partition If true separate seed files will be created for different schemas in db and a zip file will be downloaded
+ * @param {string} req.body.outputPath Determines where the seed file will be created and its filename
  */
 var export_download = function (req, res) {
 	let downloadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
@@ -105,7 +116,11 @@ var export_download = function (req, res) {
 var import_upload_utils = function (req, res) {
 	return {
 		/**
-		 *
+		 * Utility function that sets some options for import utility functions
+		 * @param {Object} options Configuration options for seed
+		 * @param {string} options.seedpath Initial file path to the seed file
+		 * @param {Boolean} options.useExistingSeed If true an additional originalseeduploadpath option will be added to the options object a set to a file path in the public directory
+		 * @return {Object} Returns a Promise which resolves to the options passed to the function and appended options
 		 */
 		setupseeddata: function (options = {}) {
 			try {
@@ -122,7 +137,11 @@ var import_upload_utils = function (req, res) {
 			}
 		},
 		/**
-		 *
+		 * Utility function that ensures that a file directory exists
+		 * @param {Object} options Configuration options for seed
+		 * @param {Boolean} options.useExistingSeed If true execution of the function is skipped
+		 * @param {string} options.uploadseeddir Directory the seed file should be uploaded to
+		 * @return {Object} Returns a Promise which resolves the options passed to the function
 		 */
 		checkdirexists: function (options = {}) {
 			if (options.useExistingSeed) { return Promise.resolve(options); }
@@ -132,7 +151,12 @@ var import_upload_utils = function (req, res) {
 			}
 		},
 		/**
-		 *
+		 * Utility function that moves a file from one location to another
+		 * @param {options} options Configuration options for seed
+		 * @param {Boolean} options.useExistingSeed If true execution of the function is skipped
+		 * @param {string} options.originalseeduploadpath The path to the file to be moved
+		 * @param {string} options.newseedpath The path to the new file location
+		 * @return {Object} Returns a Promise which resolves the options passed to the function
 		 */
 		moveseed: function (options = {}) {
 			if (options.useExistingSeed) { return Promise.resolve(options); }
@@ -142,7 +166,11 @@ var import_upload_utils = function (req, res) {
 			}
 		},
 		/**
-		 *
+		 * Utility function that removes an existing seed file from disc
+		 * @param {Object} options Configuration options for seed
+		 * @param {Boolean} options.useExistingSeed If true execution of the function is skipped
+		 * @param {string} options.originalseeduploadpath Path to the file that should be removed
+		 * @return {Object} Returns a Promise which resolves the options passed to the function
 		 */
 		deleteOldUpload: function (options = {}) {
 			if (options.useExistingSeed) { return Promise.resolve(options); }
@@ -152,7 +180,10 @@ var import_upload_utils = function (req, res) {
 			}
 		},
 		/**
-		 *
+		 * Utility function will remove an asset from the db
+		 * @param {Object} options Configuration options for seed
+		 * @param {string} [options.assetid] If passed the asset will be removed from the db
+		 * @return {Object} Returns a Promise which resolves to the options passed to the function
 		 */
 		removeAssetFromDB: function (options = {}) {
 			if (options.assetid) {
@@ -167,7 +198,10 @@ var import_upload_utils = function (req, res) {
 			else { return Promise.resolve(options); }
 		},
 		/**
-		 *
+		 * Utility function will wipe the db before seed or immediately resolve the options passed to it
+		 * @param {Object} options Configuration options for seed
+		 * @param {Boolean} [options.wipecheckbox] If true a seed file of the existing database will be created an then the db will be emptied
+		 * @return {Object} Returns a Promise which resolves the options passed to the function
 		 */
 		wipedb: function (options = {}) {
 			if (options.wipecheckbox) {
@@ -181,7 +215,10 @@ var import_upload_utils = function (req, res) {
 			else { return Promise.resolve(options); }
 		},
 		/**
-		 *
+		 * Runs the import command passed a file path to the seed file
+		 * @param {Object} options Configuration options for seed
+		 * @param {string} options.newseedpath File path or directory path to be used for seeding the db
+		 * @return {Object} Returns a promise that resolves to import result
 		 */
 		seeddb: function (options = {}) {
 			return import_db.importSeed({
@@ -192,7 +229,11 @@ var import_upload_utils = function (req, res) {
 };
 
 /**
- *
+ * Uses JSON data submitted from UI to seed the database
+ * @param {Object} req Express request object
+ * @param {Object} req.body Contains configuration options for seed import
+ * @param {Object} req.body.customseedjson Data to be used in seeding the database
+ * @param {Object} res Express response object
  */
 var import_customseed = function (req, res) {
 	let uploadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
@@ -214,7 +255,11 @@ var import_customseed = function (req, res) {
 };
 
 /**
- * 
+ * Imports seed data into database optionally drops original db if option passed
+ * @param {Object} req Express request object
+ * @param {Object} req.body Contains configuration options for seed import
+ * @param {string} req.body.previousseed If true the seed file will be pulled from the public directory
+ * @param {Object} res Express response object
  */
 var import_upload = function (req, res) {
 	let uploadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
