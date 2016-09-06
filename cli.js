@@ -48,7 +48,7 @@ var extscript = function (resources) {
 			datafile = path.resolve(argv.file);
 			seedController.importSeed({ file: datafile, use_series: argv.series })
 				.then(result => {
-					logger.info('seeds', seeds);
+					logger.info('seeds', result);
 					process.exit(0);
 				}, e => {
 					logger.error('seed error', e.stack);
