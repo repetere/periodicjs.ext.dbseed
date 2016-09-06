@@ -122,6 +122,9 @@
 <dt><a href="#configureQueryStreams">configureQueryStreams(options, queue)</a> ⇒ <code>Object</code></dt>
 <dd><p>Configures mongo query streams for all models on a mongoose instance to push data into queue on &quot;data&quot;</p>
 </dd>
+<dt><a href="#ensureDBConnection">ensureDBConnection([mongooseConnection])</a> ⇒ <code>Object</code></dt>
+<dd><p>Ensures that correct mongo db instance is used and has properly connected</p>
+</dd>
 <dt><a href="#createSeed">createSeed(options, cb)</a> ⇒ <code>Object</code></dt>
 <dd><p>Runs full create seed suite</p>
 </dd>
@@ -133,6 +136,9 @@
 </dd>
 <dt><a href="#transformDataForSeed">transformDataForSeed(data, operation)</a> ⇒ <code>Object</code></dt>
 <dd><p>Runs transform function on data or auto resolves data if there is an error or if operation argument is not a function</p>
+</dd>
+<dt><a href="#ensureDBConnection">ensureDBConnection([mongooseConnection])</a> ⇒ <code>Object</code></dt>
+<dd><p>Ensures that correct mongo db instance is used and has properly connected</p>
 </dd>
 <dt><a href="#setupInsertTask">setupInsertTask(options)</a> ⇒ <code>function</code></dt>
 <dd><p>Configures a queue task function that inserts data into database from the seed file</p>
@@ -698,6 +704,18 @@ Configures mongo query streams for all models on a mongoose instance to push dat
 | [options.skipUserSeeds] | <code>Boolean</code> &#124; <code>string</code> | If any non-falsy value is passed model wont be included in seed this option can be set for different models following the same pattern "skip" + "model name" + "seeds" |
 | queue | <code>Object</code> | Async queue or any queue that has a push method which accepts a data and cb argument |
 
+<a name="ensureDBConnection"></a>
+
+## ensureDBConnection([mongooseConnection]) ⇒ <code>Object</code>
+Ensures that correct mongo db instance is used and has properly connected
+
+**Kind**: global function  
+**Returns**: <code>Object</code> - Connected mongoose instance  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [mongooseConnection] | <code>Object</code> | A connected mongoose instance if this argument is passed it will be assumed that this connection should be used |
+
 <a name="createSeed"></a>
 
 ## createSeed(options, cb) ⇒ <code>Object</code>
@@ -758,6 +776,18 @@ Runs transform function on data or auto resolves data if there is an error or if
 | --- | --- | --- |
 | data | <code>Object</code> | Document from mongoose collection |
 | operation | <code>function</code> | Transform function to be run on the given data object |
+
+<a name="ensureDBConnection"></a>
+
+## ensureDBConnection([mongooseConnection]) ⇒ <code>Object</code>
+Ensures that correct mongo db instance is used and has properly connected
+
+**Kind**: global function  
+**Returns**: <code>Object</code> - Connected mongoose instance  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [mongooseConnection] | <code>Object</code> | A connected mongoose instance if this argument is passed it will be assumed that this connection should be used |
 
 <a name="setupInsertTask"></a>
 
