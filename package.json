@@ -1,6 +1,6 @@
 {
   "name": "periodicjs.ext.dbseed",
-  "version": "6.0.2",
+  "version": "7.0.00",
   "author": {
     "email": "yaw.etse@gmail.com",
     "name": "Yaw Joseph Etse",
@@ -10,7 +10,8 @@
     "url": "https://github.com/typesettin/periodicjs.ext.dbseed/issues"
   },
   "dependencies": {
-    "archiver": "^0.16.0"
+    "archiver": "^0.16.0",
+    "mongoose": "^4.4.14"
   },
   "description": "An extension for seeding db with data",
   "devDependencies": {

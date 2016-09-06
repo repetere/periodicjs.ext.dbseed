@@ -12,6 +12,43 @@ $ npm install periodicjs.ext.dbseed
 
 ## Usage
 
+### setting up your customseed file
+
+Modify the customseed.js file
+custom seed file must export a function which returns an object with keys detailing the import and export options
+```javascript
+/*
+Sample returned config object
+{
+  development: {
+    exportseed: {
+      user: function (seed) {
+        //these functions are used to transform data before export or import. Must return a Promise which resolves to the transformed object or syncronously returns transformed object
+        return seed;
+      }
+    },
+    importseed: {
+      user: function (seed) {...}
+    },
+    importorder: {
+      //details the order in which the models should be inserted into db
+      user: 0
+    },
+    importdb: {
+      "url": "mongodb://localhost/db_name",
+      "mongooptions":{
+        "replset": { 
+          "rs_name": "somerandomereplsetname" 
+        }
+      }
+    },
+    exportdb: {...}
+  },
+  qa: {...}
+};
+*/
+```
+
 ### import database (upsert/update) with custom file seed from cli
 
 ```
