@@ -346,7 +346,7 @@ var controller = function (resources) {
 	catch (e) {
 		logger.error(e);
 	}
-	return Object.assign({ index, export_download, import_upload, import_customseed, uploaded_seed_file, set_seed_upload_dir }, export_db, import_db);
+	return Object.assign({ index, export_download, import_upload, import_customseed, uploaded_seed_file, set_seed_upload_dir }, export_db, import_db, dbopsModule);
 };
 
 module.exports = controller;
