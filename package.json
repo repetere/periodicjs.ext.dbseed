@@ -10,6 +10,7 @@
     "url": "https://github.com/typesettin/periodicjs.ext.dbseed/issues"
   },
   "dependencies": {
+    "archiver": "^0.16.0"
   },
   "description": "An extension for seeding db with data",
   "devDependencies": {

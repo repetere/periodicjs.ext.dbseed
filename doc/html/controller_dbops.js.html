@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controller/dbops.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controller/dbops.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+var async = require('async'),
+	CoreUtilities,
+	CoreController,
+	appSettings,
+	mongoose,
+	logger,
+	Data,
+	User, // = mongoose.model('User')
+	Item, // = mongoose.model('Item')
+	Asset, //  = mongoose.model('Asset')
+	Contenttype, // = mongoose.model('Contenttype')
+	Category, // = mongoose.model('Category')
+	Tag, // = mongoose.model('Tag')
+	Collection, // = mongoose.model('Collection')
+	Compilation, // = mongoose.model('Collection')
+	Userprivilege, // = mongoose.model('Userprivilege')
+	Userrole, // = mongoose.model('Userrole')
+	Usergroup, // = mongoose.model('Usergroup');
+	dbOpsErrorsArray = [];
+
+/**
+ * removes all Usergroups from the database
+ * @param  {object} err
+ * @param  {Function} emptyUsergroupsAsyncCallback
+ * @return {Function} async callback emptyUsergroupsAsyncCallback(err,results);
+ */
+var emptyUsergroups = function (emptyUsergroupsAsyncCallback) {
+	Usergroup.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyUsergroups'
+			});
+		}
+		emptyUsergroupsAsyncCallback(null, 'removed all Usergroups');
+	});
+};
+/**
+ * removes all Userroles from the database
+ * @param  {object} err
+ * @param  {Function} emptyUserrolesAsyncCallback
+ * @return {Function} async callback emptyUserrolesAsyncCallback(err,results);
+ */
+var emptyUserroles = function (emptyUserrolesAsyncCallback) {
+	Userrole.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyUserroles'
+			});
+		}
+		emptyUserrolesAsyncCallback(null, 'removed all Userroles');
+	});
+};
+/**
+ * removes all Userprivileges from the database
+ * @param  {object} err
+ * @param  {Function} emptyUserprivilegesAsyncCallback
+ * @return {Function} async callback emptyUserprivilegesAsyncCallback(err,results);
+ */
+var emptyUserprivileges = function (emptyUserprivilegesAsyncCallback) {
+	Userprivilege.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyUserprivileges'
+			});
+		}
+		emptyUserprivilegesAsyncCallback(null, 'removed all Userprivileges');
+	});
+};
+/**
+ * removes all Collections from the database
+ * @param  {object} err
+ * @param  {Function} emptyCollectionsAsyncCallback
+ * @return {Function} async callback emptyCollectionsAsyncCallback(err,results);
+ */
+var emptyCollections = function (emptyCollectionsAsyncCallback) {
+	Collection.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyCollections'
+			});
+		}
+		emptyCollectionsAsyncCallback(null, 'removed all Collections');
+	});
+};
+/**
+ * removes all Compilations from the database
+ * @param  {object} err
+ * @param  {Function} emptyCompilationsAsyncCallback
+ * @return {Function} async callback emptyCompilationsAsyncCallback(err,results);
+ */
+var emptyCompilations = function (emptyCompilationsAsyncCallback) {
+	Compilation.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyCompilations'
+			});
+		}
+		emptyCompilationsAsyncCallback(null, 'removed all Compilations');
+	});
+};
+/**
+ * removes all Datas from the database
+ * @param  {object} err
+ * @param  {Function} emptyDatasAsyncCallback
+ * @return {Function} async callback emptyDatasAsyncCallback(err,results);
+ */
+var emptyDatas = function (emptyDatasAsyncCallback) {
+	Data.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyDatas'
+			});
+		}
+		emptyDatasAsyncCallback(null, 'removed all Datas');
+	});
+};
+/**
+ * removes all Items from the database
+ * @param  {object} err
+ * @param  {Function} emptyItemsAsyncCallback
+ * @return {Function} async callback emptyItemsAsyncCallback(err,results);
+ */
+var emptyItems = function (emptyItemsAsyncCallback) {
+	Item.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyItems'
+			});
+		}
+		emptyItemsAsyncCallback(null, 'removed all Items');
+	});
+};
+/**
+ * removes all Categorys from the database
+ * @param  {object} err
+ * @param  {Function} emptyCategorysAsyncCallback
+ * @return {Function} async callback emptyCategorysAsyncCallback(err,results);
+ */
+var emptyCategories = function (emptyCategorysAsyncCallback) {
+	Category.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyCategorys'
+			});
+		}
+		emptyCategorysAsyncCallback(null, 'removed all Categorys');
+	});
+};
+/**
+ * removes all Tags from the database
+ * @param  {object} err
+ * @param  {Function} emptyTagsAsyncCallback
+ * @return {Function} async callback emptyTagsAsyncCallback(err,results);
+ */
+var emptyTags = function (emptyTagsAsyncCallback) {
+	Tag.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyTags'
+			});
+		}
+		emptyTagsAsyncCallback(null, 'removed all Tags');
+	});
+};
+/**
+ * removes all Contenttypes from the database
+ * @param  {object} err
+ * @param  {Function} emptyContenttypesAsyncCallback
+ * @return {Function} async callback emptyContenttypesAsyncCallback(err,results);
+ */
+var emptyContenttypes = function (emptyContenttypesAsyncCallback) {
+	Contenttype.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyContenttypes'
+			});
+		}
+		emptyContenttypesAsyncCallback(null, 'removed all Contenttypes');
+	});
+};
+/**
+ * removes all Users from the database
+ * @param  {object} err
+ * @param  {Function} emptyUsersAsyncCallback
+ * @return {Function} async callback emptyUsersAsyncCallback(err,results);
+ */
+var emptyUsers = function (emptyUsersAsyncCallback) {
+	User.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyUsers'
+			});
+		}
+		emptyUsersAsyncCallback(null, 'removed all Users');
+	});
+};
+/**
+ * removes all assets from the database
+ * @param  {object} err
+ * @param  {Function} emptyAssetsAsyncCallback
+ * @return {Function} async callback emptyAssetsAsyncCallback(err,results);
+ */
+var emptyAssets = function (emptyAssetsAsyncCallback) {
+	Asset.remove({}).exec(function (err) {
+		if (err) {
+			dbOpsErrorsArray.push({
+				error: err,
+				errortype: 'emptyAssets'
+			});
+		}
+		emptyAssetsAsyncCallback(null, 'removed all assets');
+	});
+};
+
+/**
+ * empties a database
+ * @param  {object} options - filepath,limits-tags,collections,etc
+ * @param  {object} emptyDBCallback
+ * @return {Function} async callback emptyDBCallback(err,results);
+ */
+var emptyDB = function (options, emptyDBCallback) {
+	/*
+		// try{
+		// exportSeedFilePath = (typeof options.filepath ==='string') ? path.join(options.filepath) : path.resolve(process.cwd(),defaultExportDir,defaultExportFileName);
+		// }
+		// catch(e){		
+		// 	dbOpsErrorsArray.push({
+		// 		error:e,
+		// 		errortype:'exportSeedFilePath'
+		// 	});
+		// }
+	*/
+	console.log('got here');
+	var setupEmptyDB = function (setupEmptyDBCallback) {
+		var dataforseeds = options;
+		setupEmptyDBCallback(null, dataforseeds);
+	};
+	async.parallel([
+			setupEmptyDB,
+			emptyAssets,
+			emptyUsers,
+			emptyContenttypes,
+			emptyTags,
+			emptyCategories,
+			emptyDatas,
+			emptyItems,
+			emptyCollections,
+			emptyCompilations,
+			emptyUserprivileges,
+			emptyUserroles,
+			emptyUsergroups
+		],
+		function (err, emptydbresult) {
+			emptyDBCallback(err, {
+				emptydbresult: emptydbresult,
+				dbOpsErrorsArray: dbOpsErrorsArray
+			});
+		});
+};
+
+/**
+ * exportseed module
+ * @module exportseed
+ * @{@link https://github.com/typesettin/periodicjs.ext.dbseed}
+ * @author Yaw Joseph Etse
+ * @copyright Copyright (c) 2014 Typesettin. All rights reserved.
+ * @license MIT
+ * @requires module:async
+ * @requires module:periodicjs.core.utilities
+ * @requires module:periodicjs.core.controller
+ * @param  {object} resources variable injection from current periodic instance with references to the active logger and mongo session
+ * @return {object}           dbseed
+ */
+var dbOpsModule = function (resources) {
+	logger = resources.logger;
+	mongoose = resources.mongoose;
+	appSettings = resources.settings;
+	CoreController = resources.core.controller;
+	CoreUtilities = resources.core.utilities;
+	User = mongoose.model('User');
+	Data = mongoose.model('Data');
+	Item = mongoose.model('Item');
+	Asset = mongoose.model('Asset');
+	Contenttype = mongoose.model('Contenttype');
+	Category = mongoose.model('Category');
+	Tag = mongoose.model('Tag');
+	Collection = mongoose.model('Collection');
+	Compilation = mongoose.model('Compilation');
+	Userprivilege = mongoose.model('Userprivilege');
+	Userrole = mongoose.model('Userrole');
+	Usergroup = mongoose.model('Usergroup');
+	return {
+		emptyDB: emptyDB
+	};
+};
+
+module.exports = dbOpsModule;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-cliDBSeedController.html">cliDBSeedController</a></li><li><a href="module-exportseed.html">exportseed</a></li><li><a href="periodicjs.ext.module_dbseed.html">dbseed</a></li></ul><h3>Global</h3><ul><li><a href="global.html#appendJSONToFile">appendJSONToFile</a></li><li><a href="global.html#checkdirexists">checkdirexists</a></li><li><a href="global.html#configureCreateQueue">configureCreateQueue</a></li><li><a href="global.html#configureQueryStreams">configureQueryStreams</a></li><li><a href="global.html#configureWriteQueue">configureWriteQueue</a></li><li><a href="global.html#createSeed">createSeed</a></li><li><a href="global.html#deleteOldUpload">deleteOldUpload</a></li><li><a href="global.html#emptyAssets">emptyAssets</a></li><li><a href="global.html#emptyCategories">emptyCategories</a></li><li><a href="global.html#emptyCollections">emptyCollections</a></li><li><a href="global.html#emptyCompilations">emptyCompilations</a></li><li><a href="global.html#emptyContenttypes">emptyContenttypes</a></li><li><a href="global.html#emptyDatas">emptyDatas</a></li><li><a href="global.html#emptyDB">emptyDB</a></li><li><a href="global.html#emptyItems">emptyItems</a></li><li><a href="global.html#emptyTags">emptyTags</a></li><li><a href="global.html#emptyUsergroups">emptyUsergroups</a></li><li><a href="global.html#emptyUserprivileges">emptyUserprivileges</a></li><li><a href="global.html#emptyUserroles">emptyUserroles</a></li><li><a href="global.html#emptyUsers">emptyUsers</a></li><li><a href="global.html#export_download">export_download</a></li><li><a href="global.html#exportSeed">exportSeed</a></li><li><a href="global.html#getModelSettings">getModelSettings</a></li><li><a href="global.html#getModelSettingsFromFile">getModelSettingsFromFile</a></li><li><a href="global.html#getMongoQueryStream">getMongoQueryStream</a></li><li><a href="global.html#getPopulationSettings">getPopulationSettings</a></li><li><a href="global.html#handleArchivePartitionedFile">handleArchivePartitionedFile</a></li><li><a href="global.html#handleParallelInsertQueue">handleParallelInsertQueue</a></li><li><a href="global.html#handleSeriesInsertQueue">handleSeriesInsertQueue</a></li><li><a href="global.html#import_customseed">import_customseed</a></li><li><a href="global.html#import_upload">import_upload</a></li><li><a href="global.html#import_upload_utils">import_upload_utils</a></li><li><a href="global.html#importSeed">importSeed</a></li><li><a href="global.html#index">index</a></li><li><a href="global.html#moveseed">moveseed</a></li><li><a href="global.html#readSeedFromFile">readSeedFromFile</a></li><li><a href="global.html#removeAssetFromDB">removeAssetFromDB</a></li><li><a href="global.html#reorderDataByImportOrder">reorderDataByImportOrder</a></li><li><a href="global.html#seeddb">seeddb</a></li><li><a href="global.html#sendExportDownload">sendExportDownload</a></li><li><a href="global.html#setupCompleteSeedFile">setupCompleteSeedFile</a></li><li><a href="global.html#setupInsertTask">setupInsertTask</a></li><li><a href="global.html#setupseeddata">setupseeddata</a></li><li><a href="global.html#transformDataForSeed">transformDataForSeed</a></li><li><a href="global.html#wipedb">wipedb</a></li><li><a href="global.html#writeToFile">writeToFile</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Sep 06 2016 09:53:15 GMT-0400 (EDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -17,6 +17,7 @@ module.exports = function (periodic) {
 	// express,app,logger,config,db,mongoose
 	try {
 		extJson = fs.readJsonSync(path.join(__dirname, '/package.json'));
+		periodic.app.local = periodic.app.locals || {};
 		periodic.app.locals.dbseedExtJson = extJson;
 	}
 	catch (e) {
