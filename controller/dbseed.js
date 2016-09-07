@@ -86,10 +86,10 @@ var export_download = function (req, res) {
 	let downloadOptions = CoreUtilities.removeEmptyObjectValues(req.body);
 	export_db.exportSeed(downloadOptions)
 		.then(result => {
-			if (downloadOptions.partition) {
-				let zipPath = `${ path.join(path.dirname(downloadOptions.outputPath), path.basename(downloadOptions.outputPath, '.json')) }.zip`;
+			if (downloadOptions.partition || result.options.partition) {
+				let zipPath = `${ path.join(path.dirname(result.options.outputPath), path.basename(result.options.outputPath, '.json')) }.zip`;
 				let seedOutput = fs.createWriteStream(zipPath);
-				handleArchivePartitionedFile(seedOutput, result, (err) => {
+				handleArchivePartitionedFile(seedOutput, result.export_result, (err) => {
 					if (err) {
 						CoreController.handleDocumentQueryErrorResponse({
 							err: err,
@@ -100,7 +100,7 @@ var export_download = function (req, res) {
 					else { sendExportDownload({ res, filePath: zipPath }); }
 				});
 			}
-			else { sendExportDownload({ res, filePath: result.exportSeedFilePath }); }
+			else { sendExportDownload({ res, filePath: result.export_result.exportSeedFilePath }); }
 		}, e => {
 			CoreController.handleDocumentQueryErrorResponse({
 				err: e,
