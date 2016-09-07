@@ -42,6 +42,12 @@ Sample returned config object
         }
       }
     },
+    importoptions: {
+      //importoptions and exportoptions contains options for your seed imports and exports that will be treated as default options for each respectively
+      custom_model_names: {...},
+      capitalize_suffix: {...}
+    },
+    exportoptions: {...},
     exportdb: {...}
   },
   qa: {...}
