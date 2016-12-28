@@ -1,6 +1,6 @@
 {
   "name": "periodicjs.ext.dbseed",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "author": {
     "email": "yaw.etse@gmail.com",
     "name": "Yaw Joseph Etse",
@@ -15,6 +15,7 @@
   },
   "description": "An extension for seeding db with data",
   "devDependencies": {
+    "async": "^2.1.4",
     "browserify": "^10.2.4",
     "chai": "^3.0.0",
     "grunt": ">=0.4.5",
@@ -31,6 +32,7 @@
     "grunt-simple-mocha": ">=0.4.0",
     "jsdoc": "^3.3.2",
     "mocha": "^2.2.5",
+    "promisie": "^1.5.3",
     "uglify-js": "^2.4.15",
     "uglifyify": "^3.0.1"
   },
