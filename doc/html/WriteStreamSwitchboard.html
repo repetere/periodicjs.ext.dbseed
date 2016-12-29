@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: exportseed</title>
+    <title>JSDoc: Class: WriteStreamSwitchboard</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: exportseed</h1>
+    <h1 class="page-title">Class: WriteStreamSwitchboard</h1>
 
     
 
@@ -28,8 +28,9 @@
 
 <header>
     
+        <h2>WriteStreamSwitchboard</h2>
         
-            
+            <div class="class-description"><p>Switches between writeStreams dependent on the specified write path</p></div>
         
     
 </header>
@@ -38,13 +39,20 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>exportseed module</p></div>
-        
 
-        
-            
+    
+    <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="WriteStreamSwitchboard"><span class="type-signature"></span>new WriteStreamSwitchboard<span class="signature">(data)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
 
 
+
+<div class="description">
+    <p>Constructor for WriteStreamSwitchboard class</p>
+</div>
 
 
 
@@ -79,13 +87,13 @@
 
         <tr>
             
-                <td class="name"><code>resources</code></td>
+                <td class="name"><code>data</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
             
@@ -95,7 +103,56 @@
 
             
 
-            <td class="description last"><p>variable injection from current periodic instance with references to the active logger and mongo session</p></td>
+            <td class="description last"><p>json data to be written to file</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>datatype</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Data must contain datatype property which is used to determine write path</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -126,22 +183,9 @@
     
 
     
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>Yaw Joseph Etse</li>
-        </ul>
-    </dd>
-    
 
     
-    <dt class="tag-copyright">Copyright:</dt>
-    <dd class="tag-copyright"><ul class="dummy"><li>Copyright (c) 2014 Typesettin. All rights reserved.</li></ul></dd>
-    
 
-    
-    <dt class="tag-license">License:</dt>
-    <dd class="tag-license"><ul class="dummy"><li>MIT</li></ul></dd>
     
 
     
@@ -149,7 +193,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controller_dbops.js.html">controller/dbops.js</a>, <a href="controller_dbops.js.html#line273">line 273</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line237">line 237</a>
     </li></ul></dd>
     
 
@@ -176,7 +220,7 @@
 
         
 <div class="param-desc">
-    <p>dbseed</p>
+    <p>Returns a fs writeable stream</p>
 </div>
 
 
@@ -187,7 +231,7 @@
     </dt>
     <dd>
         
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
     </dd>
@@ -197,22 +241,11 @@
 
 
 
-        
     
     </div>
 
     
 
-    
-        <h3 class="subsection-title">Requires</h3>
-
-        <ul>
-            <li>module:async</li>
-        
-            <li>module:periodicjs.core.utilities</li>
-        
-            <li>module:periodicjs.core.controller</li>
-        </ul>
     
 
     
@@ -223,6 +256,255 @@
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="getStream"><span class="type-signature"></span>getStream<span class="signature">(data, batches<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Retrieves a write stream from the private var streamHolder or creates a write stream if there is no applicable stream. A new stream is created when either a new collection begins exporting or once a batch size limit is reached and a new file must be created</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Collection data used to retrieve or create a write stream from streamHolder</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>datatype</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the collection being exported</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>batches</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>If batchsize limit is specified the current batch number used in creating a new write stream</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line268">line 268</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The write stream that will be used in writing export data</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
     
 
     

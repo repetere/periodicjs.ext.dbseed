@@ -4,8 +4,13 @@
 <dt><a href="#module_exportseed">exportseed</a> ⇒ <code>object</code></dt>
 <dd><p>exportseed module</p>
 </dd>
-<dt><a href="#periodicjs.ext.module_dbseed">dbseed</a></dt>
-<dd><p>An extension to import json seeds into periodic mongodb.</p>
+</dl>
+
+## Classes
+
+<dl>
+<dt><a href="#WriteStreamSwitchboard">WriteStreamSwitchboard</a></dt>
+<dd><p>Switches between writeStreams dependent on the specified write path</p>
 </dd>
 </dl>
 
@@ -113,6 +118,12 @@
 <dt><a href="#setupCompleteSeedFile">setupCompleteSeedFile(options)</a> ⇒ <code>function</code></dt>
 <dd><p>Utility function for wrapping output json in an object with a &quot;data&quot; property</p>
 </dd>
+<dt><a href="#createDataTransformStream">createDataTransformStream()</a> ⇒ <code>Object</code></dt>
+<dd><p>Initializes a transform stream that is used to prepend data to a seed file and then push documents to file</p>
+</dd>
+<dt><a href="#handleEndOfFile">handleEndOfFile(usePartition, batchSize)</a> ⇒ <code>function</code></dt>
+<dd><p>Creates a function which tracks the number of documents that have been written to file, the current batch number and the expected number of batches. Process determines the end of file from this data and also returns this data as part once it resolves</p>
+</dd>
 <dt><a href="#configureWriteQueue">configureWriteQueue(writePath, usePartition, onDrain)</a> ⇒ <code>Object</code></dt>
 <dd><p>Configures a queue whose worker writes json data to a writeable stream</p>
 </dd>
@@ -124,6 +135,9 @@
 </dd>
 <dt><a href="#ensureDBConnection">ensureDBConnection([mongooseConnection])</a> ⇒ <code>Object</code></dt>
 <dd><p>Ensures that correct mongo db instance is used and has properly connected</p>
+</dd>
+<dt><a href="#ensureExportDirectory">ensureExportDirectory(outputPath)</a> ⇒ <code>Object</code></dt>
+<dd><p>Ensures the directory seed file is being written to exists</p>
 </dd>
 <dt><a href="#createSeed">createSeed(options, cb)</a> ⇒ <code>Object</code></dt>
 <dd><p>Runs full create seed suite</p>
@@ -176,19 +190,42 @@ exportseed module
 | --- | --- | --- |
 | resources | <code>object</code> | variable injection from current periodic instance with references to the active logger and mongo session |
 
-<a name="periodicjs.ext.module_dbseed"></a>
+<a name="WriteStreamSwitchboard"></a>
 
-## dbseed
-An extension to import json seeds into periodic mongodb.
+## WriteStreamSwitchboard
+Switches between writeStreams dependent on the specified write path
 
-**{@link**: https://github.com/typesettin/periodicjs.ext.dbseed}  
-**Author:** Yaw Joseph Etse  
-**License**: MIT  
-**Copyright**: Copyright (c) 2014 Typesettin. All rights reserved.  
+**Kind**: global class  
+
+* [WriteStreamSwitchboard](#WriteStreamSwitchboard)
+    * [new WriteStreamSwitchboard(data)](#new_WriteStreamSwitchboard_new)
+    * [.getStream(data, [batches])](#WriteStreamSwitchboard+getStream) ⇒ <code>Object</code>
+
+<a name="new_WriteStreamSwitchboard_new"></a>
+
+### new WriteStreamSwitchboard(data)
+Constructor for WriteStreamSwitchboard class
+
+**Returns**: <code>Object</code> - Returns a fs writeable stream  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| periodic | <code>object</code> | variable injection of resources from current periodic instance |
+| data | <code>Object</code> | json data to be written to file |
+| data.datatype | <code>string</code> | Data must contain datatype property which is used to determine write path |
+
+<a name="WriteStreamSwitchboard+getStream"></a>
+
+### writeStreamSwitchboard.getStream(data, [batches]) ⇒ <code>Object</code>
+Retrieves a write stream from the private var streamHolder or creates a write stream if there is no applicable stream. A new stream is created when either a new collection begins exporting or once a batch size limit is reached and a new file must be created
+
+**Kind**: instance method of <code>[WriteStreamSwitchboard](#WriteStreamSwitchboard)</code>  
+**Returns**: <code>Object</code> - The write stream that will be used in writing export data  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>Object</code> | Collection data used to retrieve or create a write stream from streamHolder |
+| data.datatype | <code>string</code> | The name of the collection being exported |
+| [batches] | <code>number</code> | If batchsize limit is specified the current batch number used in creating a new write stream |
 
 <a name="emptyUsergroups"></a>
 
@@ -648,6 +685,26 @@ Completes creation of seed file by reading file and wrapping data in an object u
 | wp | <code>string</code> | Path to the un-finalized seed file |
 | callback | <code>function</code> | Callback function |
 
+<a name="createDataTransformStream"></a>
+
+## createDataTransformStream() ⇒ <code>Object</code>
+Initializes a transform stream that is used to prepend data to a seed file and then push documents to file
+
+**Kind**: global function  
+**Returns**: <code>Object</code> - instance of Transform Stream  
+<a name="handleEndOfFile"></a>
+
+## handleEndOfFile(usePartition, batchSize) ⇒ <code>function</code>
+Creates a function which tracks the number of documents that have been written to file, the current batch number and the expected number of batches. Process determines the end of file from this data and also returns this data as part once it resolves
+
+**Kind**: global function  
+**Returns**: <code>function</code> - Returns a function that handles tracking the total number of documents, batch size limits etc.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| usePartition | <code>Boolean</code> | If true batch size limit will be respected and files will be truncated at that limit |
+| batchSize | <code>number</code> | The max number of documents that should be in a file |
+
 <a name="configureWriteQueue"></a>
 
 ## configureWriteQueue(writePath, usePartition, onDrain) ⇒ <code>Object</code>
@@ -661,19 +718,6 @@ Configures a queue whose worker writes json data to a writeable stream
 | writePath | <code>string</code> | Optional file path for the data write will default to ./seed_data.json if argument is undefined |
 | usePartition | <code>Boolean</code> | If true seperate json files will be created for each collection.  Files names will match writePath with appended collection name |
 | onDrain | <code>function</code> | Function to be called once last task is returned from worker |
-
-<a name="configureWriteQueue..createWriteStreamSwitchboard"></a>
-
-### configureWriteQueue~createWriteStreamSwitchboard(data) ⇒ <code>Object</code>
-Switches between writeStreams dependent on the specified write path
-
-**Kind**: inner method of <code>[configureWriteQueue](#configureWriteQueue)</code>  
-**Returns**: <code>Object</code> - Returns a fs writeable stream  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | <code>Object</code> | json data to be written to file |
-| data.datatype | <code>string</code> | Data must contain datatype property which is used to determine write path |
 
 <a name="transformDataForSeed"></a>
 
@@ -715,6 +759,18 @@ Ensures that correct mongo db instance is used and has properly connected
 | Param | Type | Description |
 | --- | --- | --- |
 | [mongooseConnection] | <code>Object</code> | A connected mongoose instance if this argument is passed it will be assumed that this connection should be used |
+
+<a name="ensureExportDirectory"></a>
+
+## ensureExportDirectory(outputPath) ⇒ <code>Object</code>
+Ensures the directory seed file is being written to exists
+
+**Kind**: global function  
+**Returns**: <code>Object</code> - Promise that resolves once directory has been ensured  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| outputPath | <code>string</code> | The path to either the parent directory or the full file path |
 
 <a name="createSeed"></a>
 

@@ -224,7 +224,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line25">line 25</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -686,7 +686,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_seed.js.html">lib/db_seed.js</a>, <a href="lib_db_seed.js.html#line237">line 237</a>
+        <a href="lib_db_seed.js.html">lib/db_seed.js</a>, <a href="lib_db_seed.js.html#line235">line 235</a>
     </li></ul></dd>
     
 
@@ -968,7 +968,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line314">line 314</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line419">line 419</a>
     </li></ul></dd>
     
 
@@ -1167,7 +1167,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line237">line 237</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line345">line 345</a>
     </li></ul></dd>
     
 
@@ -1195,6 +1195,110 @@
         
 <div class="param-desc">
     <p>Returns async queue object</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createDataTransformStream"><span class="type-signature"></span>createDataTransformStream<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Initializes a transform stream that is used to prepend data to a seed file and then push documents to file</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line217">line 217</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>instance of Transform Stream</p>
 </div>
 
 
@@ -1484,7 +1588,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line397">line 397</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line527">line 527</a>
     </li></ul></dd>
     
 
@@ -4162,7 +4266,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line354">line 354</a>
+        <a href="lib_db_seed.js.html">lib/db_seed.js</a>, <a href="lib_db_seed.js.html#line79">line 79</a>
     </li></ul></dd>
     
 
@@ -4327,7 +4431,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_seed.js.html">lib/db_seed.js</a>, <a href="lib_db_seed.js.html#line79">line 79</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line468">line 468</a>
     </li></ul></dd>
     
 
@@ -4355,6 +4459,159 @@
         
 <div class="param-desc">
     <p>Connected mongoose instance</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="ensureExportDirectory"><span class="type-signature"></span>ensureExportDirectory<span class="signature">(outputPath)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Ensures the directory seed file is being written to exists</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>outputPath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The path to either the parent directory or the full file path</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line505">line 505</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Promise that resolves once directory has been ensured</p>
 </div>
 
 
@@ -4968,7 +5225,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line441">line 441</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line574">line 574</a>
     </li></ul></dd>
     
 
@@ -5121,7 +5378,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line106">line 106</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line108">line 108</a>
     </li></ul></dd>
     
 
@@ -5297,7 +5554,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line80">line 80</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line82">line 82</a>
     </li></ul></dd>
     
 
@@ -5499,7 +5756,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line167">line 167</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line159">line 159</a>
     </li></ul></dd>
     
 
@@ -5918,6 +6175,182 @@
     <dd>
         
 <span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="handleEndOfFile"><span class="type-signature"></span>handleEndOfFile<span class="signature">(usePartition, batchSize)</span><span class="type-signature"> &rarr; {function}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Creates a function which tracks the number of documents that have been written to file, the current batch number and the expected number of batches. Process determines the end of file from this data and also returns this data as part once it resolves</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>usePartition</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If true batch size limit will be respected and files will be truncated at that limit</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>batchSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The max number of documents that should be in a file</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line290">line 290</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Returns a function that handles tracking the total number of documents, batch size limits etc.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
 
 
     </dd>
@@ -7305,7 +7738,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_seed.js.html">lib/db_seed.js</a>, <a href="lib_db_seed.js.html#line259">line 259</a>
+        <a href="lib_db_seed.js.html">lib/db_seed.js</a>, <a href="lib_db_seed.js.html#line257">line 257</a>
     </li></ul></dd>
     
 
@@ -8978,7 +9411,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line186">line 186</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line181">line 181</a>
     </li></ul></dd>
     
 
@@ -9866,7 +10299,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line294">line 294</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line399">line 399</a>
     </li></ul></dd>
     
 
@@ -10377,7 +10810,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line49">line 49</a>
+        <a href="lib_db_clone.js.html">lib/db_clone.js</a>, <a href="lib_db_clone.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -10441,13 +10874,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-cliDBSeedController.html">cliDBSeedController</a></li><li><a href="module-exportseed.html">exportseed</a></li><li><a href="periodicjs.ext.module_dbseed.html">dbseed</a></li></ul><h3>Global</h3><ul><li><a href="global.html#appendJSONToFile">appendJSONToFile</a></li><li><a href="global.html#checkdirexists">checkdirexists</a></li><li><a href="global.html#configureCreateQueue">configureCreateQueue</a></li><li><a href="global.html#configureQueryStreams">configureQueryStreams</a></li><li><a href="global.html#configureWriteQueue">configureWriteQueue</a></li><li><a href="global.html#createSeed">createSeed</a></li><li><a href="global.html#deleteOldUpload">deleteOldUpload</a></li><li><a href="global.html#emptyAssets">emptyAssets</a></li><li><a href="global.html#emptyCategories">emptyCategories</a></li><li><a href="global.html#emptyCollections">emptyCollections</a></li><li><a href="global.html#emptyCompilations">emptyCompilations</a></li><li><a href="global.html#emptyContenttypes">emptyContenttypes</a></li><li><a href="global.html#emptyDatas">emptyDatas</a></li><li><a href="global.html#emptyDB">emptyDB</a></li><li><a href="global.html#emptyItems">emptyItems</a></li><li><a href="global.html#emptyTags">emptyTags</a></li><li><a href="global.html#emptyUsergroups">emptyUsergroups</a></li><li><a href="global.html#emptyUserprivileges">emptyUserprivileges</a></li><li><a href="global.html#emptyUserroles">emptyUserroles</a></li><li><a href="global.html#emptyUsers">emptyUsers</a></li><li><a href="global.html#ensureDBConnection">ensureDBConnection</a></li><li><a href="global.html#export_download">export_download</a></li><li><a href="global.html#exportSeed">exportSeed</a></li><li><a href="global.html#getModelSettings">getModelSettings</a></li><li><a href="global.html#getModelSettingsFromFile">getModelSettingsFromFile</a></li><li><a href="global.html#getMongoQueryStream">getMongoQueryStream</a></li><li><a href="global.html#getPopulationSettings">getPopulationSettings</a></li><li><a href="global.html#handleArchivePartitionedFile">handleArchivePartitionedFile</a></li><li><a href="global.html#handleParallelInsertQueue">handleParallelInsertQueue</a></li><li><a href="global.html#handleSeriesInsertQueue">handleSeriesInsertQueue</a></li><li><a href="global.html#import_customseed">import_customseed</a></li><li><a href="global.html#import_upload">import_upload</a></li><li><a href="global.html#import_upload_utils">import_upload_utils</a></li><li><a href="global.html#importSeed">importSeed</a></li><li><a href="global.html#index">index</a></li><li><a href="global.html#moveseed">moveseed</a></li><li><a href="global.html#readSeedFromFile">readSeedFromFile</a></li><li><a href="global.html#removeAssetFromDB">removeAssetFromDB</a></li><li><a href="global.html#reorderDataByImportOrder">reorderDataByImportOrder</a></li><li><a href="global.html#seeddb">seeddb</a></li><li><a href="global.html#sendExportDownload">sendExportDownload</a></li><li><a href="global.html#setupCompleteSeedFile">setupCompleteSeedFile</a></li><li><a href="global.html#setupInsertTask">setupInsertTask</a></li><li><a href="global.html#setupseeddata">setupseeddata</a></li><li><a href="global.html#transformDataForSeed">transformDataForSeed</a></li><li><a href="global.html#wipedb">wipedb</a></li><li><a href="global.html#writeToFile">writeToFile</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-cliDBSeedController.html">cliDBSeedController</a></li><li><a href="module-exportseed.html">exportseed</a></li><li><a href="periodicjs.ext.module_dbseed.html">dbseed</a></li></ul><h3>Classes</h3><ul><li><a href="WriteStreamSwitchboard.html">WriteStreamSwitchboard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#appendJSONToFile">appendJSONToFile</a></li><li><a href="global.html#checkdirexists">checkdirexists</a></li><li><a href="global.html#configureCreateQueue">configureCreateQueue</a></li><li><a href="global.html#configureQueryStreams">configureQueryStreams</a></li><li><a href="global.html#configureWriteQueue">configureWriteQueue</a></li><li><a href="global.html#createDataTransformStream">createDataTransformStream</a></li><li><a href="global.html#createSeed">createSeed</a></li><li><a href="global.html#deleteOldUpload">deleteOldUpload</a></li><li><a href="global.html#emptyAssets">emptyAssets</a></li><li><a href="global.html#emptyCategories">emptyCategories</a></li><li><a href="global.html#emptyCollections">emptyCollections</a></li><li><a href="global.html#emptyCompilations">emptyCompilations</a></li><li><a href="global.html#emptyContenttypes">emptyContenttypes</a></li><li><a href="global.html#emptyDatas">emptyDatas</a></li><li><a href="global.html#emptyDB">emptyDB</a></li><li><a href="global.html#emptyItems">emptyItems</a></li><li><a href="global.html#emptyTags">emptyTags</a></li><li><a href="global.html#emptyUsergroups">emptyUsergroups</a></li><li><a href="global.html#emptyUserprivileges">emptyUserprivileges</a></li><li><a href="global.html#emptyUserroles">emptyUserroles</a></li><li><a href="global.html#emptyUsers">emptyUsers</a></li><li><a href="global.html#ensureDBConnection">ensureDBConnection</a></li><li><a href="global.html#ensureExportDirectory">ensureExportDirectory</a></li><li><a href="global.html#export_download">export_download</a></li><li><a href="global.html#exportSeed">exportSeed</a></li><li><a href="global.html#getModelSettings">getModelSettings</a></li><li><a href="global.html#getModelSettingsFromFile">getModelSettingsFromFile</a></li><li><a href="global.html#getMongoQueryStream">getMongoQueryStream</a></li><li><a href="global.html#getPopulationSettings">getPopulationSettings</a></li><li><a href="global.html#handleArchivePartitionedFile">handleArchivePartitionedFile</a></li><li><a href="global.html#handleEndOfFile">handleEndOfFile</a></li><li><a href="global.html#handleParallelInsertQueue">handleParallelInsertQueue</a></li><li><a href="global.html#handleSeriesInsertQueue">handleSeriesInsertQueue</a></li><li><a href="global.html#import_customseed">import_customseed</a></li><li><a href="global.html#import_upload">import_upload</a></li><li><a href="global.html#import_upload_utils">import_upload_utils</a></li><li><a href="global.html#importSeed">importSeed</a></li><li><a href="global.html#index">index</a></li><li><a href="global.html#moveseed">moveseed</a></li><li><a href="global.html#readSeedFromFile">readSeedFromFile</a></li><li><a href="global.html#removeAssetFromDB">removeAssetFromDB</a></li><li><a href="global.html#reorderDataByImportOrder">reorderDataByImportOrder</a></li><li><a href="global.html#seeddb">seeddb</a></li><li><a href="global.html#sendExportDownload">sendExportDownload</a></li><li><a href="global.html#setupCompleteSeedFile">setupCompleteSeedFile</a></li><li><a href="global.html#setupInsertTask">setupInsertTask</a></li><li><a href="global.html#setupseeddata">setupseeddata</a></li><li><a href="global.html#transformDataForSeed">transformDataForSeed</a></li><li><a href="global.html#wipedb">wipedb</a></li><li><a href="global.html#writeToFile">writeToFile</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Sep 06 2016 17:15:26 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Dec 29 2016 11:29:06 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>
