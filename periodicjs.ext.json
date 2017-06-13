@@ -1,26 +1,8 @@
 {
-	"periodicCompatibility":"6.5.2",
-	"periodicDependencies": [{
-    "extname": "periodicjs.ext.asyncadmin",
-    "version": "~7.0.0",
-    "optional": true
-  }],
-	"periodicjs.ext.asyncadmin": {
-		"menu": {
-			"Extensions": {
-				"dbseed": {
-					"userprivilege":"110",
-					"tree-item": "file",
-			    "tree-item-label": "DB Seed Import/Export",
-			    "tree-item-id": "dbseed.settings",
-			    "tree-item-link": "/%locals.adminPath%/dbseed",
-			    "tree-item-attributes": {
-			      "class": "async-admin-ajax-link",
-			      "title": "DB Import/Export",
-        		"style":"background-image: url(/images/adminui/svg/data102.svg);"
-			    }
-			  }
-			}
-		}
-	}
+  "periodic_compatibility": "10.0.0",
+  "periodic_dependencies": [],
+  "periodic_type": 10,
+  "periodic_priority": 0,
+  "periodic_config": {
+  }
 }
