@@ -1,5 +1,6 @@
 'use strict';
 const periodic = require('periodicjs');
+const utilities = require('../utilities/index');
 
 module.exports = {
   hello: (options) => {
@@ -7,5 +8,6 @@ module.exports = {
     return new Promise((resolve, reject) => {
       resolve(true);
     });
-  }
-}
+  },
+  export: utilities.exportSeed.exportData,
+};
