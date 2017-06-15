@@ -19,7 +19,10 @@
   "scripts": {
     "test": "mocha -R spec --recursive"
   },
-  "dependencies": {},
+  "dependencies": {
+    "fs-extra": "^3.0.1",
+    "promisie": "^1.6.1"
+  },
   "devDependencies": {
     "browserify": "^13.0.0",
     "chai": "^3.0.0",

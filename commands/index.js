@@ -10,4 +10,5 @@ module.exports = {
     });
   },
   export: utilities.exportSeed.exportData,
+  import: utilities.importSeed.importData,
 };
