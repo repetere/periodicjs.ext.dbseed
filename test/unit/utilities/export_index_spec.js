@@ -13,7 +13,7 @@ const packageJSON = require(path.join(extension_root_dir, 'package.json'));
 var request = require('supertest');
 
 // const httpMocks = require('node-mocks-http');
-const importSeed = require(path.join(extension_root_dir, 'utilities/import-seed'));
+const exportSeed = require(path.join(extension_root_dir, 'utilities/export-seed'));
 const app = express();
 let extension_files = [];
 chai.use(require('sinon-chai'));
@@ -28,11 +28,11 @@ const erouter = express.Router();
 // app.use(erouter);
 // app.use(EXTENSION_routers);
 
-describe('Import-seed', function() {
+describe('export-seed', function() {
   this.timeout(10000);
-  describe('importData', function() {
+  describe('exportData', function() {
     it('should handle errors', (done) => {
-      importSeed.importData()
+      exportSeed.exportData()
         .then(() => {
           done(new Error('this should not reach this block'));
         })
@@ -42,9 +42,9 @@ describe('Import-seed', function() {
         });
     });
   });
-  describe('importCoreData', function() {
+  describe('exportCoreData', function() {
     it('should handle errors', (done) => {
-      importSeed.importCoreData()
+      exportSeed.exportCoreData()
         .then(() => {
           done(new Error('this should not reach this block'));
         })
