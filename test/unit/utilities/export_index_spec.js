@@ -21,17 +21,35 @@ let extension_files = [];
 chai.use(require('sinon-chai'));
 require('mocha-sinon');
 const erouter = express.Router();
-// erouter.get('/aslkjdsf', (req, res) => {
-//   res.send('outputting data');
-// })
-// app.get('/SOMEGETROUTE', (req, res) => {
-//   res.send({ data: 'ok' });
-// })
-// app.use(erouter);
-// app.use(EXTENSION_routers);
+const core_data_name = 'test_exportCoreData';
+const dummySeedData = { dummy: 'data', };
+const dummySeedDataQuery = [ dummySeedData, dummySeedData, dummySeedData ];
+const export_seed_dir = path.resolve(__dirname, '../../mock/unit/utilities/export_seed');
 
-describe('export-seed', function() {
-  this.timeout(10000);
+describe('Export-seed', function() {
+  this.timeout(10000); 
+  before('initialize seed core data', (done) => {
+    periodic.datas.set(core_data_name, {
+      query: () => {
+        return Promise.resolve(dummySeedDataQuery);
+      }
+    });
+    periodic.settings = Object.assign({}, periodic.settings, {
+      extensions: {
+        'periodicjs.ext.dbseed': {
+          export: {
+            ignore_core_datas:[],
+          }
+        }
+      }
+    });
+    Promise.all([
+      fs.ensureDir(export_seed_dir),
+    ])
+      .then(() => {
+        done();
+      }).catch(done);
+  });
   describe('exportData', function() {
     it('should handle errors', (done) => {
       exportSeed.exportData()
@@ -43,7 +61,26 @@ describe('export-seed', function() {
           done();
         });
     });
-    // it('it should expor')
+    it('it should export seed to a file', (done) => {
+      const exportSeedFile = path.join(export_seed_dir, 'test_seed_export.json');
+      exportSeed.exportData(exportSeedFile)
+        .then(result => {
+          return fs.readJSON(exportSeedFile);
+        })
+        .then((seedJSON) => { 
+          let hasTestExportSeed = false;
+          expect(seedJSON).to.be.an('array');
+          seedJSON.forEach(seed => {
+            if (Object.keys(seed)[ 0 ] === core_data_name) {
+              hasTestExportSeed = true;
+              expect(seed[ core_data_name ]).to.be.an('array');
+            }
+          });
+          expect(hasTestExportSeed).to.be.true;
+          done();
+        })
+        .catch(done);
+    });
   });
   describe('exportCoreData', function() {
     it('should handle errors', (done) => {
@@ -57,21 +94,20 @@ describe('export-seed', function() {
         });
     });
     it('should export data in seed format', (done) => {
-      // console.log({ periodic });
-      const dummySeedData = { dummy: 'data', };
-      const core_data_name = 'test_exportCoreData';
-      periodic.datas.set(core_data_name, {
-        query: () => {
-          return Promise.resolve(dummySeedData)
-        }
-      });
       exportSeed.exportCoreData(core_data_name)
         .then(result => {
-          expect(result[ core_data_name ]).to.eql(dummySeedData);
-          // console.log({ result });
+          expect(result[ core_data_name ]).to.eql(dummySeedDataQuery);
           done();
         })
         .catch(done);
     });
+  });
+  after('remove test export seed dir', (done) => {
+    Promise.all([
+        fs.remove(export_seed_dir),
+      ])
+      .then(() => {
+        done();
+      }).catch(done);
   });
 });
