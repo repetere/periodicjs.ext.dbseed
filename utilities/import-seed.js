@@ -6,7 +6,7 @@ const periodicjs = require('periodicjs');
 const Promisie = require('promisie');
 
 /**
- * this function will take an array object { [core_data_name]:[{array of documents}] } and insert them into respective database
+ * this function will take an array object { [core_data_name]:[{array of documents}] } and insert them into the respective core data database
  * 
  * @param {Object} core_data_seeds a core data seed
  * @returns {Promise}

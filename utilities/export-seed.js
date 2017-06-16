@@ -5,6 +5,12 @@ const path = require('path');
 const periodicjs = require('periodicjs');
 const Promisie = require('promisie');
 
+/**
+ * exports data from a given core data database model
+ * 
+ * @param {string} core_data_name 
+ * @returns {Promise} contents of the core data model seed
+ */
 function exportCoreData(core_data_name) {
   return new Promise((resolve, reject) => {
     try {
@@ -21,12 +27,12 @@ function exportCoreData(core_data_name) {
   });
 }
 
-// function exportCoreDatabase(options) {
-//   return new Promise((resolve, reject) => {
-//     resolve('coreDatas');
-//   });
-// }
-
+/**
+ * exports all data from periodic into a seed file
+ * 
+ * @param {string} filepath 
+ * @returns {Promise} resolved value from each export from exportCoreData
+ */
 function exportData(filepath) {
   return new Promise((resolve, reject) => {
     try {
