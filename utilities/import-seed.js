@@ -14,16 +14,20 @@ const Promisie = require('promisie');
 function importCoreData(core_data_seeds) {
   return new Promise((resolve, reject) => {
     try {
-      const core_data_name = Object.keys(core_data_seeds)[ 0 ];
-      const core_data_documents = core_data_seeds[ core_data_name ];
+      const core_data_name = Object.keys(core_data_seeds)[0];
+      const core_data_documents = core_data_seeds[core_data_name];
       if (core_data_documents.length) {
         periodicjs.datas.get(core_data_name).create(core_data_documents)
-        .then(data => {
-          resolve({ [ core_data_name ]: data });
-        })
-        .catch(reject);
+          .then(data => {
+            resolve({
+              [core_data_name]: data
+            });
+          })
+          .catch(reject);
       } else {
-        resolve({ [ core_data_name ]: 'no valid seeds' });
+        resolve({
+          [core_data_name]: 'no valid seeds'
+        });
       }
     } catch (e) {
       reject(e);
@@ -31,11 +35,11 @@ function importCoreData(core_data_seeds) {
   });
 }
 
-function importCoreDatabase(options) {
-  return new Promise((resolve, reject) => {
-    resolve('coreDatas');
-  });
-}
+// function importCoreDatabase(options) {
+//   return new Promise((resolve, reject) => {
+//     resolve('coreDatas');
+//   });
+// }
 
 /**
  * imports a seedfile json file path into core data databases
@@ -46,11 +50,11 @@ function importCoreDatabase(options) {
 function importData(filepath) {
   return new Promise((resolve, reject) => {
     try {
-      const excluded_data = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].import.ignore_core_datas;
+      const excluded_data = periodicjs.settings.extensions['periodicjs.ext.dbseed'].import.ignore_core_datas;
       const core_datas = Array.from(periodicjs.datas.keys()).filter(datum => excluded_data.indexOf(datum) === -1);
       fs.readJSON(filepath)
         .then(datas => {
-          resolve( Promisie.map(datas, 5, importCoreData) );
+          resolve(Promisie.map(datas, 5, importCoreData));
           // return Promisie.map(datas, 5, importCoreData);
           // console.log({ datas });
           // resolve('imported')
@@ -68,6 +72,6 @@ function importData(filepath) {
 
 module.exports = {
   importCoreData,
-  importCoreDatabase,
+  // importCoreDatabase,
   importData,
 };

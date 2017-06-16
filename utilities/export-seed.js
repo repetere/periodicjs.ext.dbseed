@@ -10,7 +10,8 @@ function exportCoreData(core_data_name) {
     try {
       periodicjs.datas.get(core_data_name).query()
         .then(data => {
-          resolve({ [ core_data_name ]: data });
+          resolve({
+            [core_data_name]: data });
         }).catch(reject);
     } catch (e) {
       reject(e);
@@ -18,16 +19,16 @@ function exportCoreData(core_data_name) {
   });
 }
 
-function exportCoreDatabase(options) {
-  return new Promise((resolve, reject) => {
-    resolve('coreDatas');
-  });
-}
+// function exportCoreDatabase(options) {
+//   return new Promise((resolve, reject) => {
+//     resolve('coreDatas');
+//   });
+// }
 
 function exportData(filepath) {
   return new Promise((resolve, reject) => {
     try {
-      const excluded_data = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].export.ignore_core_datas;
+      const excluded_data = periodicjs.settings.extensions['periodicjs.ext.dbseed'].export.ignore_core_datas;
       const core_datas = Array.from(periodicjs.datas.keys()).filter(datum => excluded_data.indexOf(datum) === -1);
       fs.ensureFile(filepath)
         .then(() => {
@@ -45,6 +46,6 @@ function exportData(filepath) {
 
 module.exports = {
   exportCoreData,
-  exportCoreDatabase,
+  // exportCoreDatabase,
   exportData,
 };
