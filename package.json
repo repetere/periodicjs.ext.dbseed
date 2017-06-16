@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.dbseed",
   "description": "sample extension.",
-  "version": "10.0.0",
+  "version": "10.0.1",
   "main": "index.js",
   "engines": {
     "node": "^6.x"
@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "fs-extra": "^3.0.1",
-    "promisie": "^1.6.1"
+    "promisie": "^1.6.1",
+    "semver": "^5.3.0"
   },
   "devDependencies": {
     "browserify": "^13.0.0",
@@ -50,7 +51,7 @@
     "mocha-lcov-reporter": "^1.2.0",
     "mocha-sinon": "^2.0.0",
     "node-mocks-http": "^1.6.2",
-    "periodicjs": "10.0.52",
+    "periodicjs": "10.0.53",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
     "supertest": "^3.0.0"
