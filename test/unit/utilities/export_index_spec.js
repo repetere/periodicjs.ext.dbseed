@@ -61,6 +61,16 @@ describe('Export-seed', function() {
           done();
         });
     });
+    it('should handle filepath errors', (done) => {
+      exportSeed.exportData(NaN)
+        .then(() => {
+          done(new Error('this should not reach this block'));
+        })
+        .catch(e => {
+          expect(e).to.be.a('error');
+          done();
+        });
+    });
     it('it should export seed to a file', (done) => {
       const exportSeedFile = path.join(export_seed_dir, 'test_seed_export.json');
       exportSeed.exportData(exportSeedFile)
