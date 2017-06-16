@@ -1,101 +1,154 @@
-# periodicjs.ext.dbseed
+# periodicjs.ext.dbseed [![Coverage Status](https://coveralls.io/repos/github/typesettin/periodicjs.ext.dbseed/badge.svg?branch=master)](https://coveralls.io/github/typesettin/periodicjs.ext.dbseed?branch=master) [![Build Status](https://travis-ci.org/typesettin/periodicjs.ext.dbseed.svg?branch=master)](https://travis-ci.org/typesettin/periodicjs.ext.dbseed)
 
-An extension to import/export json seeds into periodic mongodb, the seed format is a mirror of the model definition except objectID reference are placed with the document name, and dbseed looks up those name references and inserts the correct object id.
+An extension that exports data in seed format and imports data in seed format to your periodic application.
 
- [API Documentation](https://github.com/typesettin/periodicjs.ext.dbseed/blob/master/doc/api.md)
-
-## Installation
-
-```
-$ npm install periodicjs.ext.dbseed
-```
+[API Documentation](https://github.com/typesettin/periodicjs.ext.dbseed/blob/master/doc/api.md)
 
 ## Usage
 
-### setting up your customseed file
+### Importing Data
 
-Modify the customseed.js file
-custom seed file must export a function which returns an object with keys detailing the import and export options
+You can import data using CLI
+```
+$ cd path/to/application/root
+### Using the CLI
+$ periodicjs ext periodicjs.ext.dbseed import path/to/seed/file.json 
+### Calling Manually
+$ node index.js --cli --command --ext --name=periodicjs.ext.dbseed --task=import --args=path/to/seed/file.json
+```
+
+### Exporting Data
+
+You can export data using CLI
+```
+$ cd path/to/application/root
+### Using the CLI
+$ periodicjs ext periodicjs.ext.dbseed export path/to/seed/file.json 
+### Calling Manually
+$ node index.js --cli --command --ext --name=periodicjs.ext.dbseed --task=export --args=path/to/seed/file.json
+```
+
+## Configuration
+
+You can configure DB Seed to exclude core datas in your database during the import and export process.
+
+You can also configure how many core data documents are permitted in a file before it's split into a new file.
+
+Customized import and export transforms are coming soon.
+
+### Default Configuration
 ```javascript
-/*
-Sample returned config object
 {
-  development: {
-    exportseed: {
-      user: function (seed) {
-        //these functions are used to transform data before export or import. Must return a Promise which resolves to the transformed object or syncronously returns transformed object
-        return seed;
-      }
+  settings: {
+    defaults: true,
+    export: {
+      ignore_core_datas: [ 'configuration', 'extension' ],
+      split_count:1000,
     },
-    importseed: {
-      user: function (seed) {...}
+    import: {
+      ignore_core_datas: [ 'configuration', 'extension' ],
     },
-    importorder: {
-      //details the order in which the models should be inserted into db
-      user: 0
-    },
-    importdb: {
-      "url": "mongodb://localhost/db_name",
-      "mongooptions":{
-        "replset": { 
-          "rs_name": "somerandomereplsetname" 
-        }
-      }
-    },
-    importoptions: {
-      //importoptions and exportoptions contains options for your seed imports and exports that will be treated as default options for each respectively
-      custom_model_names: {...},
-      capitalize_suffix: {...}
-    },
-    exportoptions: {...},
-    exportdb: {...}
   },
-  qa: {...}
+  databases: {
+  },
 };
-*/
 ```
 
-### import database (upsert/update) with custom file seed from cli
+## Seed Format
 
+The seed format is an array of data to import into any configured core data database (SQL, Mongo, Loki, etc). Regardless of the underlying database, the format for seeds are the name.
+
+A seed is comprised of a core data name, and core data documents, the combination of `{ core-data-name: [core data documents] }` is what is referred to as a seed.
+
+A seed file contains an array of seeds:
+```javascript
+//example seed file
+[
+   {
+     standard_item:[
+       {
+         "_id": 1,
+         "title": "doc1"
+       },
+       {
+         "_id": 2,
+         "title": "doc2"
+       },
+       {
+         "_id": 3,
+         "title": "doc3"
+       }
+     ]
+   },
+   {
+     standard_item:[
+       {
+         "_id": 4,
+         "title": "doc4"
+       },
+       {
+         "_id": 5,
+         "title": "doc5"
+       },
+       {
+         "_id": 6,
+         "title": "doc6"
+       }
+     ]
+   },
+   {
+     standard_user:[
+       {
+         "_id": 1,
+         "email": "user1@domain.tld"
+       },
+       {
+         "_id": 2,
+         "email": "user2@domain.tld"
+       },
+       {
+         "_id": 3,
+         "email": "user3@domain.tld"
+       }
+     ]
+   }
+ ]
 ```
-$ node index.js --cli --extension dbseed --task import --file /path/to/file.json
+
+## Installation
+
+### Installing the Extension
+
+Install like any other extension, run `npm run install periodicjs.ext.dbseed` from your periodic application root directory and then run `periodicjs addExtension periodicjs.ext.dbseed`.
+```
+$ cd path/to/application/root
+$ npm run install periodicjs.ext.dbseed
+$ periodicjs addExtension periodicjs.ext.dbseed
+```
+### Uninstalling the Extension
+
+Run `npm run uninstall periodicjs.ext.dbseed` from your periodic application root directory and then run `periodicjs removeExtension periodicjs.ext.dbseed`.
+```
+$ cd path/to/application/root
+$ npm run uninstall periodicjs.ext.dbseed
+$ periodicjs removeExtension periodicjs.ext.dbseed
 ```
 
-### export database to seed file seed from cli
 
-```
-$ node index.js --cli --extension dbseed --task export --file /path/to/file.json
-```
-
-If no file path is specified, the default file path is `content/files/backups/seeds/dbseed-[year]-[month]-[day]-[timestamp].json`
-
-### import sample from cli
-
-```
-$ node index.js --cli --extension dbseed --task sampledata
-```
-
-### empty the database (WARNING THIS AWALYS EXPORTS A BACK UP) sample from cli
-
-```
-$ node index.js --cli --extension dbseed --task empty --confirm
-```
-TThe file path is `content/files/backups/dbemptybackup-[year]-[month]-[day]-[timestamp].json`
-
-##Development
+## Testing
 *Make sure you have grunt installed*
 ```
 $ npm install -g grunt-cli
 ```
 
-Then run grunt watch
+Then run grunt test or npm test
 ```
-$ grunt watch
+$ grunt test && grunt coveralls #or locally $ npm test
 ```
 For generating documentation
 ```
 $ grunt doc
-$ jsdoc2md controller/*.js lib/*.js > doc/api.md
+$ jsdoc2md commands/**/*.js config/**/*.js controllers/**/*.js  transforms/**/*.js utilities/**/*.js index.js > doc/api.md
 ```
 ##Notes
 * Check out https://github.com/typesettin/periodicjs for the full Periodic Documentation
