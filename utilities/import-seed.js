@@ -35,12 +35,6 @@ function importCoreData(core_data_seeds) {
   });
 }
 
-// function importCoreDatabase(options) {
-//   return new Promise((resolve, reject) => {
-//     resolve('coreDatas');
-//   });
-// }
-
 /**
  * imports a seedfile json file path into core data databases
  * 
@@ -55,14 +49,7 @@ function importData(filepath) {
       fs.readJSON(filepath)
         .then(datas => {
           resolve(Promisie.map(datas, 5, importCoreData));
-          // return Promisie.map(datas, 5, importCoreData);
-          // console.log({ datas });
-          // resolve('imported')
-          // resolve(fs.outputJSON(filepath, datas));
         })
-        // .then(() => {
-        //   return Promisie.map(core_datas, 5, importCoreData);
-        // })
         .catch(reject);
     } catch (e) {
       reject(e);
@@ -72,6 +59,5 @@ function importData(filepath) {
 
 module.exports = {
   importCoreData,
-  // importCoreDatabase,
   importData,
 };
