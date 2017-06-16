@@ -11,8 +11,10 @@ function exportCoreData(core_data_name) {
       periodicjs.datas.get(core_data_name).query()
         .then(data => {
           resolve({
-            [core_data_name]: data });
-        }).catch(reject);
+            [ core_data_name ]: data,
+          });
+        })
+        .catch(reject);
     } catch (e) {
       reject(e);
     }

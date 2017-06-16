@@ -7,10 +7,12 @@ const events = require('events');
 const chai = require('chai');
 const sinon = require('sinon');
 const express = require('express');
+const periodic = require('periodicjs');
 const expect = require('chai').expect;
 const extension_root_dir = path.resolve(__dirname, '../../../');
 const packageJSON = require(path.join(extension_root_dir, 'package.json'));
 var request = require('supertest');
+
 
 // const httpMocks = require('node-mocks-http');
 const exportSeed = require(path.join(extension_root_dir, 'utilities/export-seed'));
@@ -41,6 +43,7 @@ describe('export-seed', function() {
           done();
         });
     });
+    // it('it should expor')
   });
   describe('exportCoreData', function() {
     it('should handle errors', (done) => {
@@ -52,6 +55,23 @@ describe('export-seed', function() {
           expect(e).to.be.a('error');
           done();
         });
+    });
+    it('should export data in seed format', (done) => {
+      // console.log({ periodic });
+      const dummySeedData = { dummy: 'data', };
+      const core_data_name = 'test_exportCoreData';
+      periodic.datas.set(core_data_name, {
+        query: () => {
+          return Promise.resolve(dummySeedData)
+        }
+      });
+      exportSeed.exportCoreData(core_data_name)
+        .then(result => {
+          expect(result[ core_data_name ]).to.eql(dummySeedData);
+          // console.log({ result });
+          done();
+        })
+        .catch(done);
     });
   });
 });
