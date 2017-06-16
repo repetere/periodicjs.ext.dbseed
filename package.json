@@ -28,6 +28,7 @@
     "chai": "^3.0.0",
     "chai-as-promised": "^6.0.0",
     "coveralls": "^2.11.9",
+    "express": "^4.15.3",
     "flat": "^2.0.1",
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.0.0",
@@ -48,9 +49,11 @@
     "mocha": "^2.2.5",
     "mocha-lcov-reporter": "^1.2.0",
     "mocha-sinon": "^2.0.0",
+    "node-mocks-http": "^1.6.2",
     "periodicjs": "10.0.52",
     "sinon": "^1.17.4",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "supertest": "^3.0.0"
   },
   "keywords": [],
   "bugs": {},

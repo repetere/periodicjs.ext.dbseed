@@ -1,1 +1,1 @@
-#periodicjs.ext.dbseed
+#periodicjs.ext.dbseed [![Coverage Status](https://coveralls.io/repos/github/typesettin/periodicjs.ext.dbseed/badge.svg?branch=master)](https://coveralls.io/github/typesettin/periodicjs.ext.dbseed?branch=master)
