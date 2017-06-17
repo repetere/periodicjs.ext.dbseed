@@ -16,7 +16,7 @@ function importCoreData(core_data_seeds) {
     try {
       const core_data_name = Object.keys(core_data_seeds)[0];
       const core_data_documents = core_data_seeds[core_data_name];
-      if (core_data_documents.length) {
+      if (core_data_documents.length && periodicjs.datas.get(core_data_name)) {
         periodicjs.datas.get(core_data_name).create(core_data_documents)
           .then(data => {
             resolve({
