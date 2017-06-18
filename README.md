@@ -115,6 +115,14 @@ A seed file contains an array of seeds:
  ]
 ```
 
+## Example data
+
+There's a sample seed document in `periodicjs.ext.dbseed/examples/exampleseed.json` that you can use to seed your database.
+
+```
+$ periodicjs extension periodicjs.ext.dbseed import node_modules/periodicjs.ext.dbseed/examples/exampleseed.json 
+```
+
 ## Installation
 
 ### Installing the Extension
