@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.dbseed",
   "description": "sample extension.",
-  "version": "10.0.5",
+  "version": "10.0.7",
   "main": "index.js",
   "engines": {
     "node": "^6.x"

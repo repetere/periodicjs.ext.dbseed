@@ -18,18 +18,18 @@ function importCoreData(core_data_seeds) {
       const core_data_documents = core_data_seeds[core_data_name];
       if (core_data_documents.length && periodicjs.datas.get(core_data_name)) {
         periodicjs.datas.get(core_data_name).create({
-            newdoc: core_data_documents,
-            bulk_create: true,
-          })
+          newdoc: core_data_documents,
+          bulk_create: true,
+        })
           .then(data => {
             resolve({
-              [core_data_name]: data
+              [core_data_name]: data.length,
             });
           })
           .catch(reject);
       } else {
         resolve({
-          [core_data_name]: 'no valid seeds'
+          [core_data_name]: 'no valid seeds',
         });
       }
     } catch (e) {
@@ -47,11 +47,12 @@ function importCoreData(core_data_seeds) {
 function importData(filepath) {
   return new Promise((resolve, reject) => {
     try {
-      const excluded_data = periodicjs.settings.extensions['periodicjs.ext.dbseed'].import.ignore_core_datas;
+      const excluded_data = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].import.ignore_core_datas;
+      //TODO: @janbialostok filter datas collections on import
       const core_datas = Array.from(periodicjs.datas.keys()).filter(datum => excluded_data.indexOf(datum) === -1);
       fs.readJSON(filepath)
         .then(datas => {
-          resolve(Promisie.map(datas, 5, importCoreData));
+          resolve(Promisie.map(datas, 1, importCoreData));
         })
         .catch(reject);
     } catch (e) {
