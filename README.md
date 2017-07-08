@@ -127,19 +127,19 @@ $ periodicjs extension periodicjs.ext.dbseed import node_modules/periodicjs.ext.
 
 ### Installing the Extension
 
-Install like any other extension, run `npm run install periodicjs.ext.dbseed` from your periodic application root directory and then run `periodicjs addExtension periodicjs.ext.dbseed`.
+Install like any other extension, run `npm run install periodicjs.ext.dbseed` from your periodic application root directory and then normally you would run `periodicjs addExtension periodicjs.ext.dbseed` but this is handled by npm post install.
 ```
 $ cd path/to/application/root
 $ npm run install periodicjs.ext.dbseed
-$ periodicjs addExtension periodicjs.ext.dbseed
+$ periodicjs addExtension periodicjs.ext.dbseed //handled by post install npm script
 ```
 ### Uninstalling the Extension
 
-Run `npm run uninstall periodicjs.ext.dbseed` from your periodic application root directory and then run `periodicjs removeExtension periodicjs.ext.dbseed`.
+Run `npm run uninstall periodicjs.ext.dbseed` from your periodic application root directory and then normally you would run `periodicjs removeExtension periodicjs.ext.dbseed` but this is handled by npm post uninstall.
 ```
 $ cd path/to/application/root
 $ npm run uninstall periodicjs.ext.dbseed
-$ periodicjs removeExtension periodicjs.ext.dbseed
+$ periodicjs removeExtension periodicjs.ext.dbseed //handled by post uninstall npm script
 ```
 
 

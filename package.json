@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.dbseed",
-  "description": "sample extension.",
-  "version": "10.0.7",
+  "description": "An extension for seeding db with data",
+  "version": "10.2.0",
   "main": "index.js",
   "engines": {
     "node": "^6.x"
@@ -17,7 +17,9 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "mocha -R spec --recursive"
+    "test": "mocha -R spec --recursive",
+    "postinstall": "cd ../../ && periodicjs aex periodicjs.ext.dbseed",
+    "postuninstall": "cd ../../ && periodicjs rex periodicjs.ext.dbseed"
   },
   "dependencies": {
     "fs-extra": "^3.0.1",
