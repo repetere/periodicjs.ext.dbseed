@@ -1,9 +1,9 @@
 'use strict';
 
-const fs = require('fs-extra');
+const Promisie = require('promisie');
+const fs = Promisie.promisifyAll(require('fs-extra'));
 const path = require('path');
 const periodicjs = require('periodicjs');
-const Promisie = require('promisie');
 
 /**
  * this function will take an array object { [core_data_name]:[{array of documents}] } and insert them into the respective core data database
@@ -38,27 +38,95 @@ function importCoreData(core_data_seeds) {
   });
 }
 
+function handleFileStats (filepath) {
+  return function (stats) {
+    try {
+      if (stats.isDirectory()) {
+        return fs.readdirAsync(filepath)
+          .map(filename => path.join(filepath, filename))
+          .catch(e => Promisie.reject(e));
+      }
+      return Promisie.resolve([filepath]);
+    } catch (e) {
+      return Promisie.reject(e);
+    }
+  }
+}
+
+function handleFileReads (filepath) {
+  try {
+    if (path.extname(filepath) === '.json') {
+      return fs.readJSONAsync(filepath);
+    }
+    return Promisie.resolve([]);
+  } catch (e) {
+    return Promisie.reject(e);
+  }
+}
+
+function handleFilteredCollections (included) {
+  return function (filedata) {
+    try {
+      return filedata.filter(data => {
+        let keys = Object.keys(data);
+        if (keys.length) {
+          let type = keys[0];
+          return (included.indexOf(type) !== -1);
+        }
+        return false;
+      });
+    } catch (e) {
+      return Promisie.reject(e);
+    }
+  }
+}
+
+function handleDataImport (filedata) {
+  try {
+    if (!filedata.length) return null;
+    return Promisie.map(filedata, 1, importCoreData);
+  } catch (e) {
+    return Promisie.reject(e);
+  }
+}
+
 /**
  * imports a seedfile json file path into core data databases
  * 
  * @param {string} filepath 
  * @returns {Promise}
  */
-function importData(filepath) {
-  return new Promise((resolve, reject) => {
-    try {
-      const excluded_data = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].import.ignore_core_datas;
-      //TODO: @janbialostok filter datas collections on import
-      const core_datas = Array.from(periodicjs.datas.keys()).filter(datum => excluded_data.indexOf(datum) === -1);
-      fs.readJSON(filepath)
-        .then(datas => {
-          resolve(Promisie.map(datas, 1, importCoreData));
-        })
-        .catch(reject);
-    } catch (e) {
-      reject(e);
-    }
-  });
+// function importData(filepath) {
+//   return new Promise((resolve, reject) => {
+//     try {
+//       const excluded_data = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].import.ignore_core_datas;
+//       //TODO: @janbialostok filter datas collections on import
+//       const core_datas = Array.from(periodicjs.datas.keys()).filter(datum => excluded_data.indexOf(datum) === -1);
+//       fs.readJSON(filepath)
+//         .then(datas => {
+//           resolve(Promisie.map(datas, 1, importCoreData));
+//         })
+//         .catch(reject);
+//     } catch (e) {
+//       reject(e);
+//     }
+//   });
+// }
+
+function importData (filepath) {
+  try {
+    const excluded_data = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].import.ignore_core_datas;
+    //TODO: @janbialostok filter datas collections on import
+    const core_datas = Array.from(periodicjs.datas.keys()).filter(datum => excluded_data.indexOf(datum) === -1);
+    return fs.statAsync(filepath)
+      .then(handleFileStats(filepath))
+      .map(handleFileReads, 5)
+      .map(handleFilteredCollections(core_datas))
+      .map(handleDataImport, 5)
+      .catch(e => Promisie.reject(e));
+  } catch (e) {
+    return Promisie.reject(e);
+  }
 }
 
 module.exports = {
