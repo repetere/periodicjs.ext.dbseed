@@ -5,6 +5,7 @@ const fs = Promisie.promisifyAll(require('fs-extra'));
 const path = require('path');
 const periodicjs = require('periodicjs');
 const Transform = require('stream').Transform;
+const os = require('os');
 
 /**
  * exports data from a given core data database model
@@ -20,9 +21,9 @@ function handleWriteStream (fd) {
       try {
         if (isFirst) {
           isFirst = false;
-          this.push('[');
+          this.push(`[${ os.EOL }`);
         }
-        this.push((data && typeof data === 'object') ? JSON.stringify(data) : data);
+        this.push((data && typeof data === 'object') ? JSON.stringify(data, null, 2) : data);
         next();
       } catch (e) {
         next(e);
@@ -39,7 +40,7 @@ function handleReadStream (core_data_name, writeStream, fd) {
     let count = 0;
     return new Promisie((resolve, reject) => {
       try {
-        writeStream.write(`{"${ core_data_name }": [`);
+        writeStream.write(`\t{${ os.EOL }\t\t"${ core_data_name }": [${ os.EOL }`);
         writeStream.once('error', reject);
         readStream.on('data', data => {
           count++;
@@ -47,13 +48,13 @@ function handleReadStream (core_data_name, writeStream, fd) {
             firstData = false;
             writeStream.write(data);
           } else {
-            writeStream.write(',');
+            writeStream.write(`,${ os.EOL }`);
             writeStream.write(data);
           }
         })
           .on('error', reject)
           .on('end', () => {
-            writeStream.write(']');
+            writeStream.write(`${ os.EOL }\t\t]`);
             resolve([writeStream, fd, count]);
           });
       } catch (e) {
@@ -64,7 +65,7 @@ function handleReadStream (core_data_name, writeStream, fd) {
 }
 
 function handleWriteEnd (transform, fd) {
-  transform.end('}]');
+  transform.end(`${ os.EOL }\t}${ os.EOL }]`);
   return new Promisie((resolve, reject) => {
     fd.on('finish', () => resolve())
       .on('error', reject);
