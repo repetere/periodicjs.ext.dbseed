@@ -103,12 +103,12 @@ function exportCoreData (filepath, split_count) {
  * @param {string} filepath 
  * @returns {Promise} resolved value from each export from exportCoreData
  */
-function exportData(options) {
+function exportData(options = {}) {
   try {
     const filepath = (typeof options === 'string')
       ? options
       : options.filepath;
-    const excluded_data = periodicjs.settings.extensions['periodicjs.ext.dbseed'].export.ignore_core_datas;
+    const excluded_data = options.excluded_datas ||  periodicjs.settings.extensions['periodicjs.ext.dbseed'].export.ignore_core_datas;
     const split_count = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].export.split_count;
     const include_data_filter = (Array.isArray(options.include_datas))
       ? (datum => options.include_datas.indexOf(datum) > -1)

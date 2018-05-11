@@ -96,9 +96,9 @@ function handleDataImport (filedata) {
  * @param {string} filepath 
  * @returns {Promise}
  */
-function importData (options) {
+function importData(options = {}) {
   try {
-    const excluded_data = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].import.ignore_core_datas;
+    const excluded_data = options.excluded_datas ||  periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].import.ignore_core_datas;
     const filepath = (typeof options === 'string')
       ? options
       : options.filepath;
