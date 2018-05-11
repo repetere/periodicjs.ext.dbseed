@@ -46,11 +46,11 @@ function handleFileStats (filepath) {
           .map(filename => path.join(filepath, filename))
           .catch(e => Promisie.reject(e));
       }
-      return Promisie.resolve([filepath]);
+      return Promisie.resolve([filepath,]);
     } catch (e) {
       return Promisie.reject(e);
     }
-  }
+  };
 }
 
 function handleFileReads (filepath) {
@@ -78,7 +78,7 @@ function handleFilteredCollections (included) {
     } catch (e) {
       return Promisie.reject(e);
     }
-  }
+  };
 }
 
 function handleDataImport (filedata) {
@@ -96,28 +96,19 @@ function handleDataImport (filedata) {
  * @param {string} filepath 
  * @returns {Promise}
  */
-// function importData(filepath) {
-//   return new Promise((resolve, reject) => {
-//     try {
-//       const excluded_data = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].import.ignore_core_datas;
-//       //TODO: @janbialostok filter datas collections on import
-//       const core_datas = Array.from(periodicjs.datas.keys()).filter(datum => excluded_data.indexOf(datum) === -1);
-//       fs.readJSON(filepath)
-//         .then(datas => {
-//           resolve(Promisie.map(datas, 1, importCoreData));
-//         })
-//         .catch(reject);
-//     } catch (e) {
-//       reject(e);
-//     }
-//   });
-// }
-
-function importData (filepath) {
+function importData (options) {
   try {
     const excluded_data = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].import.ignore_core_datas;
-    //TODO: @janbialostok filter datas collections on import
-    const core_datas = Array.from(periodicjs.datas.keys()).filter(datum => excluded_data.indexOf(datum) === -1);
+    const filepath = (typeof options === 'string')
+      ? options
+      : options.filepath;
+    const include_data_filter = (Array.isArray(options.include_datas))
+      ? (datum => options.include_datas.indexOf(datum) > -1)
+      : (() => true);
+    const core_datas = Array.from(periodicjs.datas.keys())
+      .filter(datum => excluded_data.indexOf(datum) === -1)
+      .filter(include_data_filter);
+    
     return fs.statAsync(filepath)
       .then(handleFileStats(filepath))
       .map(handleFileReads, 5)

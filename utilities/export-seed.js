@@ -28,7 +28,7 @@ function handleWriteStream (fd) {
       } catch (e) {
         next(e);
       }
-    }
+    },
   });
   transform.pipe(fd);
   return transform;
@@ -55,13 +55,13 @@ function handleReadStream (core_data_name, writeStream, fd) {
           .on('error', reject)
           .on('end', () => {
             writeStream.write(`${ os.EOL }\t\t]`);
-            resolve([writeStream, fd, count]);
+            resolve([writeStream, fd, count,]);
           });
       } catch (e) {
         reject(e);
       }
     });
-  }
+  };
 }
 
 function handleWriteEnd (transform, fd) {
@@ -81,11 +81,11 @@ function exportCoreData (filepath, split_count) {
       let writeStream = handleWriteStream(fd);
       return periodicjs.datas.get(core_data_name).stream({ 
         limit: (typeof split_count === 'number') ? split_count : Infinity,
-        skip: data_count
+        skip: data_count,
       })
         .then(handleReadStream(core_data_name, writeStream, fd))
         .then(result => {
-          let [transform, fd, count] = result;
+          let [transform, fd, count,] = result;
           data_count += count;
           file_index++;
           return handleWriteEnd(transform, fd)
@@ -94,7 +94,7 @@ function exportCoreData (filepath, split_count) {
         })
         .catch(e => Promisie.reject(e));
     }, result => (typeof split_count === 'number' && split_count > 0 && result === split_count));
-  }
+  };
 }
 
 /**
@@ -103,11 +103,19 @@ function exportCoreData (filepath, split_count) {
  * @param {string} filepath 
  * @returns {Promise} resolved value from each export from exportCoreData
  */
-function exportData (filepath) {
+function exportData(options) {
   try {
+    const filepath = (typeof options === 'string')
+      ? options
+      : options.filepath;
     const excluded_data = periodicjs.settings.extensions['periodicjs.ext.dbseed'].export.ignore_core_datas;
-    const split_count = periodicjs.settings.extensions['periodicjs.ext.dbseed'].export.split_count;
-    const core_datas = Array.from(periodicjs.datas.keys()).filter(datum => excluded_data.indexOf(datum) === -1);
+    const split_count = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].export.split_count;
+    const include_data_filter = (Array.isArray(options.include_datas))
+      ? (datum => options.include_datas.indexOf(datum) > -1)
+      : (() => true);
+    const core_datas = Array.from(periodicjs.datas.keys())
+      .filter(datum => excluded_data.indexOf(datum) === -1)
+      .filter(include_data_filter);
     return Promisie.map(core_datas, 5, exportCoreData(filepath, split_count));
   } catch (e) {
     return Promisie.reject(e);
