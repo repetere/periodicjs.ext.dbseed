@@ -110,7 +110,7 @@ function exportData(options = {}) {
       : options.filepath;
     const excluded_data = options.excluded_datas ||  periodicjs.settings.extensions['periodicjs.ext.dbseed'].export.ignore_core_datas;
     const split_count = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].export.split_count;
-    const include_data_filter = (Array.isArray(options.include_datas))
+    const include_data_filter = (Array.isArray(options.include_datas) && options.include_datas.filter(include=>include).length>0)
       ? (datum => options.include_datas.indexOf(datum) > -1)
       : (() => true);
     const core_datas = Array.from(periodicjs.datas.keys())

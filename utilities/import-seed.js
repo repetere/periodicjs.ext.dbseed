@@ -102,7 +102,7 @@ function importData(options = {}) {
     const filepath = (typeof options === 'string')
       ? options
       : options.filepath;
-    const include_data_filter = (Array.isArray(options.include_datas))
+    const include_data_filter = (Array.isArray(options.include_datas) && options.include_datas.filter(include=>include).length>0)
       ? (datum => options.include_datas.indexOf(datum) > -1)
       : (() => true);
     const core_datas = Array.from(periodicjs.datas.keys())
