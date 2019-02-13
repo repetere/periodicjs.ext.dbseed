@@ -13,12 +13,15 @@ const os = require('os');
  * @param {string} core_data_name 
  * @returns {Promise} contents of the core data model seed
  */
-function handleWriteStream (fd) {
+function handleWriteStream (fd, { include_ids, }) {
   let isFirst = true;
   let transform = new Transform({
     objectMode: true,
     transform: function (data, enc, next) {
       try {
+        if (typeof data === 'object' && include_ids === false) {
+          data._id = undefined; delete data._id;
+        }
         if (isFirst) {
           isFirst = false;
           this.push(`[${ os.EOL }`);
@@ -55,7 +58,7 @@ function handleReadStream (core_data_name, writeStream, fd) {
           .on('error', reject)
           .on('end', () => {
             writeStream.write(`${ os.EOL }\t\t]`);
-            resolve([writeStream, fd, count,]);
+            resolve([writeStream, fd, count, ]);
           });
       } catch (e) {
         reject(e);
@@ -72,20 +75,20 @@ function handleWriteEnd (transform, fd) {
   });
 }
 
-function exportCoreData (filepath, split_count) {
+function exportCoreData (filepath, split_count, { include_ids,  }) {
   return function (core_data_name) {
     let data_count = 0;
     let file_index = 0;
     return Promisie.doWhilst(() => {
       let fd = fs.createWriteStream(path.join(path.dirname(filepath), `${ path.basename(filepath, '.json') }_${ core_data_name }(${ file_index }).json`));
-      let writeStream = handleWriteStream(fd);
+      let writeStream = handleWriteStream(fd, { include_ids,  });
       return periodicjs.datas.get(core_data_name).stream({ 
         limit: (typeof split_count === 'number') ? split_count : Infinity,
         skip: data_count,
       })
         .then(handleReadStream(core_data_name, writeStream, fd))
         .then(result => {
-          let [transform, fd, count,] = result;
+          let [transform, fd, count, ] = result;
           data_count += count;
           file_index++;
           return handleWriteEnd(transform, fd)
@@ -105,18 +108,19 @@ function exportCoreData (filepath, split_count) {
  */
 function exportData(options = {}) {
   try {
+    const { include_ids = true, split = 50000, } = options;
     const filepath = (typeof options === 'string')
       ? options
       : options.filepath;
     const excluded_data = options.excluded_datas ||  periodicjs.settings.extensions['periodicjs.ext.dbseed'].export.ignore_core_datas;
-    const split_count = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].export.split_count;
+    const split_count = periodicjs.settings.extensions[ 'periodicjs.ext.dbseed' ].export.split_count || split;
     const include_data_filter = (Array.isArray(options.include_datas) && options.include_datas.filter(include=>include).length>0)
       ? (datum => options.include_datas.indexOf(datum) > -1)
       : (() => true);
     const core_datas = Array.from(periodicjs.datas.keys())
       .filter(datum => excluded_data.indexOf(datum) === -1)
       .filter(include_data_filter);
-    return Promisie.map(core_datas, 5, exportCoreData(filepath, split_count));
+    return Promisie.each(core_datas, 1, exportCoreData(filepath, split_count, { include_ids, }));
   } catch (e) {
     return Promisie.reject(e);
   }
